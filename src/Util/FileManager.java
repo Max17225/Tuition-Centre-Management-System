@@ -53,12 +53,19 @@ public class FileManager {
         Path path = Paths.get("Data", fileName);
         
         // This will try to append new data in the file, if file does not exist it will create a new file.
-         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-             writer.write(line);
-             writer.newLine(); // To make sure it will start from new line
-             
-         } catch (IOException e) {
-             System.out.println("Error appending to file: " + path + " → " + e.getMessage());
-         }
+        try {
+            boolean fileExists = Files.exists(path);
+            boolean isEmpty = fileExists && Files.size(path) == 0;
+
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+                if (!isEmpty && fileExists) {
+                    writer.newLine(); // Only add newline if file has content
+                }
+                writer.write(line);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error appending to file: " + path + " → " + e.getMessage());
+        }
     }
 }
