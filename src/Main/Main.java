@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] Args) {
-        List<List<String>> data = FileManager.getDataList("Admin.txt");
-        System.out.println(data);
+        
     }
 }
