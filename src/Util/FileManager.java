@@ -18,8 +18,8 @@ import java.util.*;
 public class FileManager {
     
     // Reads a CSV file from the Data directory and returns each line as a list of strings.
-    // param(fileName): The name of the file to read (e.g., "students.txt").
-    // return(List): A list of rows, where each row is a list of trimmed values.
+    // param(fileName): The name of the file to read (e.g. "students.txt").
+    // return(List)   : A list of rows, where each row is a list of trimmed values (e.g. [[userID, userName, ...], [userID, ...]]).
     public static List<List<String>> getDataList(String fileName) {
         List<List<String>> allDataList = new ArrayList<>();
         
@@ -47,7 +47,7 @@ public class FileManager {
     }
     
     // Appends a single String line of text to the specified data file.
-    // param(line): The new data(string) that u want to add.
+    // param(line)     : The new data(string) that u want to add.
     // param(fileName) : The name of the file to append (e.g., "students.txt").
     public static void appendData(String line, String fileName) {
         Path path = Paths.get("Data", fileName);
