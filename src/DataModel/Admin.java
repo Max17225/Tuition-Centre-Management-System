@@ -9,5 +9,5 @@ package DataModel;
  * @author nengz
  */
 public class Admin {
-    
+    private String AdminID;
 }
