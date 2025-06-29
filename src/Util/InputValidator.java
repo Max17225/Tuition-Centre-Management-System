@@ -12,10 +12,10 @@ public class InputValidator {
     // Param(userEmail): Email input from the user
     // return(boolean) : If correct format return true.
     public static boolean emailFormatIsValid(String userEmail) {
-    if (userEmail == null) return false;
-
-    userEmail = userEmail.trim().toLowerCase();
-    return userEmail.endsWith("@gmail.com") || userEmail.endsWith("@mail.com");
+        if (userEmail == null) return false;
+    
+        userEmail = userEmail.trim().toLowerCase();
+        return userEmail.endsWith("@gmail.com") || userEmail.endsWith("@mail.com");
     }
     
     
