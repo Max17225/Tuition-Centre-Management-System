@@ -4,9 +4,10 @@
  */
 package Main;
 
+import UserInterface.LoginUI;
 
 public class Main {
     public static void main(String[] Args) {
-        
+        LoginUI.showLoginMenu();
     }
 }
