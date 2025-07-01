@@ -71,12 +71,9 @@ public class LoginUI {
                 switch(userType) {
                     case"Admin"        -> {}
                     case"Receptionist" -> {}
-                    case"Tutor"        -> {}
+                    case"Tutor"        -> {TutorUI.showTutorMenu(inputID, userType); return;}
                     case"Student"      -> {}
                 }
-                
-                // this SHIT for TRY only must REMEMBER to DELETE!!
-                System.out.println("Login successful!!! Delete me after u update");
                 
             } else {
                 System.out.println("Error: Incorrect password.");
