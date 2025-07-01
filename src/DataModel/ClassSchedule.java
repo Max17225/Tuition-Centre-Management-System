@@ -8,6 +8,6 @@ package DataModel;
  *
  * @author nengz
  */
-public class ClassInfo {
+public class ClassSchedule {
     
 }

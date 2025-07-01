@@ -4,11 +4,10 @@
  */
 package Main;
 
-import Util.FileManager;
-import java.util.List;
+import UserInterface.LoginUI;
 
 public class Main {
     public static void main(String[] Args) {
-        
+        LoginUI.showLoginMenu();
     }
 }
