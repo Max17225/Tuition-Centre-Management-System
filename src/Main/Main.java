@@ -4,10 +4,10 @@
  */
 package Main;
 
-import UserInterface.LoginUI;
+import UserInterface.LoginGUI;
 
 public class Main {
     public static void main(String[] Args) {
-        LoginUI.showLoginMenu();
+       LoginGUI loginGUI = new LoginGUI();
     }
 }
