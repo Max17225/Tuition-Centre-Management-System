@@ -8,6 +8,7 @@ package Util;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import Service.AuthService;
 
 
 // Utility class for access or manage data files used in the system.
@@ -15,7 +16,7 @@ import java.util.*;
 // Support reading CSV-like files into structured lists.
 // Located in the /Data/ directory relative to the working directory.
  
-public class FileManager {
+public class DataManager {
     
     // Reads a CSV file from the Data directory and returns each line as a list of strings.
     // param(fileName): The name of the file to read (e.g. "students.txt").
@@ -67,5 +68,21 @@ public class FileManager {
         } catch (IOException e) {
             System.out.println("Error appending to file: " + path + " → " + e.getMessage());
         }
+    }
+    
+    // Used for getting the info(1 row) by the ID input by the user.
+    // param(userID)  : The ID input by the user (e.g. "A0001").
+    // param(userType): The type of the login user, Must be admin/receptionist/tutor/student.
+    // return(List)   : The list which contain info of the user (e.g. ["A0001", "userName", ...]).
+    public static List<String> getUserRecordByID(String userID, String userType) {
+        List<List<String>> allUsers = DataManager.getDataList(AuthService.getUserFileType(userType));
+        
+        for (List<String> user : allUsers) {
+            // Check if user data is not empty and ID is correct
+            if (!user.isEmpty() && user.get(0).trim().equals(userID)) {
+                return user;
+            }
+        }
+        return null;
     }
 }
