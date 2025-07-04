@@ -12,7 +12,10 @@ import java.util.Scanner;
 import java.util.List;
 import Util.DataManager;
 
+// UserInterface class for display Tutor UI.
+
 public class TutorUI {
+    
     public static void showTutorMenu(String userID, String userType) {
         Scanner scanner = new Scanner(System.in);
         List<String> userInfo = DataManager.getUserRecordByID(userID, userType);
@@ -32,7 +35,7 @@ public class TutorUI {
             String userInput = scanner.nextLine().trim();
             
             switch(userInput) {
-                case"0" -> {System.out.println("Exiting Tutor Menu..."); return;}
+                case"0" -> {System.out.println("Exiting System..."); return;}
                 case"1" -> {}
                 case"2" -> {}
                 case"3" -> {}
