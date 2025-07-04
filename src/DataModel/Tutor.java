@@ -8,6 +8,9 @@ package DataModel;
  *
  * @author nengz
  */
-public class Tutor {
-    
+
+public class Tutor extends User {
+    public Tutor(String id, String username, String password, String phoneNumber) {
+        super(id, username, password, phoneNumber); 
+    }
 }
