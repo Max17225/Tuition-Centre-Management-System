@@ -15,14 +15,15 @@ public class AuthService {
     // Used for convert userType to their file name.
     // param(userType): The type of the login user, Must be admin/receptionist/tutor/student.
     // return(String) : Will return a file name in string format (e.g. "Admin.txt").
-    public static String getUserFileType(String userType) {
-        return switch (userType.toLowerCase()) {
-            case "admin"       -> "Admin.txt";
-            case "receptionist"-> "Receptionist.txt";
-            case "tutor"       -> "Tutor.txt";
-            case "student"     -> "Student.txt";
-            default -> throw new IllegalArgumentException(
-                "Invalid userType: '" + userType + "'. Expected: admin, receptionist, tutor, or student.");
+    public static String getUserFileType(String inputId) {
+        if (inputId.isEmpty()) return null;
+        
+        return switch ((inputId.charAt(0))) {
+            case 'A' -> "Admin.txt";
+            case 'R' -> "Receptionist.txt";
+            case 'T' -> "Tutor.txt";
+            case 'S' -> "Student.txt";
+            default -> null;    
         };
     }
     
@@ -31,9 +32,9 @@ public class AuthService {
     // param(inputID) : ID input by the user.
     // param(userType): The type of the login user, Must be admin/receptionist/tutor/student.
     // return(boolean): True, if found the ID input by user in the database.
-    public static boolean foundID(String inputID, String userType) {
+    public static boolean foundID(String inputID, String userFileType) {
         // if getUserRecordByID is not null then return true
-        return DataManager.getUserRecordByID(inputID, userType) != null;
+        return DataManager.getUserRecordByID(inputID, userFileType) != null;
     }
     
     
