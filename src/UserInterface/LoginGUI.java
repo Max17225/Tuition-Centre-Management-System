@@ -23,18 +23,6 @@ public class LoginGUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    private String getUserType(String inputID) {
-        if (inputID.isEmpty()) return null;
-        
-        return switch ((inputID.charAt(0))) {
-            case 'A' -> "Admin";
-            case 'R' -> "Receptionist";
-            case 'T' -> "Tutor";
-            case 'S' -> "Student";
-            default -> null;    
-        };
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,7 +38,7 @@ public class LoginGUI extends javax.swing.JFrame {
         usernameTitle = new javax.swing.JLabel();
         passwordTitle = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
-        usernameEnter = new javax.swing.JTextField();
+        userIdEnter = new javax.swing.JTextField();
         passwordEnter = new javax.swing.JPasswordField();
         errorMessageLabel = new javax.swing.JLabel();
         incorrectPassDisplay = new javax.swing.JLabel();
@@ -88,7 +76,7 @@ public class LoginGUI extends javax.swing.JFrame {
         });
 
         usernameTitle.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        usernameTitle.setText("Username:");
+        usernameTitle.setText("UserID:");
 
         passwordTitle.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         passwordTitle.setText("Password:");
@@ -101,10 +89,10 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         });
 
-        usernameEnter.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        usernameEnter.addActionListener(new java.awt.event.ActionListener() {
+        userIdEnter.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        userIdEnter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameEnterActionPerformed(evt);
+                userIdEnterActionPerformed(evt);
             }
         });
 
@@ -137,7 +125,7 @@ public class LoginGUI extends javax.swing.JFrame {
                             .addComponent(passwordTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(usernameEnter)
+                            .addComponent(userIdEnter)
                             .addComponent(passwordEnter, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(incorrectPassDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,7 +143,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usernameTitle)
-                    .addComponent(usernameEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(userIdEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordTitle)
@@ -168,7 +156,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 .addGap(36, 36, 36))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {passwordTitle, usernameEnter, usernameTitle});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {passwordTitle, userIdEnter, usernameTitle});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -184,49 +172,50 @@ public class LoginGUI extends javax.swing.JFrame {
         return;
         }
         
-        // Get username and password
-        String username = usernameEnter.getText().trim();
+        // Get userId and password
+        String userId = userIdEnter.getText().trim();
         String password = new String(passwordEnter.getPassword());
         
         // Get userType
-        String userType = getUserType(username);
+        String userFileType = AuthService.getUserFileType(userId);
         
         // Flag to track if login was succesful or not
         boolean credentialsValid = false;
         
         // Validate credentials
-        if (userType == null) {
+        if (userFileType == null) {
             failedAttempts++;
             JOptionPane.showMessageDialog(this, "Invalid user ID format.");
         }
         
-        else if (!AuthService.foundID(username, userType)){
+        else if (!AuthService.foundID(userId, userFileType)){
             failedAttempts++;
-            JOptionPane.showMessageDialog(this, "username:"+ username +"not found");
+            JOptionPane.showMessageDialog(this, "userID:"+ userId +"not found");
         }
         
-        else if (AuthService.passwordIsCorrect(username,password,userType)) {
+        else if (AuthService.passwordIsCorrect(userId,password,userFileType)) {
             failedAttempts = 0;
             credentialsValid = true;
             JOptionPane.showMessageDialog(this, "Login Succesful!");
             
             // Open respective GUI based on user type
-            switch (userType.toLowerCase()){
+            switch (userFileType.toLowerCase()){
                 
-                case "student" -> {
+                case "student.txt" -> {
                     new StudentGUI().setVisible(true);
                 }
                 
-                case "admin" -> {
+                case "admin.txt" -> {
                     new AdminGUI().setVisible(true);
                 }
                 
-                case "receptionist" -> {
+                case "receptionist.txt" -> {
                     new ReceptGUI().setVisible(true);
                 }
                 
-                case "tutor" -> {
-                    new TutorGUI().setVisible(true);
+                case "tutor.txt" -> {
+                    // new TutorGUI().setVisible(true);
+                    TutorUI.showTutorMenu(userId, userFileType);
                 }
                 
                 default -> {
@@ -268,9 +257,9 @@ public class LoginGUI extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_loginButtonActionPerformed
 
-    private void usernameEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameEnterActionPerformed
+    private void userIdEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userIdEnterActionPerformed
 
-    }//GEN-LAST:event_usernameEnterActionPerformed
+    }//GEN-LAST:event_userIdEnterActionPerformed
 
     private void passwordEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordEnterActionPerformed
 
@@ -279,41 +268,6 @@ public class LoginGUI extends javax.swing.JFrame {
     private void incorrectPassDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_incorrectPassDisplayMouseClicked
         
     }//GEN-LAST:event_incorrectPassDisplayMouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginGUI().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorMessageLabel;
@@ -324,7 +278,7 @@ public class LoginGUI extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordEnter;
     private javax.swing.JLabel passwordTitle;
     private javax.swing.JLabel title;
-    private javax.swing.JTextField usernameEnter;
+    private javax.swing.JTextField userIdEnter;
     private javax.swing.JLabel usernameTitle;
     // End of variables declaration//GEN-END:variables
 }

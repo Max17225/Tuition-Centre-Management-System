@@ -16,14 +16,14 @@ import Util.DataManager;
 
 public class TutorUI {
     
-    public static void showTutorMenu(String userID, String userType) {
+    public static void showTutorMenu(String userID, String userFileType) {
         Scanner scanner = new Scanner(System.in);
-        List<String> userInfo = DataManager.getUserRecordByID(userID, userType);
+        List<String> userInfo = DataManager.getUserRecordByID(userID, userFileType);
         String userName = userInfo.get(1);
         
         
         while (true) {
-            System.out.println("[ Welcome back " + userName + "(" + userType + ")" + " ]");
+            System.out.println("[ Welcome back " + userName + "(Tutor)" + " ]");
             System.out.println("1 - Add Class");
             System.out.println("2 - Update Class Infomation");
             System.out.println("3 - View My Classes");

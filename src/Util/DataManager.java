@@ -74,8 +74,8 @@ public class DataManager {
     // param(userID)  : The ID input by the user (e.g. "A0001").
     // param(userType): The type of the login user, Must be admin/receptionist/tutor/student.
     // return(List)   : The list which contain info of the user (e.g. ["A0001", "userName", ...]).
-    public static List<String> getUserRecordByID(String userID, String userType) {
-        List<List<String>> allUsers = DataManager.getDataList(AuthService.getUserFileType(userType));
+    public static List<String> getUserRecordByID(String userID, String userFileType) {
+        List<List<String>> allUsers = DataManager.getDataList(AuthService.getUserFileType(userFileType));
         
         for (List<String> user : allUsers) {
             // Check if user data is not empty and ID is correct
