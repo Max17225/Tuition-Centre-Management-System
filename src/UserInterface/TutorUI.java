@@ -17,6 +17,7 @@ import Util.DataManager;
 public class TutorUI {
     
     public static void showTutorMenu(String userID, String userFileType) {
+
         Scanner scanner = new Scanner(System.in);
         List<String> userInfo = DataManager.getUserRecordByID(userID, userFileType);
         String userName = userInfo.get(1);
