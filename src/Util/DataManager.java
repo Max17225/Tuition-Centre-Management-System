@@ -38,7 +38,7 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         fileNameMap.put(DataModel.Admin.class, "Admin.txt");
         
         converterMap.put(DataModel.Receptionist.class, row ->
-            new DataModel.Tutor(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+            new DataModel.Receptionist(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
         );
         fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
         
