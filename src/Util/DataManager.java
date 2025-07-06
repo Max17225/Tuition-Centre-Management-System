@@ -15,7 +15,7 @@ import java.util.function.Function;
 // Example of use this class: DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
 // Located in the /Data/ directory relative to the working directory.
 
-public class DataManager<T extends DataModel.DataSerializable> { // extends DataSerializable, because this DataManager only can use to fetch out DataModel
+public class DataManager<T extends DataModel.DataSerializable> { // extends DataSerializable, because this DataManager only can use the class in DataModel
     // A variable(rowToObject), store function.
     private final Function<List<String>, T> rowToObject; 
     // fileName will the manager use.
