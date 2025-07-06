@@ -17,6 +17,10 @@ import Util.DataManager;
 public class TutorUI {
     
     public static void showTutorMenu(String userId) {
+
+    public static void showTutorMenu(String userID, String userFileType) {
+
+
         Scanner scanner = new Scanner(System.in);
         Util.DataManager<DataModel.Tutor> tutorManager = DataManager.of(DataModel.Tutor.class);
         DataModel.Tutor target = tutorManager.getRecordById(userId);
