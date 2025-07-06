@@ -173,50 +173,43 @@ public class LoginGUI extends javax.swing.JFrame {
         return;
         }
         
-        // Get userId and password
-        String userId = userIdEnter.getText().trim();
-        String password = new String(passwordEnter.getPassword());
-        
-        // Get userType
-        String userFileType = AuthService.getUserFileType(userId);
+        // Get inputId and inputPassword
+        String inputId = userIdEnter.getText().trim();
+        String inputPassword = new String(passwordEnter.getPassword());
         
         // Flag to track if login was succesful or not
         boolean credentialsValid = false;
         
         // Validate credentials
-        if (userFileType == null) {
+
+        if (!AuthService.foundId(inputId)){
             failedAttempts++;
-            JOptionPane.showMessageDialog(this, "Invalid user ID format.");
+            JOptionPane.showMessageDialog(this, "userID:"+ inputId +"not found");
         }
         
-        else if (!AuthService.foundID(userId, userFileType)){
-            failedAttempts++;
-            JOptionPane.showMessageDialog(this, "userID:"+ userId +"not found");
-        }
-        
-        else if (AuthService.passwordIsCorrect(userId,password,userFileType)) {
+        else if (AuthService.passwordIsCorrect(inputId, inputPassword)) {
             failedAttempts = 0;
             credentialsValid = true;
             JOptionPane.showMessageDialog(this, "Login Succesful!");
             
             // Open respective GUI based on user type
-            switch (userFileType.toLowerCase()){
+            switch (inputId.charAt(0)){
                 
-                case "student.txt" -> {
+                case 'S' -> {
                     new StudentGUI().setVisible(true);
                 }
                 
-                case "admin.txt" -> {
+                case 'A' -> {
                     new AdminGUI().setVisible(true);
                 }
                 
-                case "receptionist.txt" -> {
+                case 'R' -> {
                     new ReceptGUI().setVisible(true);
                 }
                 
-                case "tutor.txt" -> {
+                case 'T' -> {
                     // new TutorGUI().setVisible(true);
-                    TutorUI.showTutorMenu(userId, userFileType);
+                    TutorUI.showTutorMenu(inputId);
                 }
                 
                 default -> {

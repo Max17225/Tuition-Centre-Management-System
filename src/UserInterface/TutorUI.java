@@ -9,22 +9,24 @@ package UserInterface;
  * @author nengz
  */
 import java.util.Scanner;
-import java.util.List;
 import Util.DataManager;
+
 
 // UserInterface class for display Tutor UI.
 
 public class TutorUI {
     
+    public static void showTutorMenu(String userId) {
+
     public static void showTutorMenu(String userID, String userFileType) {
 
+
         Scanner scanner = new Scanner(System.in);
-        List<String> userInfo = DataManager.getUserRecordByID(userID, userFileType);
-        String userName = userInfo.get(1);
-        
+        Util.DataManager<DataModel.Tutor> tutorManager = DataManager.of(DataModel.Tutor.class);
+        DataModel.Tutor target = tutorManager.getRecordById(userId);
         
         while (true) {
-            System.out.println("[ Welcome back " + userName + "(Tutor)" + " ]");
+            System.out.println("[ Welcome back " + target.getUsername() + "(Tutor)" + " ]");
             System.out.println("1 - Add Class");
             System.out.println("2 - Update Class Infomation");
             System.out.println("3 - View My Classes");

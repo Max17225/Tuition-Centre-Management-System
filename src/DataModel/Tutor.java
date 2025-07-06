@@ -9,8 +9,19 @@ package DataModel;
  * @author nengz
  */
 
-public class Tutor extends User {
+public class Tutor extends User implements DataSerializable{
     public Tutor(String id, String username, String password, String phoneNumber) {
         super(id, username, password, phoneNumber); 
     }
+    
+    public Tutor(String id, String username, String password, String phoneNumber, String country, String email) {
+    super(id, username, password, phoneNumber);
+    this.country = country;
+    this.email = email;
+    }
+    
+    @Override
+    public String toDataLine() {
+        return String.join(",", id, username, password, phoneNumber, country, email);
+    }  
 }
