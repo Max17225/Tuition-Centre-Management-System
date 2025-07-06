@@ -9,7 +9,7 @@ package DataModel;
  * @author nengz
  */
 
-// A interface used for make sure everything in data model can convert to a String line and save into text file.
+// A interface used for make sure everything in data model can convert to a String line and must have a getId method.
 
 public interface DataSerializable {
     // this both method can be use for every data model class
