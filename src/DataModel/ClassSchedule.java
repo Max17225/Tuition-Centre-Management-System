@@ -8,6 +8,17 @@ package DataModel;
  *
  * @author nengz
  */
-public class ClassSchedule {
+public class ClassSchedule implements DataSerializable {
     
+    @Override
+    public String toDataLine() {
+        // do the code here
+        return "";
+    }
+
+    @Override
+    public String getId() {
+        // do the code here
+        return "";
+    }   
 }

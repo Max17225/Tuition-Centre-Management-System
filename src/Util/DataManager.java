@@ -8,81 +8,137 @@ package Util;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import Service.AuthService;
-
+import java.util.function.Function;
 
 // Utility class for access or manage data files used in the system.
-// Expected file format: comma-separated values (CSV).
-// Support reading CSV-like files into structured lists.
+// Expected file format     : comma-separated values (CSV).
+// Example of use this class: DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
 // Located in the /Data/ directory relative to the working directory.
- 
-public class DataManager {
+
+public class DataManager<T extends DataModel.DataSerializable> { // extends DataSerializable, because this DataManager only can use to fetch out DataModel
+    // A variable(rowToObject), store function.
+    private final Function<List<String>, T> rowToObject; 
+    // fileName will the manager use.
+    private final String fileName;
+    // A Variable to Store each Function with corresponding Class.
+    private static final Map<Class<?>, Function<List<String>, ?>> converterMap = new HashMap<>();
+    // A Variable to Store eatch fileName with corresponding Class.
+    private static final Map<Class<?>, String> fileNameMap = new HashMap<>();
     
-    // Reads a CSV file from the Data directory and returns each line as a list of strings.
-    // param(fileName): The name of the file to read (e.g. "students.txt").
-    // return(List)   : A list of rows, where each row is a list of trimmed values (e.g. [[userID, userName, ...], [userID, ...]]).
-    public static List<List<String>> getDataList(String fileName) {
-        List<List<String>> allDataList = new ArrayList<>();
+    // Register Function here
+    static {
+        converterMap.put(DataModel.Tutor.class, row -> 
+            new DataModel.Tutor(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+        ); 
+        fileNameMap.put(DataModel.Tutor.class, "Tutor.txt");
+
+        converterMap.put(DataModel.Admin.class, row ->
+            new DataModel.Admin(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+        );
+        fileNameMap.put(DataModel.Admin.class, "Admin.txt");
         
-        // Get the file path like Data/fileName.
+        converterMap.put(DataModel.Receptionist.class, row ->
+            new DataModel.Tutor(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+        );
+        fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
+        
+        // Add more DataModel here
+    }                                                                   
+
+    // Constructor of FileManager
+    // param(rowToObject): The function that can convert a row data(list of string) to Object.
+    // param(fileName)   : The name of the file that manager will use.
+    public DataManager(Function<List<String>, T> rowToObject, String fileName) { 
+        this.rowToObject = rowToObject;
+        this.fileName = fileName;
+    }
+    
+    // ------------------------Static Method to auto generate constructor easily------------------------------
+    
+    // This will try to get the method with the Class u want
+    // param(clazz)    : Write down the class u want(e.g. Tutor.class)
+    // return(Function): Return a function that will convert a list of string to a class
+    public static <T extends DataModel.DataSerializable> DataManager<T> of(Class<T> clazz) {
+        Function<List<String>, ?> converter = converterMap.get(clazz);
+        String fileName = fileNameMap.get(clazz);
+
+        if (converter == null || fileName == null) {
+            throw new IllegalArgumentException("No converter or file registered for " + clazz.getSimpleName());
+        }
+
+        return new DataManager<>((Function<List<String>, T>) converter, fileName);
+    }
+    
+    
+    // -------------------------------------Function of Manager---------------------------------------------
+    
+    // To encapsulate all the raw data into a Object, and store these object in a List.
+    // return (List)   : Return a list of Object 
+    public List<T> readFromFile() {
+        List<T> list = new ArrayList<>();
         Path path = Paths.get("Data", fileName);
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
-            
-            // Convert each line of String data to a List by split the "," and add the List to the allDataList.
             while ((line = reader.readLine()) != null) {
-                String[] values = line.split(",");
-                List<String> row = new ArrayList<>();
-                for (String val : values) {
-                    row.add(val.trim());
-                }
-                allDataList.add(row);
+                String[] parts = line.split(",");
+                List<String> row = Arrays.stream(parts).map(String::trim).toList();
+                T obj = rowToObject.apply(row);
+                list.add(obj);
             }
-
         } catch (IOException e) {
-            System.out.println("Error reading file: " + path + " → " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
 
-        return allDataList;
+        return list;
     }
-    
-    // Appends a single String line of text to the specified data file.
-    // param(line)     : The new data(string) that u want to add.
-    // param(fileName) : The name of the file to append (e.g., "students.txt").
-    public static void appendData(String line, String fileName) {
+
+    // Use to convert one record(raw data) to one Object
+    // param (inputId) : The id u want of your target
+    // return (Object)   : Return a Object 
+    public T getRecordById(String inputId) {
+        List<T> list = readFromFile();
+        for (T item : list) {
+            if (item.getId().equalsIgnoreCase(inputId)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    // Overwrite everything in a file, normally used to modify data
+    // param (list): A list of object(must specify what DataModel) will be write down to a file, one record one line
+    public void overwriteFile(List<T> list) {
         Path path = Paths.get("Data", fileName);
-        
-        // This will try to append new data in the file, if file does not exist it will create a new file.
+
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (T item : list) {
+                writer.write(item.toDataLine());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + e.getMessage());
+        }
+    }
+
+    // appendOne string line to a choosen file
+    // param (item): A new Object that u want to add into database.
+    public void appendOne(T item) {
+        Path path = Paths.get("Data", fileName);
+
         try {
             boolean fileExists = Files.exists(path);
             boolean isEmpty = fileExists && Files.size(path) == 0;
 
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
                 if (!isEmpty && fileExists) {
-                    writer.newLine(); // Only add newline if file has content
+                    writer.newLine(); 
                 }
-                writer.write(line);
+                writer.write(item.toDataLine());
             }
 
         } catch (IOException e) {
-            System.out.println("Error appending to file: " + path + " → " + e.getMessage());
+            System.out.println("Error appending to file: " + e.getMessage());
         }
     }
-    
-    // Used for getting the info(1 row) by the ID input by the user.
-    // param(userID)  : The ID input by the user (e.g. "A0001").
-    // param(userType): The type of the login user, Must be admin/receptionist/tutor/student.
-    // return(List)   : The list which contain info of the user (e.g. ["A0001", "userName", ...]).
-    public static List<String> getUserRecordByID(String userID, String userFileType) {
-        List<List<String>> allUsers = DataManager.getDataList(AuthService.getUserFileType(userFileType));
-        
-        for (List<String> user : allUsers) {
-            // Check if user data is not empty and ID is correct
-            if (!user.isEmpty() && user.get(0).trim().equals(userID)) {
-                return user;
-            }
-        }
-        return null;
-    }
-}
+} 
