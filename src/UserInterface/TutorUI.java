@@ -18,9 +18,6 @@ public class TutorUI {
     
     public static void showTutorMenu(String userId) {
 
-    public static void showTutorMenu(String userID, String userFileType) {
-
-
         Scanner scanner = new Scanner(System.in);
         Util.DataManager<DataModel.Tutor> tutorManager = DataManager.of(DataModel.Tutor.class);
         DataModel.Tutor target = tutorManager.getRecordById(userId);
@@ -28,10 +25,11 @@ public class TutorUI {
         while (true) {
             System.out.println("[ Welcome back " + target.getUsername() + "(Tutor)" + " ]");
             System.out.println("1 - Add Class");
-            System.out.println("2 - Update Class Infomation");
-            System.out.println("3 - View My Classes");
-            System.out.println("4 - View My Student");
-            System.out.println("5 - Update My Profile");
+            System.out.println("2 - Update Subject Infomation");
+            System.out.println("3 - Create Class Schedule");
+            System.out.println("4 - View My Time Table");
+            System.out.println("5 - View My Student");
+            System.out.println("6 - Update My Profile");
             System.out.println("0 - Exit");
             System.out.print("=> ");
             
@@ -44,8 +42,13 @@ public class TutorUI {
                 case"3" -> {}
                 case"4" -> {}
                 case"5" -> {}
+                case"6" -> {}
                 default -> {System.out.println("Invalid Input!!!");}
             }        
         }
+    }
+    
+    public static void main(String[] args) {
+        showTutorMenu("T0001");
     }
 }
