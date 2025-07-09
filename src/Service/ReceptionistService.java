@@ -9,5 +9,7 @@ package Service;
  * @author nengz
  */
 public class ReceptionistService {
-    
+    public void hello() {
+        System.out.println("Hello");
+    }
 }
