@@ -27,20 +27,35 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
     
     // Register Function here
     static {
+        //---------------------------TUTOR----------------------------------------
         converterMap.put(DataModel.Tutor.class, row -> 
             new DataModel.Tutor(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
         ); 
         fileNameMap.put(DataModel.Tutor.class, "Tutor.txt");
-
+        
+        //---------------------------ADMIN----------------------------------------
         converterMap.put(DataModel.Admin.class, row ->
             new DataModel.Admin(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
         );
         fileNameMap.put(DataModel.Admin.class, "Admin.txt");
         
+        //---------------------------RECEPTIONIST----------------------------------------
         converterMap.put(DataModel.Receptionist.class, row ->
             new DataModel.Receptionist(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
         );
         fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
+        
+        //---------------------------SUBJECT----------------------------------------
+        converterMap.put(DataModel.Subject.class, row ->
+            new DataModel.Subject(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4))
+        );
+        fileNameMap.put(DataModel.Subject.class, "Subject.txt");
+        
+        //---------------------------CLASS SCHEDULE----------------------------------------
+        converterMap.put(DataModel.ClassSchedule.class, row ->
+            new DataModel.ClassSchedule(row.get(0), row.get(1), row.get(2))
+        );
+        fileNameMap.put (DataModel.ClassSchedule.class, "ClassSchedule.txt");
         
         // Add more DataModel here
     }                                                                   
@@ -81,8 +96,20 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
             while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                // skip the empty row
+                if (line.isEmpty()) continue;
+
                 String[] parts = line.split(",");
                 List<String> row = Arrays.stream(parts).map(String::trim).toList();
+
+                // if there is some data is malformed it will skip and warning
+                if (row.size() < 3) {
+                    System.err.println("Warning: Skipping malformed line: [" + line + "]");
+                    continue;
+                }
+
                 T obj = rowToObject.apply(row);
                 list.add(obj);
             }
@@ -92,6 +119,7 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
 
         return list;
     }
+
 
     // Use to convert one record(raw data) to one Object
     // param (inputId) : The id u want of your target
