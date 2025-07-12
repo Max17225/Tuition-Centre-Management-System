@@ -18,11 +18,7 @@ public class AdminUI {
     private JTextField uName, uEmail;
     private JLabel updatedLabel;
 
-    public void launch() {
-        JFrame frame = new JFrame("Tuition Centre System");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
-
+    public JPanel getAdminPanel() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         // Tutor Panel
@@ -124,8 +120,13 @@ public class AdminUI {
         tabbedPane.add("Income Report", incomePanel);
         tabbedPane.add("My Profile", profilePanel);
 
-        frame.add(tabbedPane);
-        frame.setVisible(true);
+        JPanel container = new JPanel(new BorderLayout());
+        container.add(tabbedPane, BorderLayout.CENTER);
+        return container;
+    }
+
+    private void launch() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     // Inner classes for Tutor and Receptionist
@@ -171,6 +172,14 @@ public class AdminUI {
 
     // Add main method here to run AdminUI directly
     public static void main(String[] args) {
-        new AdminUI().launch();
+        JFrame frame;
+        frame = new JFrame("Admin UI");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        
+        AdminUI adminUI = new AdminUI();
+        JPanel panel = adminUI.getAdminPanel(); // ✅ use the updated method
+        frame.add(panel);
+        frame.setVisible(true);
     }
 }
