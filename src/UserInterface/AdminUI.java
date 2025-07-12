@@ -2,6 +2,7 @@ package UserInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.*;
 
 public class AdminUI {
@@ -32,8 +33,15 @@ public class AdminUI {
         tutorListModel = new DefaultListModel<>();
         JList<String> tutorList = new JList<>(tutorListModel);
 
-        registerTutor.addActionListener(e -> {
-            Tutor tutor = new Tutor(tName.getText(), tEmail.getText(), tLevel.getText(), tSubject.getText());
+        registerTutor.addActionListener((ActionEvent e) -> {
+            Tutor tutor = new Tutor(
+                    tName.getText(),
+                    tEmail.getText(),
+                    tLevel.getText(),
+                    tSubject.getText(),
+                    3000.00  // or use a JTextField if you want it input by user
+            );
+            
             tutors.add(tutor);
             tutorListModel.addElement(tutor.toString());
             tName.setText(""); tEmail.setText(""); tLevel.setText(""); tSubject.setText("");
@@ -47,7 +55,7 @@ public class AdminUI {
             }
         });
 
-        tutorPanel.add(new JLabel("Name:")); tutorPanel.add(tName);
+        tutorPanel.add(new JLabel("Tutor ID:")); tutorPanel.add(tName);
         tutorPanel.add(new JLabel("Email:")); tutorPanel.add(tEmail);
         tutorPanel.add(new JLabel("Level:")); tutorPanel.add(tLevel);
         tutorPanel.add(new JLabel("Subject:")); tutorPanel.add(tSubject);
@@ -63,8 +71,13 @@ public class AdminUI {
         receptionistListModel = new DefaultListModel<>();
         JList<String> receptionistList = new JList<>(receptionistListModel);
 
-        registerReceptionist.addActionListener(e -> {
-            Receptionist r = new Receptionist(rName.getText(), rEmail.getText());
+        registerReceptionist.addActionListener((ActionEvent e) -> {
+            Receptionist r = new Receptionist(
+                    rName.getText(),
+                    rEmail.getText(),
+                    2500.00  // fixed income, or get from input
+            );
+            
             receptionists.add(r);
             receptionistListModel.addElement(r.toString());
             rName.setText(""); rEmail.setText("");
@@ -78,7 +91,7 @@ public class AdminUI {
             }
         });
 
-        receptionistPanel.add(new JLabel("Name:")); receptionistPanel.add(rName);
+        receptionistPanel.add(new JLabel("Receptionist ID:")); receptionistPanel.add(rName);
         receptionistPanel.add(new JLabel("Email:")); receptionistPanel.add(rEmail);
         receptionistPanel.add(registerReceptionist); receptionistPanel.add(deleteReceptionist);
         receptionistPanel.add(new JScrollPane(receptionistList));
@@ -125,48 +138,60 @@ public class AdminUI {
         return container;
     }
 
-    private void launch() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     // Inner classes for Tutor and Receptionist
     class User {
         protected String name, email;
+        protected double monthlyIncome;
 
-        public User(String name, String email) {
+        public User(String name, String email, double income) {
             this.name = name;
             this.email = email;
+            this.monthlyIncome = monthlyIncome;
         }
 
         public void updateProfile(String name, String email) {
             this.name = name;
             this.email = email;
         }
+        
+        public void promote(double increment) {
+            this.monthlyIncome += increment;
+        }
+        
+        public String getIncomeInfo() {
+            return "RM " + monthlyIncome;
+        }
     }
 
     class Tutor extends User {
         String level, subject;
 
-        public Tutor(String name, String email, String level, String subject) {
-            super(name, email);
+        public Tutor(String name, String email, String level, String subject, double income) {
+            super(name, email, income);
             this.level = level;
             this.subject = subject;
         }
 
+        public void promote(double increment, String newLevel) {
+            super.promote(increment);
+            this.level = newLevel;
+        }
+
         @Override
         public String toString() {
-            return name + " - " + level + " - " + subject;
+            return name + " - " + level + " - " + subject + " - " + getIncomeInfo();
         }
     }
 
     class Receptionist extends User {
-        public Receptionist(String name, String email) {
-            super(name, email);
+        public Receptionist(String name, String email, double income) {
+            super(name, email, income);
         }
 
         @Override
         public String toString() {
-            return name + " - " + email;
+            return name + " - " + email + " - " + getIncomeInfo();
         }
     }
 
