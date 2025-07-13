@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 
 public class AdminUI {
+    private JComboBox<String> tutorDropdown;
+    private JComboBox<String> receptionistDropdown;
     private final ArrayList<Tutor> tutors = new ArrayList<>();
     private final ArrayList<Receptionist> receptionists = new ArrayList<>();
 
@@ -21,6 +23,76 @@ public class AdminUI {
 
     public JPanel getAdminPanel() {
         JTabbedPane tabbedPane = new JTabbedPane();
+        // === Promotions Tab ===
+        JPanel promotePanel = new JPanel(new GridLayout(8, 2, 10, 10));
+        
+        // ComboBoxes for existing tutors and receptionists
+        tutorDropdown = new JComboBox<>();
+        for (Tutor t : tutors) tutorDropdown.addItem(t.name);
+        
+        receptionistDropdown = new JComboBox<>();
+        for (Receptionist r : receptionists) receptionistDropdown.addItem(r.name);
+        
+        // Input fields
+        JTextField tutorNewLevel = new JTextField();
+        JTextField tutorIncomeIncrement = new JTextField();
+        JTextField receptionistIncomeIncrement = new JTextField();
+        
+        // Buttons
+        JButton promoteTutorBtn = new JButton("Promote Tutor");
+        JButton promoteReceptionistBtn = new JButton("Promote Receptionist");
+        
+        // Tutor promotion logic
+        promoteTutorBtn.addActionListener(e -> {
+            int index = tutorDropdown.getSelectedIndex();
+            if (index >= 0) {
+                Tutor t = tutors.get(index);
+                try {
+                    double increment = Double.parseDouble(tutorIncomeIncrement.getText());
+                    String newLevel = tutorNewLevel.getText();
+                    t.promote(increment, newLevel);
+                    tutorListModel.set(index, t.toString());
+                    JOptionPane.showMessageDialog(null, "Tutor promoted.");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid income increment value.");
+                }
+            }
+        });
+        
+        // Receptionist promotion logic
+        promoteReceptionistBtn.addActionListener(e -> {
+            int index = receptionistDropdown.getSelectedIndex();
+            if (index >= 0) {
+                Receptionist r = receptionists.get(index);
+                try {
+                    double increment = Double.parseDouble(receptionistIncomeIncrement.getText());
+                    r.promote(increment);
+                    receptionistListModel.set(index, r.toString());
+                    JOptionPane.showMessageDialog(null, "Receptionist promoted.");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid income increment value.");
+                }
+            }
+        });
+        
+        // Add components to panel
+        promotePanel.add(new JLabel("Select Tutor:"));
+        promotePanel.add(tutorDropdown);
+        promotePanel.add(new JLabel("New Level:"));
+        promotePanel.add(tutorNewLevel);
+        promotePanel.add(new JLabel("Income Increment (RM):"));
+        promotePanel.add(tutorIncomeIncrement);
+        promotePanel.add(promoteTutorBtn);
+        promotePanel.add(new JLabel("")); // spacer
+
+        promotePanel.add(new JLabel("Select Receptionist:"));
+        promotePanel.add(receptionistDropdown);
+        promotePanel.add(new JLabel("Income Increment (RM):"));
+        promotePanel.add(receptionistIncomeIncrement);
+        promotePanel.add(promoteReceptionistBtn);
+        promotePanel.add(new JLabel("")); // spacer
+        
+        tabbedPane.add("Promotions", promotePanel);
 
         // Tutor Panel
         JPanel tutorPanel = new JPanel(new GridLayout(6, 2));
@@ -33,18 +105,38 @@ public class AdminUI {
         tutorListModel = new DefaultListModel<>();
         JList<String> tutorList = new JList<>(tutorListModel);
 
-        registerTutor.addActionListener((ActionEvent e) -> {
-            Tutor tutor = new Tutor(
-                    tName.getText(),
-                    tEmail.getText(),
-                    tLevel.getText(),
-                    tSubject.getText(),
-                    3000.00  // or use a JTextField if you want it input by user
-            );
+        registerTutor.addActionListener((var e) -> {
+            String newTutorID = tName.getText();
+            String newTutorEmail = tEmail.getText();
+            boolean idExists = false;
+            boolean emailExists = false;
             
-            tutors.add(tutor);
-            tutorListModel.addElement(tutor.toString());
-            tName.setText(""); tEmail.setText(""); tLevel.setText(""); tSubject.setText("");
+            for (Tutor t : tutors) {
+                if (t.name.equals(newTutorID)) {
+                    idExists = true;
+                }
+                if (t.email.equalsIgnoreCase(newTutorEmail)) {
+                    emailExists = true;
+                }
+            }
+            if (idExists) {
+                JOptionPane.showMessageDialog(null, "Error: Tutor ID already exists!", "Duplicate ID", JOptionPane.ERROR_MESSAGE);
+            } else if (emailExists) {
+                JOptionPane.showMessageDialog(null, "Error: Tutor email already exists!", "Duplicate Email", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Tutor tutor;
+                tutor = new Tutor(
+                        tName.getText(),
+                        tEmail.getText(),
+                        tLevel.getText(),
+                        tSubject.getText(),
+                        3000.00  // or use a JTextField if you want it input by user
+                );
+                tutors.add(tutor);
+                tutorListModel.addElement(tutor.toString());
+                tName.setText(""); tEmail.setText(""); tLevel.setText(""); tSubject.setText("");
+                refreshTutorDropdown();
+            }
         });
 
         deleteTutor.addActionListener(e -> {
@@ -72,18 +164,34 @@ public class AdminUI {
         JList<String> receptionistList = new JList<>(receptionistListModel);
 
         registerReceptionist.addActionListener((ActionEvent e) -> {
-            Receptionist r = new Receptionist(
-                    rName.getText(),
-                    rEmail.getText(),
-                    2500.00  // fixed income, or get from input
-            );
+            String newRecID = tName.getText();
+            String newRecEmail = rEmail.getText();
+            boolean idExists = false;
+            boolean emailExists = false;
             
-            receptionists.add(r);
-            receptionistListModel.addElement(r.toString());
-            rName.setText(""); rEmail.setText("");
+            for (Receptionist r : receptionists) {
+                if (r.name.equals(newRecID)) {
+                    idExists = true;
+                    break;
+                }
+            }
+            if (idExists) {
+                JOptionPane.showMessageDialog(null, "Error: Receptionist ID already exists!", "Duplicate ID", JOptionPane.ERROR_MESSAGE);
+            } else if (emailExists) {
+                JOptionPane.showMessageDialog(null, "Error: Receptionist email already exists!", "Duplicate Email", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Receptionist r = new Receptionist(
+                        rName.getText(),
+                        rEmail.getText(),
+                        2500.00
+                );
+                receptionists.add(r);
+                receptionistListModel.addElement(r.toString());
+                rName.setText(""); rEmail.setText("");
+                refreshReceptionistDropdown();
+            }
         });
-
-        deleteReceptionist.addActionListener(e -> {
+        deleteReceptionist.addActionListener((ActionEvent e) -> {
             int index = receptionistList.getSelectedIndex();
             if (index >= 0) {
                 receptionists.remove(index);
@@ -101,14 +209,14 @@ public class AdminUI {
         JButton viewIncome = new JButton("View Income Report");
 
         viewIncome.addActionListener(e -> {
-            Map<String, Integer> incomeMap = new HashMap<>();
-            for (Tutor t : tutors) {
-                String key = t.level + " - " + t.subject;
-                incomeMap.put(key, incomeMap.getOrDefault(key, 0) + 500);
-            }
-
             System.out.println("=== Income Report ===");
-            incomeMap.forEach((k, v) -> System.out.println(k + ": RM" + v));
+            for (Tutor t : tutors) {
+                System.out.printf("Tutor: %s - RM%.2f%n", t.name, t.monthlyIncome);
+            }
+            
+            for (Receptionist r : receptionists) {
+                System.out.printf("Receptionist: %s - RM%.2f%n", r.name, r.monthlyIncome);
+            }
         });
 
         incomePanel.add(viewIncome, BorderLayout.NORTH);
@@ -144,7 +252,7 @@ public class AdminUI {
         protected String name, email;
         protected double monthlyIncome;
 
-        public User(String name, String email, double income) {
+        public User(String name, String email, double monthlyIncome) {
             this.name = name;
             this.email = email;
             this.monthlyIncome = monthlyIncome;
@@ -188,6 +296,10 @@ public class AdminUI {
         public Receptionist(String name, String email, double income) {
             super(name, email, income);
         }
+        
+        public void promote(double increment) {
+            super.promote(increment);
+        }
 
         @Override
         public String toString() {
@@ -206,5 +318,20 @@ public class AdminUI {
         JPanel panel = adminUI.getAdminPanel(); // ✅ use the updated method
         frame.add(panel);
         frame.setVisible(true);
+    }
+    // Refresh tutor dropdown with updated list
+    private void refreshTutorDropdown() {
+        tutorDropdown.removeAllItems();
+        for (Tutor t : tutors) {
+            tutorDropdown.addItem(t.name);
+        }
+    }
+    
+    // Refresh receptionist dropdown with updated list
+    private void refreshReceptionistDropdown() {
+        receptionistDropdown.removeAllItems();
+        for (Receptionist r : receptionists) {
+            receptionistDropdown.addItem(r.name);
+        }
     }
 }
