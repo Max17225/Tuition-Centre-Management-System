@@ -226,7 +226,7 @@ public class TutorUI {
                                             
                                             while (true) {
                                                 Map<String, String> newScheduleMap = TutorService.newScheduleCreation();
-                                                if (TutorService.noTimeConflict(mySubjectWithSchedule.get(userUpdateInputInt - 1), newScheduleMap)) {
+                                                if (TutorService.noTimeConflictInSameLevel(mySubjectWithSchedule.get(userUpdateInputInt - 1), newScheduleMap) && TutorService.noTimeConflictWithOwnSchedule(userId, newScheduleMap)) {
                                                     String scheduleLine = TutorService.formatScheduleMapToString(newScheduleMap);
                                                     schedule.setScheduleInweek(scheduleLine);
                                                     scheduleManager.overwriteFile(allSchedule);
