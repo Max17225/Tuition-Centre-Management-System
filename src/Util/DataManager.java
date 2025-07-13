@@ -45,6 +45,12 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         );
         fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
         
+        //---------------------------Student---------------------------------------------
+        converterMap.put(DataModel.Student.class, row -> 
+            new DataModel.Student(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8))
+        );
+        fileNameMap.put(DataModel.Student.class, "Student.txt");
+        
         //---------------------------SUBJECT----------------------------------------
         converterMap.put(DataModel.Subject.class, row ->
             new DataModel.Subject(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4))
@@ -56,6 +62,12 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
             new DataModel.ClassSchedule(row.get(0), row.get(1), row.get(2))
         );
         fileNameMap.put (DataModel.ClassSchedule.class, "ClassSchedule.txt");
+        
+        //---------------------------Enrollment----------------------------------------------
+        converterMap.put(DataModel.Enrollment.class, row -> 
+            new DataModel.Enrollment(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+        );
+        fileNameMap.put (DataModel.Enrollment.class, "Enrollment.txt");
         
         // Add more DataModel here
     }                                                                   

@@ -4,29 +4,36 @@
  */
 package DataModel;
 
-/**
- *
- * @author nengz
- */
 public class Student extends User implements DataSerializable {
     
+    private String address;
+    final private String enrollmentId;
+    private String icPassport;  
+    
+    
     //constructor
-    public Student(String id, String username, String password, String phoneNumber) {
-        super(id, username, password, phoneNumber); 
+    public Student(String id, String username, String password, String phoneNumber, String icPassport) {
+        super(id, username, password, phoneNumber);
+        this.address = "Empty";
+        this.enrollmentId = "Empty";
+        this.icPassport = icPassport;
     }
     
-    public Student(String id, String username, String password, String phoneNumber, String country, String email) {
+    public Student(String id, String username, String password, String phoneNumber, String country, String email ,String address, String enrollmentId, String icPassport) {
     super(id, username, password, phoneNumber);
     this.country = country;
     this.email = email;
-    }
+    this.address = address;
+    this.enrollmentId = enrollmentId;
+    this.icPassport = icPassport;
+    }   
     
-    // Everything in here was prepare for u to modify
+    // Get info
+    public String getEnrollmentId() {return this.enrollmentId;}
 
     @Override
     public String toDataLine() {
-        // do the code here
-        return "";
+        return String.join(",", id, username, password, phoneNumber, country, email, address, enrollmentId, icPassport);
     }
 }
 
