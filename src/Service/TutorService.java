@@ -258,7 +258,7 @@ public class TutorService {
 
         return true;
     }
-    
+
     // Format the scheduleMap to a string for saving it to the file 
     // param(scheduleMap): The map of the schedule info
     // return(String)    : A formated string line
@@ -267,7 +267,7 @@ public class TutorService {
         .map(entry -> entry.getKey() + ":" + entry.getValue())
         .collect(Collectors.joining("|"));
     }
-    
+
     // This will store all the schedule info of the tutor in a Map.
     // param(tutorId): The id of the Tutor
     // return(Map)   : Return a map of schedule info (e.g. {"Monday": {Math: "1020-1120", Sceince: "0900-1000", ...}, "Tuesday": ...)
@@ -362,7 +362,6 @@ public class TutorService {
         return subjectStudentsMap;
     }
 
-    
     // -----------------------------------------Private Method-----------------------------------
     
     // get all the subject which already having the schedule
@@ -404,7 +403,7 @@ public class TutorService {
             .findFirst()
             .orElse(null); 
     }
-    
+
     // To convert "1100-1200" -> int[]{1100, 1200}
     private static int[] parseTimeRange(String timeStr) {
         String[] parts = timeStr.split("-");
@@ -414,6 +413,8 @@ public class TutorService {
     // To convert int[]{1100, 1200} -> "1100-1200"
     private static String timeRangeToStr(int[] range) {
         return String.format("%04d-%04d", range[0], range[1]);
+
     }
     
+
 }
