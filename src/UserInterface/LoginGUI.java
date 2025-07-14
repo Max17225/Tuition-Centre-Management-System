@@ -208,8 +208,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 }
                 
                 case 'T' -> {
-                    // new TutorGUI().setVisible(true);
-                    TutorUI.showTutorMenu(inputId);
+                    new TutorGUI().setVisible(true);
                 }
                 
                 default -> {
