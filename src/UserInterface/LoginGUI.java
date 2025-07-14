@@ -4,6 +4,7 @@
  */
 package UserInterface;
 
+import UserInterface.Student.StudentGUI;
 import Service.AuthService;
 import DataModel.Student; 
 import Util.DataManager;   
@@ -186,7 +187,7 @@ public class LoginGUI extends javax.swing.JFrame {
         // Validate credentials
         if (!AuthService.foundId(inputId)){
             failedAttempts++;
-            JOptionPane.showMessageDialog(this, "userID:"+ inputId +"not found");
+            JOptionPane.showMessageDialog(this, "userID:"+"("+inputId+")"+"not found");
         }
         else if (AuthService.passwordIsCorrect(inputId, inputPassword)) {
             failedAttempts = 0;

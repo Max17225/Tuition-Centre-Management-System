@@ -45,11 +45,17 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         );
         fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
         
-        //---------------------------Student---------------------------------------------
-        converterMap.put(DataModel.Student.class, row -> 
-            new DataModel.Student(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8))
+        //---------------------------STUDENT----------------------------------------
+        converterMap.put (DataModel.Student.class, row ->
+            new DataModel.Student(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7))
         );
         fileNameMap.put(DataModel.Student.class, "Student.txt");
+        
+        //---------------------------STUDENT REQUEST----------------------------------------
+        converterMap.put(DataModel.StudentRequest.class, row ->
+            new DataModel.StudentRequest(row) 
+        );
+        fileNameMap.put(DataModel.StudentRequest.class, "StudentRequest.txt"); 
         
         //---------------------------SUBJECT----------------------------------------
         converterMap.put(DataModel.Subject.class, row ->
