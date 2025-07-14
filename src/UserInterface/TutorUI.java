@@ -111,8 +111,9 @@ public class TutorUI {
         }
     }
     
-    private static void showScheduleManageMenu(String userId) 
-            {
+
+    private static void showScheduleManageMenu(String userId) {
+
         Scanner scanner = new Scanner(System.in);
         
         while (true) {
@@ -126,6 +127,7 @@ public class TutorUI {
             
             try {
                 int intUserInput = Integer.parseInt(userInput);
+
                 switch (intUserInput) {
                     case 1 -> {
                         List<Subject> userSubjects = TutorService.getMySubject(userId);
@@ -254,6 +256,7 @@ public class TutorUI {
                         return;
                     }
                     default -> System.out.println("Out Of Range");
+
                 }
                 
             } catch(NumberFormatException e) {
