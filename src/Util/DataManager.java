@@ -187,4 +187,25 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
             System.out.println("Error appending to file: " + e.getMessage());
         }
     }
+    
+    // Update a object info by own id in a class and update into text file
+    // param(updatedItem) : The new version of object 
+    public void updateRecord(T updatedItem) {
+        List<T> list = readFromFile();
+        boolean updated = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equalsIgnoreCase(updatedItem.getId())) {
+                list.set(i, updatedItem);  
+                updated = true;
+                break;
+            }
+        }
+
+        if (updated) {
+            overwriteFile(list); 
+        } else {
+            System.err.println("Update failed: ID not found - " + updatedItem.getId());
+        }
+    }
 } 

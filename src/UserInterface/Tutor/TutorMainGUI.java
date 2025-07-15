@@ -2,23 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package UserInterface;
+package UserInterface.Tutor;
 
+/**
+ *
+ * @author nengz
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import DataModel.Tutor;
+import DataModel.*;
+import UserInterface.LoginGUI;
 import Util.*;
 
-public class TutorGUI extends JFrame {
 
+public class TutorMainGUI extends JFrame {
     final private String tutorId;
     
     // Initialize GUI
-    public TutorGUI(String tutorId) {
+    public TutorMainGUI(String tutorId) {
         this.tutorId = tutorId;
         
         // ===Frame Setting===
@@ -61,7 +66,8 @@ public class TutorGUI extends JFrame {
         centerWrapper.setBackground(new Color(102, 102, 102));
         centerWrapper.add(textPanel);
         topPanel.add(centerWrapper, BorderLayout.CENTER);
-
+        
+        // Account button
         JButton accountButton = new JButton("My Account", getScaledIcon("/images/uis--user-md.png", 48, 48));
         accountButton.setHorizontalTextPosition(SwingConstants.CENTER);
         accountButton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -73,6 +79,11 @@ public class TutorGUI extends JFrame {
         accountButton.setBorderPainted(false);
         accountButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         accountButton.setPreferredSize(new Dimension(90, 90));
+
+        accountButton.addActionListener(e -> {
+            new TutorAccountGUI(tutorId).setVisible(true); 
+            dispose(); 
+        });
 
         accountButton.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
             @Override
@@ -91,8 +102,9 @@ public class TutorGUI extends JFrame {
                 super.paint(g, c);
             }
         });
-
         topPanel.add(accountButton, BorderLayout.EAST);
+        
+        // Add everything on top
         add(topPanel, BorderLayout.NORTH);
         
         
@@ -136,9 +148,9 @@ public class TutorGUI extends JFrame {
                 private boolean hover = false;
 
                 {
-                    setHorizontalTextPosition(SwingConstants.CENTER); // text will at below of the icon
-                    setVerticalTextPosition(SwingConstants.BOTTOM);
-                    setFont(new Font("Segoe UI", Font.BOLD, 14));
+                    setHorizontalTextPosition(SwingConstants.CENTER); 
+                    setVerticalTextPosition(SwingConstants.BOTTOM); // text will at below of the icon
+                    setFont(new Font("Segoe UI", Font.BOLD, 12));
                     setForeground(Color.WHITE);
                     setFocusPainted(false);
                     setContentAreaFilled(false);
@@ -162,7 +174,8 @@ public class TutorGUI extends JFrame {
                         }
                     });
                 }
-
+                
+                // change button graphic and colour
                 @Override
                 protected void paintComponent(Graphics g) {
                     Graphics2D g2 = (Graphics2D) g.create();
@@ -173,7 +186,8 @@ public class TutorGUI extends JFrame {
                     g2.dispose();
                     super.paintComponent(g);
                 }
-
+                
+                // change border graphic and colour
                 @Override
                 protected void paintBorder(Graphics g) {
                     Graphics2D g2 = (Graphics2D) g.create();
@@ -208,8 +222,8 @@ public class TutorGUI extends JFrame {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(new Color(102,102,102));
 
-        ImageIcon defaultIcon = getScaledIcon("/images/Key 1.png", 20, 20); // ← 放关门图路径
-        ImageIcon hoverIcon = getScaledIcon("/images/Key 2.png", 20, 20);     // ← 放开门图路径
+        ImageIcon defaultIcon = getScaledIcon("/images/Key 1.png", 20, 20); 
+        ImageIcon hoverIcon = getScaledIcon("/images/Key 2.png", 20, 20);     
 
         JButton logoutBtn = new JButton("Logout", defaultIcon) {
             @Override
@@ -245,14 +259,14 @@ public class TutorGUI extends JFrame {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 logoutBtn.setBackground(new Color(40, 160, 100)); // darker green
-                logoutBtn.setIcon(hoverIcon); // 切换成开门图标
+                logoutBtn.setIcon(hoverIcon); 
                 logoutBtn.repaint();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 logoutBtn.setBackground(new Color(60, 179, 113)); // 原色
-                logoutBtn.setIcon(defaultIcon); // 回到关门图标
+                logoutBtn.setIcon(defaultIcon); 
                 logoutBtn.repaint();
             }
         });
@@ -266,7 +280,9 @@ public class TutorGUI extends JFrame {
         add(bottomPanel, BorderLayout.SOUTH);
 
     }
-
+    
+    // ----------------------------- Private Method -------------------------------------------------------
+    
     private ImageIcon getScaledIcon(String path, int width, int height) {
         try {
             BufferedImage original = ImageIO.read(getClass().getResource(path));
@@ -283,9 +299,8 @@ public class TutorGUI extends JFrame {
             return null;
         }
     }
-
+    
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TutorGUI("T0001").setVisible(true));
+        SwingUtilities.invokeLater(() -> new TutorMainGUI("T0001").setVisible(true));
     }
 }
-
