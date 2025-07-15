@@ -11,7 +11,7 @@ import Util.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID; 
+import Util.IdGenerator; 
 
 /**
  *
@@ -59,9 +59,9 @@ public class StudentService {
             return false;
         }
 
-        // Generate a unique request ID
-        String requestId = "REQ-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        String studentId = student.getId(); // Get student ID from the passed Student object
+        // Generate a unique request ID using IdGenerator
+        String requestId = IdGenerator.getNewId(StudentRequest.class);
+        String studentId = student.getId(); 
         
         // Combine request details
         String requestDetails = "CHANGE_SUBJECT: " + selectedSubject + " (Notes: " + notes + ")";

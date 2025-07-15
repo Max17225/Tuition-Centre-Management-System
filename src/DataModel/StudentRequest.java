@@ -32,29 +32,6 @@ public class StudentRequest implements DataSerializable {
     }
     
     /**
-     * Constructor 2: For reconstructing EXISTING StudentRequest objects from file data.
-     * This constructor is specifically used by the DataManager when loading requests
-     * from the 'StudentRequest.txt' file. It takes a List of strings, where each
-     * string is a parsed part of a data lDine.
-     * @param parts A List of strings representing the parsed fields from a data line.
-     */
-    public StudentRequest(List<String> parts) { 
-        if (parts != null && parts.size() >= 4) { // Basic check to prevent IndexOutOfBoundsException
-            this.requestId = parts.get(0);
-            this.studentId = parts.get(1);
-            this.requestDetails = parts.get(2);
-            this.status = parts.get(3);
-        } else {
-            // Handle error for malformed data line.
-            System.err.println("Error: Malformed StudentRequest data parts. Expected at least 4, got: " + (parts != null ? parts.size() : "null"));
-            this.requestId = "ERROR_REQ";
-            this.studentId = "ERROR_STUDENT";
-            this.requestDetails = "MALFORMED_DATA";
-            this.status = "ERROR";
-        }
-    }
-    
-    /**
      * Implements the getId() method from the DataSerializable interface.
      * Returns the unique identifier for this student request.
      * @return The requestId of this student request.
