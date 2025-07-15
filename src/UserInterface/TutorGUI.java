@@ -13,12 +13,12 @@ import javax.imageio.ImageIO;
 import DataModel.Tutor;
 import Util.*;
 
-public class TutorTESTGUI extends JFrame {
+public class TutorGUI extends JFrame {
 
     final private String tutorId;
     
     // Initialize GUI
-    public TutorTESTGUI(String tutorId) {
+    public TutorGUI(String tutorId) {
         this.tutorId = tutorId;
         setTitle("Tutor Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -283,7 +283,7 @@ public class TutorTESTGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TutorTESTGUI("T0001").setVisible(true));
+        SwingUtilities.invokeLater(() -> new TutorGUI("T0001").setVisible(true));
     }
 }
 
