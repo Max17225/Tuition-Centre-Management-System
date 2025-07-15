@@ -25,6 +25,7 @@ public class TutorMainGUI extends JFrame {
     // Initialize GUI
     public TutorMainGUI(String tutorId) {
         this.tutorId = tutorId;
+
         
         // ===Frame Setting===
         setTitle("Tutor Dashboard");
@@ -138,6 +139,7 @@ public class TutorMainGUI extends JFrame {
             "/images/Fee 2.png"
         };
         
+
         // create 5 button at center
         for (int i = 0; i < btnLabels.length; i++) {
             final String label = btnLabels[i];
