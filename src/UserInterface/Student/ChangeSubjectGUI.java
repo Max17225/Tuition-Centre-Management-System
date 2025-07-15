@@ -294,15 +294,6 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         if (success) {
             JOptionPane.showMessageDialog(this, "Subject change request submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             reasonTextArea.setText(""); // Clear notes after submission
-            
-            // Close the current ChangeSubjectGUI's JFrame
-            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(ChangeSubjectGUI.this);
-            if (currentFrame != null) {
-                currentFrame.dispose();
-            }
-            // Open a new StudentGUI JFrame
-            StudentGUI studentHome = new StudentGUI(loggedInStudent);
-            studentHome.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Failed to submit request. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
