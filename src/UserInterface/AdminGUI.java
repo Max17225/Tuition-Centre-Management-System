@@ -31,11 +31,11 @@ public class AdminGUI extends javax.swing.JFrame {
         welcomeUser = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jMyProfile = new javax.swing.JButton();
+        jViewIncome = new javax.swing.JButton();
+        jTutor = new javax.swing.JButton();
+        jReceptionist = new javax.swing.JButton();
+        jLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,59 +84,63 @@ public class AdminGUI extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(235, 245, 238));
         jPanel3.setForeground(new java.awt.Color(152, 193, 217));
 
-        jButton1.setBackground(new java.awt.Color(112, 138, 88));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(50, 50, 50));
-        jButton1.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton1.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jMyProfile.setBackground(new java.awt.Color(112, 138, 88));
+        jMyProfile.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jMyProfile.setForeground(new java.awt.Color(50, 50, 50));
+        jMyProfile.setText("My Profile");
+        jMyProfile.setMaximumSize(new java.awt.Dimension(163, 43));
+        jMyProfile.setMinimumSize(new java.awt.Dimension(163, 43));
+        jMyProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jMyProfileActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(112, 138, 88));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(50, 50, 50));
-        jButton3.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton3.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton3.setPreferredSize(new java.awt.Dimension(163, 43));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jViewIncome.setBackground(new java.awt.Color(112, 138, 88));
+        jViewIncome.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jViewIncome.setForeground(new java.awt.Color(50, 50, 50));
+        jViewIncome.setText("View Income Report");
+        jViewIncome.setMaximumSize(new java.awt.Dimension(163, 43));
+        jViewIncome.setMinimumSize(new java.awt.Dimension(163, 43));
+        jViewIncome.setPreferredSize(new java.awt.Dimension(163, 43));
+        jViewIncome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jViewIncomeActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(112, 138, 88));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(50, 50, 50));
-        jButton4.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton4.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jTutor.setBackground(new java.awt.Color(112, 138, 88));
+        jTutor.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jTutor.setForeground(new java.awt.Color(50, 50, 50));
+        jTutor.setText("Tutor");
+        jTutor.setMaximumSize(new java.awt.Dimension(163, 43));
+        jTutor.setMinimumSize(new java.awt.Dimension(163, 43));
+        jTutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jTutorActionPerformed(evt);
             }
         });
 
-        jButton7.setBackground(new java.awt.Color(112, 138, 88));
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(50, 50, 50));
-        jButton7.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton7.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        jReceptionist.setBackground(new java.awt.Color(112, 138, 88));
+        jReceptionist.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jReceptionist.setForeground(new java.awt.Color(50, 50, 50));
+        jReceptionist.setText("Receptionist");
+        jReceptionist.setMaximumSize(new java.awt.Dimension(163, 43));
+        jReceptionist.setMinimumSize(new java.awt.Dimension(163, 43));
+        jReceptionist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                jReceptionistActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(60, 179, 113));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout .png"))); // NOI18N
-        jButton2.setText("Logout");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jLogout.setBackground(new java.awt.Color(60, 179, 113));
+        jLogout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLogout.setForeground(new java.awt.Color(255, 255, 255));
+        jLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout .png"))); // NOI18N
+        jLogout.setText("Logout");
+        jLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jLogoutActionPerformed(evt);
             }
         });
 
@@ -147,16 +151,16 @@ public class AdminGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jViewIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(70, 70, 70)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jMyProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jReceptionist, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(100, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(jLogout)
                 .addGap(32, 32, 32))
         );
         jPanel3Layout.setVerticalGroup(
@@ -164,14 +168,14 @@ public class AdminGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jReceptionist, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jViewIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jMyProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
@@ -193,28 +197,28 @@ public class AdminGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jMyProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMyProfileActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jMyProfileActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jViewIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewIncomeActionPerformed
 
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jViewIncomeActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jTutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTutorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jTutorActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void jReceptionistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jReceptionistActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_jReceptionistActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLogoutActionPerformed
         LoginGUI Login = new LoginGUI();
         Login.setVisible(true);
         this.dispose();
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,15 +256,15 @@ public class AdminGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton jLogout;
+    private javax.swing.JButton jMyProfile;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton jReceptionist;
+    private javax.swing.JButton jTutor;
+    private javax.swing.JButton jViewIncome;
     private javax.swing.JLabel welcomeUser;
     // End of variables declaration//GEN-END:variables
 }
