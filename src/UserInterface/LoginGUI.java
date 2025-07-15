@@ -221,12 +221,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 }
                 
                 case 'T' -> {
-<<<<<<< HEAD
-                    new TutorGUI().setVisible(true);
-=======
-                    new TutorGUI().setVisible(true); 
-                    TutorUI.showTutorMenu(inputId); 
->>>>>>> master
+                    SwingUtilities.invokeLater(() -> new TutorGUI(inputId).setVisible(true));
                 }
                 
                 default -> {
