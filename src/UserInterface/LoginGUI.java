@@ -3,7 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package UserInterface;
+
+import UserInterface.Student.StudentGUI;
 import Service.AuthService;
+import DataModel.Student; 
+import Util.DataManager;   
 import java.awt.Color;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -181,12 +185,10 @@ public class LoginGUI extends javax.swing.JFrame {
         boolean credentialsValid = false;
         
         // Validate credentials
-
         if (!AuthService.foundId(inputId)){
             failedAttempts++;
-            JOptionPane.showMessageDialog(this, "userID:"+ inputId +"not found");
+            JOptionPane.showMessageDialog(this, "userID:"+"("+inputId+")"+"not found");
         }
-        
         else if (AuthService.passwordIsCorrect(inputId, inputPassword)) {
             failedAttempts = 0;
             credentialsValid = true;
@@ -195,34 +197,49 @@ public class LoginGUI extends javax.swing.JFrame {
             // Open respective GUI based on user type
             switch (inputId.charAt(0)){
                 
-                case 'S' -> {
-                    new StudentGUI().setVisible(true);
-                }
+                 case 'S' -> {
+                    // 1. Get DataManager for Student
+                    DataManager<Student> studentManager = DataManager.of(Student.class);
+                    // 2. Retrieve the logged-in Student object
+                    Student loggedInStudent = studentManager.getRecordById(inputId);
+
+                    if (loggedInStudent != null) {
+                        // 3. Pass the Student object to StudentGUI's constructor
+                        StudentGUI studentHomePage = new StudentGUI(loggedInStudent);
+                        studentHomePage.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: Student data not found for ID: " + inputId);
+                    }
+                } 
                 
                 case 'A' -> {
                     new AdminGUI().setVisible(true);
                 }
                 
                 case 'R' -> {
-                    new ReceptGUI().setVisible(true);
+                     new ReceptGUI().setVisible(true); 
                 }
                 
                 case 'T' -> {
-                    // new TutorGUI().setVisible(true);
-                    TutorUI.showTutorMenu(inputId);
+<<<<<<< HEAD
+                    new TutorGUI().setVisible(true);
+=======
+                    new TutorGUI().setVisible(true); 
+                    TutorUI.showTutorMenu(inputId); 
+>>>>>>> master
                 }
                 
                 default -> {
-                    JOptionPane.showMessageDialog(this, "Unkown user type.");
-                    return;
+                    JOptionPane.showMessageDialog(this, "Unknown user type.");
+                    // No return here, as dispose() should still happen below
                 }
-            }
+            } // This brace correctly closes the 'switch' statement.
             
             // Close login form
             this.dispose();
             
-        } 
-        else {
+        } // This brace correctly closes the 'else if' block.
+        else { 
             failedAttempts++;
             JOptionPane.showMessageDialog(this, "Incorrect password. Attempt"+failedAttempts );
         }

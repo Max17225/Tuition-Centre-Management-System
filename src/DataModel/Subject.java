@@ -16,8 +16,8 @@ public class Subject implements DataSerializable{
     private String feePerMonth;
 
     //constructor
-    public Subject(String subjectName, String level, String tutorId, String feePerMonth) {
-        this.subjectId = Util.IdGenerator.getNewId(Subject.class);
+    public Subject(String subjectId, String subjectName, String level, String tutorId, String feePerMonth) {
+        this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.level = level;
         this.tutorId = tutorId;
