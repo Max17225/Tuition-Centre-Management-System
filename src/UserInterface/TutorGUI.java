@@ -20,6 +20,9 @@ public class TutorGUI extends JFrame {
     // Initialize GUI
     public TutorGUI(String tutorId) {
         this.tutorId = tutorId;
+
+        
+        // ===Frame Setting===
         setTitle("Tutor Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -29,20 +32,20 @@ public class TutorGUI extends JFrame {
         // === Top Panel ===
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(new Color(102, 102, 102));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Add extra space surround the topPanel
 
-        JLabel logoLabel = new JLabel();
+        JLabel logoLabel = new JLabel(); // A JLabel to display image
         logoLabel.setIcon(getScaledIcon("/images/ATCIcon.png", 100, 100));
         topPanel.add(logoLabel, BorderLayout.WEST);
 
         JPanel textPanel = new JPanel();
-        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Create a BoxLayout at center of topPanel, it can put two textLabel top and bottom
         textPanel.setBackground(new Color(102, 102, 102));
 
-        JLabel titleLabel = new JLabel("Tutor Dashboard", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Tutor Dashboard", SwingConstants.CENTER); 
         titleLabel.setFont(new Font("MV Boli", Font.BOLD, 30));
         titleLabel.setForeground(new Color(0, 53, 97));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // center of textpanel
         
         DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
         Tutor targetTutor = tutorManager.getRecordById(tutorId);
@@ -124,7 +127,8 @@ public class TutorGUI extends JFrame {
             "/images/Fee 2.png"
         };
         
-        // create 
+
+        // create 5 button at center
         for (int i = 0; i < btnLabels.length; i++) {
             final String label = btnLabels[i];
             final ImageIcon defaultIcon = getScaledIcon(defaultIcons[i], 40, 40);  
