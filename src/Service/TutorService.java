@@ -413,8 +413,6 @@ public class TutorService {
     // To convert int[]{1100, 1200} -> "1100-1200"
     private static String timeRangeToStr(int[] range) {
         return String.format("%04d-%04d", range[0], range[1]);
-
     }
     
-
 }
