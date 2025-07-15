@@ -4,6 +4,7 @@
  */
 package UserInterface;
 
+import UserInterface.ReceptGUI;
 import UserInterface.Student.StudentGUI;
 import Service.AuthService;
 import DataModel.Student; 
@@ -12,6 +13,7 @@ import java.awt.Color;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 /**
  *
@@ -217,8 +219,9 @@ public class LoginGUI extends javax.swing.JFrame {
                 }
                 
                 case 'R' -> {
-                     new ReceptGUI().setVisible(true); 
+                    new ReceptGUI().setVisible(true);
                 }
+
                 
                 case 'T' -> {
                     SwingUtilities.invokeLater(() -> new TutorGUI(inputId).setVisible(true));
