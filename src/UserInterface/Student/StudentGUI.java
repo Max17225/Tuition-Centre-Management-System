@@ -8,9 +8,7 @@ import UserInterface.Student.ChangeSubjectGUI;
 import DataModel.Student; 
 import UserInterface.LoginGUI;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 /**
  *
  * @author User
@@ -24,6 +22,7 @@ public class StudentGUI extends javax.swing.JFrame {
      */
     public StudentGUI(Student student) {
        this.loggedInStudent = student; //store the student object
+       this.setResizable(false);
         initComponents();
         
         // --- Use the loggedInStudent object to personalize the GUI ---
@@ -234,9 +233,23 @@ public class StudentGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        LoginGUI login = new LoginGUI();
-        login.setVisible(true);
+     // Show a confirmation dialog
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to log out?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+
+    // If the user clicks "Yes"
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Dispose (close) the current StudentGUI JFrame directly
         this.dispose();
+
+        // Create a new LoginGUI instance
+        LoginGUI login = new LoginGUI();
+        // Make the LoginGUI visible
+        login.setVisible(true);
+        }   
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void changeSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectActionPerformed

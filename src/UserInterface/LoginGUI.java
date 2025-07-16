@@ -26,6 +26,7 @@ public class LoginGUI extends javax.swing.JFrame {
     private Timer timer;
     
     public LoginGUI() {
+        this.setResizable(false);
         initComponents();
     }
     
