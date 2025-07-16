@@ -154,13 +154,13 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButton4" alignment="0" min="-2" pref="207" max="-2" attributes="0"/>
-                      <Component id="changeSubject" alignment="0" min="-2" pref="207" max="-2" attributes="0"/>
+                      <Component id="scheduleButton" alignment="0" min="-2" pref="207" max="-2" attributes="0"/>
+                      <Component id="changeSubjectButton" alignment="0" min="-2" pref="207" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButton1" min="-2" pref="207" max="-2" attributes="0"/>
-                      <Component id="jButton7" min="-2" pref="207" max="-2" attributes="0"/>
+                      <Component id="paymentButton" min="-2" pref="207" max="-2" attributes="0"/>
+                      <Component id="profileButton" min="-2" pref="207" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="100" max="32767" attributes="0"/>
               </Group>
@@ -176,13 +176,13 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton4" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
-                      <Component id="jButton7" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
+                      <Component id="scheduleButton" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
+                      <Component id="profileButton" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="changeSubject" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
-                      <Component id="jButton1" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
+                      <Component id="changeSubjectButton" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
+                      <Component id="paymentButton" alignment="3" min="-2" pref="114" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="25" max="32767" attributes="0"/>
                   <Component id="jButton2" min="-2" pref="64" max="-2" attributes="0"/>
@@ -192,7 +192,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="paymentButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ed" green="bc" red="30" type="rgb"/>
@@ -215,10 +215,10 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="paymentButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="changeSubject">
+        <Component class="javax.swing.JButton" name="changeSubjectButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ed" green="bc" red="30" type="rgb"/>
@@ -244,10 +244,10 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeSubjectActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeSubjectButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
+        <Component class="javax.swing.JButton" name="scheduleButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ed" green="bc" red="30" type="rgb"/>
@@ -270,10 +270,10 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scheduleButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton7">
+        <Component class="javax.swing.JButton" name="profileButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ed" green="bc" red="30" type="rgb"/>
@@ -296,7 +296,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton7ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profileButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
