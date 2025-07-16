@@ -45,11 +45,17 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         );
         fileNameMap.put(DataModel.Receptionist.class, "Receptionist.txt");
         
-        //---------------------------Student---------------------------------------------
-        converterMap.put(DataModel.Student.class, row -> 
-            new DataModel.Student(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8))
+        //---------------------------STUDENT----------------------------------------
+        converterMap.put (DataModel.Student.class, row ->
+            new DataModel.Student(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7))
         );
         fileNameMap.put(DataModel.Student.class, "Student.txt");
+        
+        //---------------------------STUDENT REQUEST----------------------------------------
+        converterMap.put(DataModel.StudentRequest.class, row ->
+            new DataModel.StudentRequest(row.get(0), row.get(1), row.get(2), row.get(3)) 
+        );
+        fileNameMap.put(DataModel.StudentRequest.class, "StudentRequest.txt"); 
         
         //---------------------------SUBJECT----------------------------------------
         converterMap.put(DataModel.Subject.class, row ->
@@ -179,6 +185,27 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
 
         } catch (IOException e) {
             System.out.println("Error appending to file: " + e.getMessage());
+        }
+    }
+    
+    // Update a object info by own id in a class and update into text file
+    // param(updatedItem) : The new version of object 
+    public void updateRecord(T updatedItem) {
+        List<T> list = readFromFile();
+        boolean updated = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equalsIgnoreCase(updatedItem.getId())) {
+                list.set(i, updatedItem);  
+                updated = true;
+                break;
+            }
+        }
+
+        if (updated) {
+            overwriteFile(list); 
+        } else {
+            System.err.println("Update failed: ID not found - " + updatedItem.getId());
         }
     }
 } 

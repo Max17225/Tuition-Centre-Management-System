@@ -15,7 +15,7 @@ public class InputValidator {
         if (userEmail == null) return false;
     
         userEmail = userEmail.trim().toLowerCase();
-        return userEmail.endsWith("@gmail.com") || userEmail.endsWith("@mail.com");
+        return userEmail.endsWith("@gmail.com") || userEmail.endsWith("@mail.com") || userEmail.equalsIgnoreCase("Empty");
     }
     
     // Verify for correct time input format.

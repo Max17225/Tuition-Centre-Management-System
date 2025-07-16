@@ -4,6 +4,8 @@
  */
 package UserInterface;
 
+import UserInterface.ReceptGUI;
+import UserInterface.Student.StudentGUI;
 import Service.AuthService;
 import DataModel.Student; 
 import Util.DataManager;   
@@ -11,6 +13,7 @@ import java.awt.Color;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 /**
  *
@@ -186,7 +189,7 @@ public class LoginGUI extends javax.swing.JFrame {
         // Validate credentials
         if (!AuthService.foundId(inputId)){
             failedAttempts++;
-            JOptionPane.showMessageDialog(this, "userID:"+ inputId +"not found");
+            JOptionPane.showMessageDialog(this, "userID:"+"("+inputId+")"+"not found");
         }
         else if (AuthService.passwordIsCorrect(inputId, inputPassword)) {
             failedAttempts = 0;
@@ -216,12 +219,12 @@ public class LoginGUI extends javax.swing.JFrame {
                 }
                 
                 case 'R' -> {
-                     new ReceptGUI().setVisible(true); 
+                    new ReceptGUI().setVisible(true);
                 }
+
                 
                 case 'T' -> {
-                    new TutorGUI().setVisible(true); 
-                    TutorUI.showTutorMenu(inputId); 
+                    SwingUtilities.invokeLater(() -> new UserInterface.Tutor.TutorMainGUI(inputId).setVisible(true));
                 }
                 
                 default -> {

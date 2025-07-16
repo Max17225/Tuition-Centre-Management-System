@@ -2,11 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package UserInterface;
+package UserInterface.Student;
 
-import DataModel.Student;
+import UserInterface.Student.ChangeSubjectGUI;
+import DataModel.Student; 
 import UserInterface.LoginGUI;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 /**
  *
  * @author User
@@ -26,7 +30,6 @@ public class StudentGUI extends javax.swing.JFrame {
         if (loggedInStudent != null) {
             // Update the welcome message
             welcomeUser.setText("Welcome, " + loggedInStudent.getUsername() + "!"); // Update welcomeUser label
-            
         }
     }
 
@@ -46,7 +49,7 @@ public class StudentGUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        changeSubject = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -63,7 +66,6 @@ public class StudentGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(152, 193, 217));
         setMinimumSize(new java.awt.Dimension(665, 535));
-        setPreferredSize(new java.awt.Dimension(684, 615));
 
         jPanel1.setBackground(new java.awt.Color(45, 118, 232));
 
@@ -123,17 +125,17 @@ public class StudentGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(48, 188, 237));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(50, 50, 50));
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book-stack.png"))); // NOI18N
-        jButton3.setText("Change Subject");
-        jButton3.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton3.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton3.setPreferredSize(new java.awt.Dimension(163, 43));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        changeSubject.setBackground(new java.awt.Color(48, 188, 237));
+        changeSubject.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        changeSubject.setForeground(new java.awt.Color(50, 50, 50));
+        changeSubject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book-stack.png"))); // NOI18N
+        changeSubject.setText("Change Subject");
+        changeSubject.setMaximumSize(new java.awt.Dimension(163, 43));
+        changeSubject.setMinimumSize(new java.awt.Dimension(163, 43));
+        changeSubject.setPreferredSize(new java.awt.Dimension(163, 43));
+        changeSubject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                changeSubjectActionPerformed(evt);
             }
         });
 
@@ -182,7 +184,7 @@ public class StudentGUI extends javax.swing.JFrame {
                 .addGap(100, 100, 100)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(changeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(70, 70, 70)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -202,7 +204,7 @@ public class StudentGUI extends javax.swing.JFrame {
                     .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(changeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -232,15 +234,23 @@ public class StudentGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        LoginGUI Login = new LoginGUI();
-        Login.setVisible(true);
+        LoginGUI login = new LoginGUI();
+        login.setVisible(true);
         this.dispose();
-        
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void changeSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectActionPerformed
+        // When "Change Subject" button is clicked, open ChangeSubjectGUI in a NEW JFrame
+        ChangeSubjectGUI changeSubjectPanel = new ChangeSubjectGUI(loggedInStudent);
+        JFrame changeSubjectFrame = new JFrame("Change Subject Request"); // Create a new JFrame
+        changeSubjectFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only this frame
+        changeSubjectFrame.getContentPane().add(changeSubjectPanel); // Add the JPanel to the new JFrame
+        changeSubjectFrame.pack(); // Size the new frame
+        changeSubjectFrame.setLocationRelativeTo(this); // Center relative to current frame
+        changeSubjectFrame.setVisible(true); // Make the new frame visible
+        
+        this.dispose(); // Close the current StudentGUI window
+    }//GEN-LAST:event_changeSubjectActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -256,9 +266,9 @@ public class StudentGUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton changeSubject;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
