@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DataModel;
-import java.util.List;
 
 /**
  *
@@ -13,22 +12,46 @@ public class StudentRequest implements DataSerializable {
     
     private String requestId;
     private String studentId;
-    private String requestDetails; // This holds the combined request info (e.g., "ADD: Math (Notes: ...)")
-    private String status;       // "PENDING", "ACCEPTED", "REJECTED", "CANCELLED"
+    private String oldSubjectId; 
+    private String newSubjectId;
+    private String status;       // "Pending", "Accepted", "Rejected", "Cancelled"
+    private String reason;
 
     /**
      * Constructor 1: For creating NEW StudentRequest objects from GUI input.
      * This is used when a student submits a new request through the user interface.
-     * * @param requestId The unique ID for the new request.
+     * @param requestId The unique ID for the new request.
      * @param studentId The ID of the student submitting the request.
-     * @param requestDetails A detailed description of the request.
-     * @param status The initial status of the request (e.g., "PENDING").
+     * @param oldSubjectId The ID of the subject to be dropped.
+     * @param newSubjectId The ID of the new subject the student wishes to enroll in.
+     * @param reason A detailed description of the request.
      */
-    public StudentRequest(String requestId, String studentId, String requestDetails, String status) {
+    public StudentRequest(String requestId, String studentId, String oldSubjectId, String newSubjectId, String reason) {
         this.requestId = requestId;
         this.studentId = studentId;
-        this.requestDetails = requestDetails;
-        this.status = status;
+        this.oldSubjectId = oldSubjectId;
+        this.newSubjectId = newSubjectId;
+        this.reason = reason;
+        this.status = "Pending"; // Default status for new requests
+    }
+    
+    /**
+     * Constructor 2: For loading StudentRequest objects from a data file.
+     * This constructor takes all fields, including the status from the file.
+     * @param requestId The unique ID for the request.
+     * @param studentId The ID of the student.
+     * @param oldSubjectId The ID of the subject to be dropped.
+     * @param newSubjectId The ID of the new subject.
+     * @param reason The reason for the request.
+     * @param status The current status of the request.
+     */
+    public StudentRequest(String requestId, String studentId, String oldSubjectId, String newSubjectId, String reason, String status) {
+        this.requestId = requestId;
+        this.studentId = studentId;
+        this.oldSubjectId = oldSubjectId;
+        this.newSubjectId = newSubjectId;
+        this.reason = reason;
+        this.status = status; // Use the status passed from the file
     }
     
     /**
@@ -51,56 +74,21 @@ public class StudentRequest implements DataSerializable {
      */
     @Override
     public String toDataLine() { 
-        return String.join(",", requestId, studentId, requestDetails, status);
+        return String.join(",", requestId, studentId, oldSubjectId, newSubjectId, reason, status);
     }
 
     // Get info
-    /**
-     * Returns the unique ID of the request.
-     * @return The request ID.
-     */
-    public String getRequestId() {
-        return requestId;
-    }
-
-    /**
-     * Returns the ID of the student who made the request.
-     * @return The student ID.
-     */
-    public String getStudentId() {
-        return studentId;
-    }
-
-    /**
-     * Returns the detailed description of the request.
-     * @return The request details.
-     */
-    public String getRequestDetails() {
-        return requestDetails;
-    }
-
-    /**
-     * Returns the current status of the request.
-     * @return The request status ("PENDING", "ACCEPTED", "REJECTED", "CANCELLED").
-     */
-    public String getStatus() {
-        return status;
-    }
-
+    public String getRequestId() {return requestId;}
+    public String getStudentId() {return studentId;}
+    public String getOldSubjectId() {return oldSubjectId;}
+    public String getNewSubjectId() {return newSubjectId;}
+    public String getReason() {return reason;}
+    public String getStatus() {return status;}
+    
     // Set info
-    /**
-     * Sets the status of the student request.
-     * @param status The new status for the request.
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * Sets the detailed description of the request.
-     * @param requestDetails The new request details.
-     */
-    public void setRequestDetails(String requestDetails) {
-        this.requestDetails = requestDetails;
-    }
+    public void setStatus(String status) {this.status = status;}
+    public void setReason(String reason) { this.reason = reason; } 
+    public void setOldSubjectId(String oldSubjectId) { this.oldSubjectId = oldSubjectId; }
+    public void setNewSubjectId(String newSubjectId) { this.newSubjectId = newSubjectId; }
+    
 }

@@ -15,17 +15,17 @@ public class ReceptGUI extends javax.swing.JFrame {
     new EnrollmentGUI().setVisible(true);  // you must have this class
 });
 
-btnPayment.addActionListener(e -> {
-    new PaymentGUI().setVisible(true);  // make sure this exists
-});
-
-btnChangeSubject.addActionListener(e -> {
-    new ChangeSubjectGUI().setVisible(true);
-});
-
-btnUpdateProfile.addActionListener(e -> {
-    new UpdateProfileGUI().setVisible(true);
-});
+//btnPayment.addActionListener(e -> {
+//    new PaymentGUI().setVisible(true);  // make sure this exists
+//});
+//
+//btnChangeSubject.addActionListener(e -> {
+//    new ChangeSubjectGUI().setVisible(true);
+//});
+//
+//btnUpdateProfile.addActionListener(e -> {
+//    new UpdateProfileGUI().setVisible(true);
+//});
 
 btnExit.addActionListener(e -> {
     dispose(); // close the window

@@ -4,48 +4,55 @@
  */
 package UserInterface.Student;
 
-import DataModel.Student; 
-import DataModel.Subject; 
-import Util.DataManager; 
-import Service.StudentService; 
+import DataModel.Student;
+import DataModel.Subject;
+import DataModel.StudentRequest;
+import DataModel.Enrollment;
+import Util.DataManager;
+import Service.StudentService;
 import javax.swing.*;
 import java.util.List;
+import java.awt.Dimension;
+import java.awt.GridBagLayout; 
+import java.awt.GridBagConstraints; 
+import java.awt.Insets; 
+import java.awt.event.ActionEvent; 
+
 
 /**
  * GUI for students to request a change of subject.
- * This class extends JPanel and is designed to work with NetBeans's
- * auto-generated initComponents() method.
+ * This class allows students to choose a subject to replace (or add a new one)
+ * and select a new subject from available options.
  */
 public class ChangeSubjectGUI extends javax.swing.JPanel {
-    
+
+    // --- Class-level fields ---
     private Student loggedInStudent;
-    private StudentService studentService; // <--- Declare StudentService
+    private StudentService studentService;
     private DataManager<Subject> subjectManager;
-    
-    /**
-     * No-argument constructor for ChangeSubjectGUI.
-     * This is primarily for the IDE's design view or simple instantiation.
-     * It initializes services and calls initComponents().
-     */
+    private DataManager<Enrollment> enrollmentManager;
+    private DataManager<StudentRequest> studentRequestManager; // Ensure this is initialized
+
+    // Lists to hold data for populating combo boxes
+    private List<Subject> allSubjects;
+    private List<Subject> enrolledSubjects;
+
+    // Constructor 
     public ChangeSubjectGUI() {
-        this.studentService = new StudentService();
-        this.subjectManager = DataManager.of(Subject.class);
-        initComponents(); // Call manual UI initialization
-    }
-    
-     /**
-     * Parameterized constructor for ChangeSubjectGUI.
-     * This is the main constructor used in the application flow,
-     * receiving the logged-in Student object.
-     * @param student The logged-in Student object.
-     */
-    public ChangeSubjectGUI(Student student) {
-        this(); // Call the no-argument constructor to initialize UI components
-        this.loggedInStudent = student; // Set the specific student object
-        populateSubjectComboBox(); // Populate subjects based on available data
-        // No displayStudentInfo() as welcome label was removed
+        initComponents();
+        studentService = new StudentService();
+        subjectManager = DataManager.of(Subject.class);
+        enrollmentManager = DataManager.of(Enrollment.class);
+        studentRequestManager = DataManager.of(StudentRequest.class); 
+
     }
 
+    public ChangeSubjectGUI(Student student) {
+        this(); // Call the no-arg constructor to initialize components
+        this.loggedInStudent = student;
+        populateComboBoxes(); 
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,16 +65,22 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        viewRequest = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         selectNewSubjectLabel = new javax.swing.JLabel();
-        insertCurrentSubjectLabel = new javax.swing.JLabel();
         subjectLabel = new javax.swing.JLabel();
-        availableSubject = new javax.swing.JComboBox<>();
+        chooseNewSubject = new javax.swing.JComboBox<>();
         reasonLabel = new javax.swing.JLabel();
         backHomeButton = new javax.swing.JButton();
-        sendButton = new javax.swing.JButton();
+        doneButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         reasonTextArea = new javax.swing.JTextArea();
+        availableSubject = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel5 = new javax.swing.JPanel();
+
+        setBackground(new java.awt.Color(235, 245, 238));
+        setForeground(new java.awt.Color(255, 255, 204));
 
         jPanel1.setBackground(new java.awt.Color(45, 118, 232));
 
@@ -77,28 +90,34 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         jLabel1.setText("Subject Change Request Form");
 
         jPanel2.setBackground(new java.awt.Color(235, 245, 238));
+        jPanel2.setForeground(new java.awt.Color(255, 255, 204));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 204));
-        jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        viewRequest.setBackground(new java.awt.Color(0, 0, 0));
+        viewRequest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        viewRequest.setForeground(new java.awt.Color(235, 245, 238));
+        viewRequest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        viewRequest.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewRequestMouseClicked(evt);
+            }
+        });
+
+        jPanel3.setBackground(new java.awt.Color(235, 245, 238));
 
         selectNewSubjectLabel.setBackground(new java.awt.Color(255, 255, 204));
         selectNewSubjectLabel.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         selectNewSubjectLabel.setForeground(new java.awt.Color(0, 0, 0));
         selectNewSubjectLabel.setText("Select New Subject:");
 
-        insertCurrentSubjectLabel.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
-        insertCurrentSubjectLabel.setForeground(new java.awt.Color(0, 0, 0));
-        insertCurrentSubjectLabel.setText("N/A");
-
         subjectLabel.setBackground(new java.awt.Color(255, 255, 204));
         subjectLabel.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         subjectLabel.setForeground(new java.awt.Color(0, 0, 0));
-        subjectLabel.setText("Your Current Subjects:");
+        subjectLabel.setText("Choose Subject To Replace:");
 
-        availableSubject.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
-        availableSubject.addActionListener(new java.awt.event.ActionListener() {
+        chooseNewSubject.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        chooseNewSubject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                availableSubjectActionPerformed(evt);
+                chooseNewSubjectActionPerformed(evt);
             }
         });
 
@@ -114,10 +133,10 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
             }
         });
 
-        sendButton.setText("Send");
-        sendButton.addActionListener(new java.awt.event.ActionListener() {
+        doneButton.setText("Done");
+        doneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendButtonActionPerformed(evt);
+                doneButtonActionPerformed(evt);
             }
         });
 
@@ -125,71 +144,95 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         reasonTextArea.setRows(5);
         jScrollPane1.setViewportView(reasonTextArea);
 
+        availableSubject.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        availableSubject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                availableSubjectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(reasonLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)
-                        .addGap(3, 3, 3))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(subjectLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(insertCurrentSubjectLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(selectNewSubjectLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(availableSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(backHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(backHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(selectNewSubjectLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(chooseNewSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(subjectLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(availableSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(reasonLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectLabel)
-                    .addComponent(insertCurrentSubjectLabel))
+                    .addComponent(availableSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(selectNewSubjectLabel)
-                    .addComponent(availableSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chooseNewSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(reasonLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(backHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28))))
+                            .addComponent(backHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(122, 122, 122))))
         );
+
+        viewRequest.addTab("Subject Change Form", jPanel3);
+
+        jPanel5.setBackground(new java.awt.Color(235, 245, 238));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 624, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 517, Short.MAX_VALUE)
+        );
+
+        jScrollPane2.setViewportView(jPanel5);
+
+        viewRequest.addTab("View Requests", jScrollPane2);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(viewRequest, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(viewRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -198,12 +241,12 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,97 +266,396 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
-  
-    
+
     private void availableSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_availableSubjectActionPerformed
-        // TODO add your handling code here:
+        String selectedOldSubjectName = (String) availableSubject.getSelectedItem();
+        // Call the helper to update the "Select New Subject" dropdown based on this choice
+        updateNewSubjectComboBoxOptions(selectedOldSubjectName);
     }//GEN-LAST:event_availableSubjectActionPerformed
 
-    private void backHomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backHomeButtonActionPerformed
-        // Close the current ChangeSubjectGUI's JFrame
-        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(ChangeSubjectGUI.this);
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        
-        // Open a new StudentGUI JFrame
-        StudentGUI studentHome = new StudentGUI(loggedInStudent);
-        studentHome.setVisible(true);
-    }//GEN-LAST:event_backHomeButtonActionPerformed
-
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        handleSubmitRequest();        
-    }//GEN-LAST:event_sendButtonActionPerformed
-
     /**
-     * Populates the subject combo box with available subjects from DataManager.
-     * This method should only be called when loggedInStudent is available.
+     * Action listener for the "Done" button.
+     * Validates input and submits the subject change request.
+     * @param evt The ActionEvent generated by the button.
      */
-    private void populateSubjectComboBox() {
-        // Create a new DefaultComboBoxModel to manage items
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+    private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
+        String oldSubjectName = (String) availableSubject.getSelectedItem(); // Get from "Choose Subject To Replace"
+        String newSubjectName = (String) chooseNewSubject.getSelectedItem();    // Get from "Select New Subject"
+        String reason = reasonTextArea.getText();
 
-        List<Subject> subjects = subjectManager.readFromFile();
-        if (subjects.isEmpty()) {
-            model.addElement("No subjects available"); // Add to model
-            sendButton.setEnabled(false); // Disable submit if no subjects
-        } else {
-            for (Subject subject : subjects) {
-                model.addElement(subject.getSubjectName()); // Add subjects to the model
-            }
-            sendButton.setEnabled(true);
-        }
-        availableSubject.setModel(model); // Set the model to the JComboBox
-    }
-
-    /**
-     * Handles the submission of the subject change request.
-     * Creates a StudentRequest object and saves it using StudentService.
-     */
-    private void handleSubmitRequest() {
-        String selectedSubject = (String) availableSubject.getSelectedItem(); // Use availableSubject
-        String notes = reasonTextArea.getText().trim(); // Use reasonTextArea
-
-        if (selectedSubject == null || selectedSubject.equals("No subjects available")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid subject.", "Input Error", JOptionPane.WARNING_MESSAGE);
+        // --- Input Validations ---
+        if (oldSubjectName == null || oldSubjectName.equals("No subjects enrolled")) {
+            JOptionPane.showMessageDialog(this, "Please select a subject to drop or 'None (Add New Subject)'.", "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        if (notes.isEmpty()) { 
+        if (newSubjectName == null || newSubjectName.equals("Select New Subject") || newSubjectName.equals("No new subjects available")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid new subject to enroll in.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Prevent replacing a subject with itself unless oldSubjectName is "None"
+        if (!"None (Add New Subject)".equals(oldSubjectName) && oldSubjectName.equals(newSubjectName)) {
+            JOptionPane.showMessageDialog(this, "Cannot replace a subject with itself. Please choose a different subject.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (reason.trim().isEmpty()) { // Use .trim() to account for just whitespace
             JOptionPane.showMessageDialog(this, "Please provide a reason for the subject change.", "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        // --- End Input Validations ---
 
-        boolean success = studentService.submitSubjectChangeRequest(loggedInStudent, selectedSubject, notes);
+        // Convert subject names to IDs for the hasPendingSubjectChangeRequest check
+        String oldSubjectIdForCheck = null;
+        if ("None (Add New Subject)".equals(oldSubjectName)) {
+            oldSubjectIdForCheck = "None"; // Use "None" as placeholder ID for adding new
+        } else {
+            // Find ID for the actual old subject name
+            for (Subject sub : enrolledSubjects) { // Assuming enrolledSubjects is up-to-date
+                if (sub.getSubjectName().equalsIgnoreCase(oldSubjectName)) {
+                    oldSubjectIdForCheck = sub.getId();
+                    break;
+                }
+            }
+        }
+
+        String newSubjectIdForCheck = null;
+        for (Subject sub : allSubjects) { // Assuming allSubjects is up-to-date
+            if (sub.getSubjectName().equalsIgnoreCase(newSubjectName)) {
+                newSubjectIdForCheck = sub.getId();
+                break;
+            }
+        }
+
+        if (oldSubjectIdForCheck == null || newSubjectIdForCheck == null) {
+            JOptionPane.showMessageDialog(this, "Internal error: Could not find subject IDs for validation. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Use StudentService to check for duplicate pending requests
+        if (studentService.hasPendingSubjectChangeRequest(loggedInStudent.getId(), oldSubjectIdForCheck, newSubjectIdForCheck)) {
+            JOptionPane.showMessageDialog(this, "You already have a pending request for this exact subject change.", "Duplicate Request", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Submit the request using StudentService
+        boolean success = studentService.submitSubjectChangeRequest(loggedInStudent, oldSubjectName, newSubjectName, reason);
 
         if (success) {
-            JOptionPane.showMessageDialog(this, "Subject change request submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            reasonTextArea.setText(""); // Clear notes after submission
+            JOptionPane.showMessageDialog(this, "Subject change request submitted successfully! Pending approval.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            reasonTextArea.setText(""); // Clear reason text area
+            // Refresh combo boxes after submission
+            populateComboBoxes(); // Re-call the main population method to reset and refresh
+            chooseNewSubject.setSelectedIndex(0); // Reset "Select New Subject" to prompt
+            availableSubject.setSelectedIndex(0); // Reset "Choose Subject To Replace" to first item
         } else {
             JOptionPane.showMessageDialog(this, "Failed to submit request. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }//GEN-LAST:event_doneButtonActionPerformed
+
+    /**
+     * Action listener for the "Back" button.
+     * Closes the current frame and opens the StudentGUI dashboard.
+     * @param evt The ActionEvent generated by the button.
+     */
+    private void backHomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backHomeButtonActionPerformed
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to go back? Any unsaved changes will be lost.",
+            "Confirm Exit",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame != null) {
+                topFrame.dispose(); // Close the current ChangeSubjectGUI frame
+            }
+            // Open the StudentGUI for the logged-in student
+            StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
+            studentDashboard.setVisible(true);
+        }
+    }//GEN-LAST:event_backHomeButtonActionPerformed
+
+     /**
+     * Action listener for the "Select New Subject" JComboBox (chooseNewSubject).
+     * This method can be used for any specific logic needed when a new subject is selected.
+     * @param evt The ActionEvent generated by the JComboBox.
+     */
+    private void chooseNewSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseNewSubjectActionPerformed
+
+    }//GEN-LAST:event_chooseNewSubjectActionPerformed
+
+    private void viewRequestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewRequestMouseClicked
+         // Check if the clicked tab is the "View Requests" tab
+        int selectedIndex = viewRequest.getSelectedIndex();
+        // Use indexOfTab for robustness, as tab order might change
+        if (selectedIndex != -1 && viewRequest.getTitleAt(selectedIndex).equals("View Requests")) {
+            populatePendingRequestsPanel(); // Call the method to populate the panel
+        }
+    }//GEN-LAST:event_viewRequestMouseClicked
+
+    /**
+     * Populates both subject combo boxes with relevant subjects.
+     * This method should be called once when the GUI is initialized
+     * (e.g., from the parameterized constructor).
+     * It populates "Choose Subject To Replace" (availableSubject)
+     * and calls a helper to populate "Select New Subject" (chooseNewSubject).
+     */
+    private void populateComboBoxes() {
+        // Ensure class-level lists are initialized/updated by fetching fresh data
+        this.enrolledSubjects = studentService.getEnrolledSubjects(loggedInStudent.getId());
+        this.allSubjects = subjectManager.readFromFile();
+
+        // --- Populate the "Choose Subject To Replace" combo box (availableSubject) ---
+        DefaultComboBoxModel<String> subjectToReplaceModel = new DefaultComboBoxModel<>();
+
+        // Add "None (Add New Subject)" as the first option if the student has less than 3 subjects
+        // (assuming a maximum of 3 subjects per enrollment slot).
+        if (enrolledSubjects.size() < 3) {
+            subjectToReplaceModel.addElement("None (Add New Subject)");
+        }
+
+        if (enrolledSubjects.isEmpty()) {
+            subjectToReplaceModel.addElement("No subjects enrolled");
+        } else {
+            for (Subject subject : enrolledSubjects) {
+                subjectToReplaceModel.addElement(subject.getSubjectName());
+            }
+        }
+        availableSubject.setModel(subjectToReplaceModel);
+
+
+        // --- Populate the "Select New Subject" combo box (chooseNewSubject) ---
+        // This part will be dynamically updated by updateNewSubjectComboBoxOptions().
+        // Call the helper for initial population based on the default selected item
+        // of 'availableSubject' (which will be the first item, either "None" or a subject).
+        updateNewSubjectComboBoxOptions((String) availableSubject.getSelectedItem());
     }
 
+    /**
+     * Helper method to update the "Select New Subject" combo box (chooseNewSubject)
+     * based on the selected "Subject To Replace" (availableSubject).
+     * Filters out:
+     * 1. The specific subject being replaced (if any).
+     * 2. Any other subjects the student is ALREADY enrolled in.
+     * @param subjectToExcludeName The name of the subject selected in "Choose Subject To Replace".
+     */
+    private void updateNewSubjectComboBoxOptions(String subjectToExcludeName) {
+        DefaultComboBoxModel<String> availableNewSubjectsModel = new DefaultComboBoxModel<>();
+        availableNewSubjectsModel.addElement("Select New Subject"); // Always start with a prompt
+
+        if (allSubjects == null || allSubjects.isEmpty()) {
+            availableNewSubjectsModel.addElement("No subjects available");
+        } else {
+            for (Subject subject : allSubjects) {
+                // Rule 1: Do not add the subject that is being replaced (if any)
+                if (subjectToExcludeName != null &&
+                    !"None (Add New Subject)".equals(subjectToExcludeName) &&
+                    subject.getSubjectName().equalsIgnoreCase(subjectToExcludeName)) {
+                    continue;
+                }
+
+                // Rule 2: Do not add subjects the student is ALREADY enrolled in
+                boolean alreadyEnrolled = false;
+                if (enrolledSubjects != null) {
+                    for (Subject enrolled : enrolledSubjects) {
+                        if (enrolled.getId().equalsIgnoreCase(subject.getId())) {
+                            alreadyEnrolled = true;
+                            break;
+                        }
+                    }
+                }
+                if (!alreadyEnrolled) {
+                    availableNewSubjectsModel.addElement(subject.getSubjectName());
+                }
+            }
+        }
+        chooseNewSubject.setModel(availableNewSubjectsModel);
+    }
+    
+    
+    /**
+     * Populates jPanel5 with the logged-in student's pending subject change requests.
+     */
+    private void populatePendingRequestsPanel() {
+        // Clear previous components from jPanel5
+        jPanel5.removeAll();
+        // Set layout for jPanel5 to stack requests vertically
+        jPanel5.setLayout(new BoxLayout(jPanel5, BoxLayout.Y_AXIS));
+
+        // Fetch all student requests
+        List<StudentRequest> allRequests = studentRequestManager.readFromFile();
+        boolean hasPendingRequests = false;
+
+        if (allRequests != null) {
+            for (StudentRequest request : allRequests) {
+                // Filter for pending requests by the current logged-in student
+                if (request.getStudentId().equals(loggedInStudent.getId()) &&
+                    request.getStatus().equalsIgnoreCase("Pending")) {
+                    
+                    hasPendingRequests = true;
+                    // Get subject names from IDs
+                    String oldSubjectName = studentService.getSubjectNameById(request.getOldSubjectId());
+                    String newSubjectName = studentService.getSubjectNameById(request.getNewSubjectId());
+                    
+                    // Create and add a panel for each request
+                    JPanel requestPanel = createRequestPanel(request, oldSubjectName, newSubjectName);
+                    jPanel5.add(requestPanel);
+                    // Add some vertical space between panels
+                    jPanel5.add(Box.createVerticalStrut(10)); 
+                }
+            }
+        }
+
+        if (!hasPendingRequests) {
+            JLabel noRequestsLabel = new JLabel("No pending subject change requests.");
+            noRequestsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            jPanel5.add(noRequestsLabel);
+        }
+        
+        // Revalidate and repaint to ensure components are displayed correctly
+        jPanel5.revalidate();
+        jPanel5.repaint();
+    }
+
+    /**
+     * Creates a JPanel displaying details of a single student request with a "Cancel" button.
+     * @param request The StudentRequest object.
+     * @param oldSubjectName The name of the old subject.
+     * @param newSubjectName The name of the new subject.
+     * @return A JPanel representing the request.
+     */
+   private JPanel createRequestPanel(StudentRequest request, String oldSubjectName, String newSubjectName) {
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setBorder(BorderFactory.createLineBorder(java.awt.Color.GRAY));
+    // --- ADJUSTED HEIGHT HERE (e.g., 150-180 pixels to be safe with padding and multi-line text) ---
+    panel.setPreferredSize(new Dimension(550, 160)); // Increased preferred height
+    panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 160)); // Increased maximum height
+    // -------------------------------------------------------------------------------------------------
+    
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(5, 5, 5, 5); // Padding
+
+    // Old Subject
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    panel.add(createStyledLabel("Old Subject:", 100), gbc);
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.weightx = 1.0; // Allow horizontal expansion
+    panel.add(createStyledLabel(oldSubjectName, 200), gbc);
+
+    // New Subject
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.weightx = 0; // Reset weight
+    panel.add(createStyledLabel("New Subject:", 100), gbc);
+    gbc.gridx = 1;
+    gbc.gridy = 1;
+    gbc.weightx = 1.0; // Allow horizontal expansion
+    panel.add(createStyledLabel(newSubjectName, 200), gbc);
+
+    // Reason
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.weightx = 0; // Reset weight
+    // Add gbc.anchor for the "Reason:" label to align it correctly
+    gbc.anchor = GridBagConstraints.NORTHWEST; // Align "Reason:" label to top-left of its cell
+    panel.add(createStyledLabel("Reason:", 100), gbc);
+
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.weightx = 1.0; // Allow horizontal expansion
+    // --- IMPORTANT: Allow JScrollPane to fill vertical space ---
+    gbc.weighty = 1.0; // Allow vertical expansion for the scroll pane
+    gbc.fill = GridBagConstraints.BOTH; // Make the scroll pane fill both horizontal and vertical space
+    // -----------------------------------------------------------
+
+    JTextArea reasonDisplay = new JTextArea(request.getReason());
+    reasonDisplay.setWrapStyleWord(true);
+    reasonDisplay.setLineWrap(true);
+    reasonDisplay.setEditable(false);
+    reasonDisplay.setBackground(panel.getBackground()); // Match panel background
+    reasonDisplay.setFont(new java.awt.Font("Segoe UI", 0, 12));
+    
+    JScrollPane scrollPane = new JScrollPane(reasonDisplay);
+    // You can keep a preferred size here, but with weighty and fill, it will expand
+    // A slightly larger initial preferred height might also help.
+    scrollPane.setPreferredSize(new Dimension(200, 60)); // Slightly increase initial preferred height
+    scrollPane.setBorder(null); // No border for the scroll pane
+    panel.add(scrollPane, gbc);
+
+    // Reset weights for subsequent components if any, though the button is fine
+    gbc.weighty = 0;
+    gbc.fill = GridBagConstraints.NONE;
+
+    // Cancel Button
+    JButton cancelButton = new JButton("Cancel");
+    gbc.gridx = 2; // Place it to the right
+    gbc.gridy = 0; // Top row
+    gbc.gridheight = 3; // Span across rows
+    gbc.anchor = GridBagConstraints.EAST; // Align to right
+    gbc.fill = GridBagConstraints.NONE; // Do not fill space (already reset above, but good to be explicit)
+    gbc.weightx = 0; // No horizontal expansion (already reset above)
+    panel.add(cancelButton, gbc);
+
+    // Add action listener to the cancel button
+    cancelButton.addActionListener((ActionEvent e) -> {
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to cancel this request?",
+            "Confirm Cancellation",
+            JOptionPane.YES_NO_OPTION
+        );
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean success = studentService.cancelStudentRequest(request.getId());
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Request cancelled successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                populatePendingRequestsPanel(); // Refresh the list
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to cancel request.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    });
+
+    return panel;
+}
+    
+    /**
+     * Helper method to create a styled JLabel with a preferred width.
+     * @param text The text for the label.
+     * @param preferredWidth The preferred width of the label.
+     * @return A styled JLabel.
+     */
+    private JLabel createStyledLabel(String text, int preferredWidth) {
+        JLabel label = new JLabel("<html><body style='width: " + preferredWidth + "px;'>" + text + "</body></html>");
+        label.setFont(new java.awt.Font("Segoe UI", 0, 12));
+        label.setPreferredSize(new Dimension(preferredWidth, 30)); // Fixed height for alignment
+        label.setVerticalAlignment(SwingConstants.TOP); // Align text to top if it wraps
+        return label;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> availableSubject;
     private javax.swing.JButton backHomeButton;
-    private javax.swing.JLabel insertCurrentSubjectLabel;
+    private javax.swing.JComboBox<String> chooseNewSubject;
+    private javax.swing.JButton doneButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel reasonLabel;
     private javax.swing.JTextArea reasonTextArea;
     private javax.swing.JLabel selectNewSubjectLabel;
-    private javax.swing.JButton sendButton;
     private javax.swing.JLabel subjectLabel;
+    private javax.swing.JTabbedPane viewRequest;
     // End of variables declaration//GEN-END:variables
 }
+

@@ -1,1 +1,2 @@
-S0001, Justin Tay, S0001, 000-0000000, Brazil, juicetin@gmail.com, Bukit Jalil, ENR0001, Justin'sIC
+S0001,Juicetin,S0001,ENR0001,09382919393,0192388287,juicetin@gmail.com,bukit jalil
+S0002,MAX,S0002,ENR0002,icPassport,phoneNumber,email,russia
