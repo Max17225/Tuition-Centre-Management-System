@@ -13,11 +13,10 @@ import Service.StudentService;
 import javax.swing.*;
 import java.util.List;
 import java.awt.Dimension;
-import java.awt.Component; // Added for BoxLayout.Y_AXIS
-import java.awt.GridBagLayout; // Added for request panel layout
-import java.awt.GridBagConstraints; // Added for request panel layout
-import java.awt.Insets; // Added for padding in GridBagLayout
-import java.awt.event.ActionEvent; // Added for ActionListener
+import java.awt.GridBagLayout; 
+import java.awt.GridBagConstraints; 
+import java.awt.Insets; 
+import java.awt.event.ActionEvent; 
 
 
 /**
@@ -38,22 +37,20 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
     private List<Subject> allSubjects;
     private List<Subject> enrolledSubjects;
 
-    // Constructor (ensure DataManager for StudentRequest is initialized)
+    // Constructor 
     public ChangeSubjectGUI() {
         initComponents();
-        // Initialize DataManagers and Service
         studentService = new StudentService();
         subjectManager = DataManager.of(Subject.class);
         enrollmentManager = DataManager.of(Enrollment.class);
-        studentRequestManager = DataManager.of(StudentRequest.class); // Initialize here
+        studentRequestManager = DataManager.of(StudentRequest.class); 
 
     }
 
     public ChangeSubjectGUI(Student student) {
         this(); // Call the no-arg constructor to initialize components
         this.loggedInStudent = student;
-        // Re-populate if student-specific data is needed
-        populateComboBoxes(); // Ensure these are specific to loggedInStudent if needed
+        populateComboBoxes(); 
     }
     
     /**
@@ -82,7 +79,7 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel5 = new javax.swing.JPanel();
 
-        setBackground(new java.awt.Color(255, 255, 204));
+        setBackground(new java.awt.Color(235, 245, 238));
         setForeground(new java.awt.Color(255, 255, 204));
 
         jPanel1.setBackground(new java.awt.Color(45, 118, 232));
@@ -92,12 +89,12 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book-stack.png"))); // NOI18N
         jLabel1.setText("Subject Change Request Form");
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel2.setBackground(new java.awt.Color(235, 245, 238));
         jPanel2.setForeground(new java.awt.Color(255, 255, 204));
 
         viewRequest.setBackground(new java.awt.Color(0, 0, 0));
         viewRequest.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        viewRequest.setForeground(new java.awt.Color(255, 255, 204));
+        viewRequest.setForeground(new java.awt.Color(235, 245, 238));
         viewRequest.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         viewRequest.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -105,7 +102,7 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
             }
         });
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel3.setBackground(new java.awt.Color(235, 245, 238));
 
         selectNewSubjectLabel.setBackground(new java.awt.Color(255, 255, 204));
         selectNewSubjectLabel.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
@@ -209,7 +206,7 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
 
         viewRequest.addTab("Subject Change Form", jPanel3);
 
-        jPanel5.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel5.setBackground(new java.awt.Color(235, 245, 238));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);

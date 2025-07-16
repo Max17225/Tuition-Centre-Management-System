@@ -85,7 +85,32 @@ public class StudentService {
         }
         return enrolled;
     }
-
+    
+    /**
+     * Updates an existing student's profile in the data file.
+     * Reads all students, finds the one to update by ID, replaces it,
+     * and overwrites the file.
+     * @param updatedStudent The Student object with updated information.
+     * @return true if the student was successfully updated, false otherwise.
+     */
+    public boolean updateStudentProfile(Student updatedStudent) {
+        List<Student> allStudents = studentManager.readFromFile();
+        boolean updated = false;
+        if (allStudents != null) {
+            for (int i = 0; i < allStudents.size(); i++) {
+                // Ensure the comparison is by unique ID
+                if (allStudents.get(i).getId().equals(updatedStudent.getId())) {
+                    allStudents.set(i, updatedStudent); // Replace the old student object with the updated one
+                    updated = true;
+                    break;
+                }
+            }
+            if (updated) {
+                studentManager.overwriteFile(allStudents); // Write the updated list back to the file
+            }
+        }
+        return updated;
+    }
 
     /**
      * Submits a subject change request for a student.
