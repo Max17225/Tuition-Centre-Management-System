@@ -1,6 +1,5 @@
 package Service;
 import java.util.*;
-import java.util.stream.Collectors;
 import DataModel.*;
 import Util.*;
 public class AdminService {
@@ -62,75 +61,43 @@ public class AdminService {
     }
     
     // ----------------------- INCOME REPORTING ------------------------
-    public static Map<String, Double> getMonthlyIncomeReportByLevel(String month) {
-        Map<String, Double> incomeByLevel = new HashMap<>();
+    public static Map<String, Map<String, Integer>> getIncomeReportByLevelAndSubject() {
+    DataManager<Payment> paymentManager = DataManager.of(Payment.class);
+    List<Payment> allPayments = paymentManager.readFromFile();
 
-        List<Payment> payments = DataManager.of(Payment.class).readFromFile();
-        List<Subject> subjects = DataManager.of(Subject.class).readFromFile();
-        List<Enrollment> enrollments = DataManager.of(Enrollment.class).readFromFile();
+    DataManager<Subject> subjectManager = DataManager.of(Subject.class);
+    List<Subject> allSubjects = subjectManager.readFromFile();
 
-        Map<String, Subject> subjectMap = subjects.stream()
-            .collect(Collectors.toMap(Subject::getId, s -> s));
+    // Map<Level, Map<SubjectName, TotalIncome>>
+    Map<String, Map<String, Integer>> incomeReport = new HashMap<>();
 
-        for (Payment payment : payments) {
-            if (!payment.getMonth().equalsIgnoreCase(month)) continue;
+    for (Payment payment : allPayments) {
+        // Find the corresponding subject using subjectId
+        Subject subject = allSubjects.stream()
+            .filter(s -> s.getId().equals(payment.getSubjectId()))
+            .findFirst().orElse(null);
 
-            Enrollment enrollment = enrollments.stream()
-                .filter(e -> e.getId().equals(payment.getEnrollmentId()))
-                .findFirst().orElse(null);
-            if (enrollment == null) continue;
+        if (subject != null) {
+            String level = subject.getLevel();
+            String subjectName = subject.getSubjectName();
+            int amount;
 
-            String[] subjectIds = { enrollment.getSubjectId1(), enrollment.getSubjectId2(), enrollment.getSubjectId3() };
-
-            for (String subjectId : subjectIds) {
-                if (subjectId == null || subjectId.isBlank()) continue;
-                Subject subject = subjectMap.get(subjectId);
-                if (subject == null) continue;
-
-                String level = subject.getLevel();
-                double fee = Double.parseDouble(subject.getFeePerMonth());
-
-                incomeByLevel.put(level, incomeByLevel.getOrDefault(level, 0.0) + fee);
+            try {
+                amount = Integer.parseInt(payment.getAmount());
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid amount in payment: " + payment.toDataLine());
+                continue;
             }
+
+            incomeReport
+                .computeIfAbsent(level, k -> new HashMap<>())
+                .merge(subjectName, amount, Integer::sum);
         }
-
-        return incomeByLevel;
     }
-    
-    public static Map<String, Double> getMonthlyIncomeReportBySubject(String month) {
-        Map<String, Double> incomeBySubject = new HashMap<>();
 
-        List<Payment> payments = DataManager.of(Payment.class).readFromFile();
-        List<Subject> subjects = DataManager.of(Subject.class).readFromFile();
-        List<Enrollment> enrollments = DataManager.of(Enrollment.class).readFromFile();
+    return incomeReport;
+}
 
-        Map<String, Subject> subjectMap = subjects.stream()
-            .collect(Collectors.toMap(Subject::getId, s -> s));
-
-        for (Payment payment : payments) {
-            if (!payment.getMonth().equalsIgnoreCase(month)) continue;
-
-            Enrollment enrollment = enrollments.stream()
-                .filter(e -> e.getId().equals(payment.getEnrollmentId()))
-                .findFirst().orElse(null);
-            if (enrollment == null) continue;
-
-            String[] subjectIds = { enrollment.getSubjectId1(), enrollment.getSubjectId2(), enrollment.getSubjectId3() };
-
-            for (String subjectId : subjectIds) {
-                if (subjectId == null || subjectId.isBlank()) continue;
-                Subject subject = subjectMap.get(subjectId);
-                if (subject == null) continue;
-
-                String subjectName = subject.getSubjectName();
-                double fee = Double.parseDouble(subject.getFeePerMonth());
-
-                incomeBySubject.put(subjectName, incomeBySubject.getOrDefault(subjectName, 0.0) + fee);
-            }
-        }
-
-        return incomeBySubject;
-    }
     
     // ----------------------- ADMIN PROFILE UPDATE ------------------------
     public static boolean updateAdminProfile(String adminId, String name, String email, String contact) {
@@ -141,9 +108,9 @@ public class AdminService {
 
         for (Admin admin : allAdmins) {
             if (admin.getId().equals(adminId)) {
-                admin.setName(name);
+                admin.setUsername(name);
                 admin.setEmail(email);
-                admin.setContact(contact);
+                admin.setPhoneNumber(contact);
                 adminManager.overwriteFile(allAdmins);
                 return true;
             }

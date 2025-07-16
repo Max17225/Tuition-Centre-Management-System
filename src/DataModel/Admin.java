@@ -4,10 +4,7 @@
  */
 package DataModel;
 
-/**
- *
- * @author nengz
- */
+
 
 public class Admin extends User implements DataSerializable {
     
