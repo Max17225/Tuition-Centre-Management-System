@@ -4,6 +4,11 @@
  */
 package UserInterface;
 
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.GridLayout;
+import java.time.YearMonth;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -176,14 +181,81 @@ public class AdminGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void jMyProfileActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    // ===== User Profile =====
+    private void jMyProfileActionPerformed(java.awt.event.ActionEvent evt) {
+        // Assume admin ID is known (you should replace "A001" with actual login value)
+        String adminId = "A0001"; // TODO: replace with dynamic value from login session
+        
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        JTextField contactField = new JTextField();
+        
+        Object[] fields = {
+            "Name:", nameField,
+            "Email:", emailField,
+            "Contact:", contactField
+        };
+        
+        int result = JOptionPane.showConfirmDialog(this, fields, "Update Profile", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            boolean success = Service.AdminService.updateAdminProfile(
+                    adminId,
+                    nameField.getText(),
+                    emailField.getText(),
+                    contactField.getText()
+            );
+            JOptionPane.showMessageDialog(this, success ? "Profile updated." : "Update failed. Check email format.");
+        }
         // TODO add your handling code here:
     }                                          
 
-    private void jViewIncomeActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    // ===== View Income Report =====
+    private void jViewIncomeActionPerformed(java.awt.event.ActionEvent evt) {
+        // Prompt for month and year
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 2));
+        panel.add(new JLabel("Select Month (1-12):"));
+        JTextField monthField = new JTextField();
+        panel.add(monthField);
+        panel.add(new JLabel("Select Year (e.g., 2025):"));
+        JTextField yearField = new JTextField();
+        panel.add(yearField);
 
+        int result = JOptionPane.showConfirmDialog(this, panel, "Select Month and Year", JOptionPane.OK_CANCEL_OPTION);
+        if (result != JOptionPane.OK_OPTION) return;
+
+        try {
+            int month = Integer.parseInt(monthField.getText());
+            int year = Integer.parseInt(yearField.getText());
+
+            // Validate month and year
+            if (month < 1 || month > 12) {
+                JOptionPane.showMessageDialog(this, "Invalid month. Please enter a value between 1 and 12.");
+                return;
+            }
+
+            YearMonth selectedMonth = YearMonth.of(year, month);
+            YearMonth currentMonth = YearMonth.now();
+
+            if (selectedMonth.isAfter(currentMonth)) {
+                JOptionPane.showMessageDialog(this, "No income data available for future months.", "Income Report", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            int totalProfit = Service.AdminService.getMonthlyProfit(year, month);
+            String monthName = selectedMonth.getMonth().name().substring(0, 1).toUpperCase() + selectedMonth.getMonth().name().substring(1).toLowerCase();
+
+            String message = "=== Income Report for " + monthName + " " + year + " ===\n\n"
+                        + "Total Income: RM" + totalProfit;
+
+            JOptionPane.showMessageDialog(this, message, "Monthly Income Report", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numeric values for month and year.");
+        }
     }                                           
 
+    // ===== Tutor Platform =====
     private void jTutorActionPerformed(java.awt.event.ActionEvent evt) {
         String[] options = { "Register Tutor", "Delete Tutor" };
         int choice = JOptionPane.showOptionDialog(
@@ -197,31 +269,49 @@ public class AdminGUI extends javax.swing.JFrame {
         
         if (choice == 0) {
             // Register Tutor
-            JTextField nameField = new JTextField();
             JTextField usernameField = new JTextField();
             JTextField passwordField = new JTextField();
             JTextField emailField = new JTextField();
             JTextField contactField = new JTextField();
+            JTextField subjectNameField = new JTextField();
+            JComboBox<String> levelCombo = new JComboBox<>(new String[]{"", "L1", "L2", "L3", "L4", "L5"});
+            JTextField feeField = new JTextField();
             
             Object[] fields = {
-                "Name:", nameField,
                 "User ID:", usernameField,
                 "Password:", passwordField,
                 "Email:", emailField,
-                "Contact:", contactField
+                "Contact:", contactField,
+                "Subject Name (optional):", subjectNameField,
+                "Subject Level (optional):", levelCombo,
+                "Monthly Fee (optional):", feeField
             };
             
             int result = JOptionPane.showConfirmDialog(this, fields, "Register Tutor", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                boolean success = Service.AdminService.registerTutor(
-                        nameField.getText(),
-                        usernameField.getText(),
-                        passwordField.getText(),
-                        emailField.getText(),
-                        contactField.getText()
-                );
+                String username = usernameField.getText().trim();
+                String password = passwordField.getText().trim();
+                String email = emailField.getText().trim();
+                String contact = contactField.getText().trim();
+                String subjectName = subjectNameField.getText().trim();
+                String level = (String) levelCombo.getSelectedItem();
+                String fee = feeField.getText().trim();
                 
-                JOptionPane.showMessageDialog(this, success ? "Tutor registered successfully." : "Invalid email format.");
+                // If any subject field is blank, treat as no subject
+                if (subjectName.isEmpty() || level.isEmpty() || fee.isEmpty()) {
+                    subjectName = null;
+                    level = null;
+                    fee = null;
+                }
+                
+                boolean success = Service.AdminService.registerTutor(
+                        username, password, email, contact,
+                        subjectName, level, fee
+                );
+
+                
+                JOptionPane.showMessageDialog(this, 
+                        success ? "Tutor registered successfully." : "Invalid email format.");
             }
         } else if (choice == 1) {
             // Delete Tutor
@@ -234,6 +324,7 @@ public class AdminGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                      
 
+    // ===== Receptionist Platform =====
     private void jReceptionistActionPerformed(java.awt.event.ActionEvent evt) {
         String[] options = { "Register Receptionist", "Delete Receptionist" };
         int choice = JOptionPane.showOptionDialog(
@@ -283,6 +374,7 @@ public class AdminGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                             
 
+    // ===== Logout Button =====
     private void jLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                        
         LoginGUI Login = new LoginGUI();
         Login.setVisible(true);

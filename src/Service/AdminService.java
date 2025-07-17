@@ -2,16 +2,29 @@ package Service;
 import java.util.*;
 import DataModel.*;
 import Util.*;
+import java.time.LocalDate;
 public class AdminService {
     // ----------------------- TUTOR MANAGEMENT ------------------------
-    public static boolean registerTutor(String name, String username, String password, String email, String contact) {
+    public static boolean registerTutor(String username, String password, String email, String contact, String subjectName, String level, String fee) {
         if (!InputValidator.emailFormatIsValid(email)) return false;
 
         String newId = IdGenerator.getNewId(Tutor.class);
-        Tutor newTutor = new Tutor(newId, name, username, password, email, contact);
+        Tutor newTutor = new Tutor(newId, "", username, password, email, contact);
 
         DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
         tutorManager.appendOne(newTutor);
+        
+        if (subjectName != null && !subjectName.isEmpty() &&
+            level != null && !level.isEmpty() &&
+            fee != null && !fee.isEmpty()) {
+            
+            // Assign subject only if values are provided
+            String subjectId = IdGenerator.getNewId(Subject.class);
+            Subject subject = new Subject(subjectId, subjectName, level, newId, fee);
+
+            DataManager<Subject> subjectManager = DataManager.of(Subject.class);
+            subjectManager.appendOne(subject);
+        }
         return true;
     }
     
@@ -61,44 +74,25 @@ public class AdminService {
     }
     
     // ----------------------- INCOME REPORTING ------------------------
-    public static Map<String, Map<String, Integer>> getIncomeReportByLevelAndSubject() {
-    DataManager<Payment> paymentManager = DataManager.of(Payment.class);
-    List<Payment> allPayments = paymentManager.readFromFile();
+    public static int getMonthlyProfit(int year, int month) {
+        DataManager<Payment> paymentManager = DataManager.of(Payment.class);
+        List<Payment> payments = paymentManager.readFromFile();
 
-    DataManager<Subject> subjectManager = DataManager.of(Subject.class);
-    List<Subject> allSubjects = subjectManager.readFromFile();
-
-    // Map<Level, Map<SubjectName, TotalIncome>>
-    Map<String, Map<String, Integer>> incomeReport = new HashMap<>();
-
-    for (Payment payment : allPayments) {
-        // Find the corresponding subject using subjectId
-        Subject subject = allSubjects.stream()
-            .filter(s -> s.getId().equals(payment.getSubjectId()))
-            .findFirst().orElse(null);
-
-        if (subject != null) {
-            String level = subject.getLevel();
-            String subjectName = subject.getSubjectName();
-            int amount;
-
+        int total = 0;
+        for (Payment payment : payments) {
             try {
-                amount = Integer.parseInt(payment.getAmount());
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid amount in payment: " + payment.toDataLine());
-                continue;
+                LocalDate date = LocalDate.parse(payment.getPaymentDate()); // e.g., "2025-07-01"
+                if (date.getYear() == year && date.getMonthValue() == month) {
+                    total += Integer.parseInt(payment.getAmount());
+                }
+            } catch (Exception e) {
+                System.err.println("Invalid payment entry: " + payment.toDataLine());
             }
-
-            incomeReport
-                .computeIfAbsent(level, k -> new HashMap<>())
-                .merge(subjectName, amount, Integer::sum);
         }
-    }
-
-    return incomeReport;
+        return total;
 }
 
-    
+
     // ----------------------- ADMIN PROFILE UPDATE ------------------------
     public static boolean updateAdminProfile(String adminId, String name, String email, String contact) {
         if (!InputValidator.emailFormatIsValid(email)) return false;
