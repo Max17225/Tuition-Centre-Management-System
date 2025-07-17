@@ -82,6 +82,13 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         fileNameMap.put (DataModel.Payment.class, "Payment.txt");
         
         // Add more DataModel here
+        // ---------------------------- PAYMENT ----------------------------------------------
+        converterMap.put(DataModel.Payment.class, row ->
+           new DataModel.Payment(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5))
+        );
+        fileNameMap.put(DataModel.Payment.class, "Payment.txt");
+
+//   Add more DataModel here
     }                                                                   
 
     // Constructor of FileManager

@@ -44,7 +44,4 @@ public class Payment implements DataSerializable {
     public void setPaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
     public void setAmount(String amount) {this.amount = amount;}
     
-
-    
-    
 }
