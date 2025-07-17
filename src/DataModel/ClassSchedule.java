@@ -27,7 +27,7 @@ public class ClassSchedule implements DataSerializable {
     public String getScheduleInWeek() {return this.scheduleInWeek;}
     
     //set info
-    public void setScheduleInweek(String newScheduleInWeek) {this.scheduleInWeek = newScheduleInWeek;}
+    public void setScheduleInWeek(String newScheduleInWeek) {this.scheduleInWeek = newScheduleInWeek;}
     
     
     @Override
