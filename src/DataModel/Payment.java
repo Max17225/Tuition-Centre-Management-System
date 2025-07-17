@@ -11,55 +11,40 @@ public class Payment implements DataSerializable {
     private String subjectId;
     private String amount;
     private String paymentDate;
+    private String status; 
 
     // Constructor
-    public Payment(String paymentId, String receptionistId, String studentId, String subjectId, String amount, String paymentDate) {
+    public Payment(String paymentId, String receptionistId, String studentId, String subjectId, String amount, String paymentDate, String status) {
         this.paymentId = paymentId;
         this.receptionistId = receptionistId;
         this.studentId = studentId;
         this.subjectId = subjectId;
         this.amount = amount;
         this.paymentDate = paymentDate;
+        this.status = status; 
     }
 
     // Save to text file format
     @Override
     public String toDataLine() {
-        // Format: PYM001,R001,S001,SUB001,250.00,2025-07-08
-        return String.join(",", 
-            paymentId, 
-            receptionistId, 
-            studentId, 
-            subjectId, 
-            amount, 
-            paymentDate
-        );
-    }
+        return String.join(",", paymentId, receptionistId, studentId, subjectId, amount, paymentDate, status);}
 
-    // Return Payment ID
+    // Get info
     @Override
-    public String getId() {
-        return paymentId;
-    }
+    public String getId() {return paymentId;}
+    public String getReceptionistId() {return receptionistId;}
+    public String getStudentId() {return studentId;}
+    public String getSubjectId() {return subjectId;}
+    public String getAmount() {return amount;}
+    public String getPaymentDate() {return paymentDate;}
+    public String getStatus() {return status;}
 
-    // Optional: Getters
-    public String getReceptionistId() {
-        return receptionistId;
-    }
+    // Set info
+    public void setStatus(String status) {this.status = status;}
+    public void setPaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
+    public void setAmount(String amount) {this.amount = amount;}
+    
 
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public String getSubjectId() {
-        return subjectId;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public String getPaymentDate() {
-        return paymentDate;
-    }
+    
+    
 }
