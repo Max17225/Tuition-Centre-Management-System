@@ -8,7 +8,6 @@ import DataModel.Student;
 import Service.StudentService; 
 import Util.InputValidator;
 import javax.swing.*; 
-import java.awt.event.ActionListener;
 
 /**
  * GUI for displaying and editing a student's profile.
@@ -26,6 +25,10 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
     private String initialPhoneNumber;
     private String initialEmail;
     private String initialAddress;
+    
+    // New fields to store the coordinates of the previous frame (StudentGUI)
+    private int previousFrameX;
+    private int previousFrameY;
 
     /**
      * Creates new form StudentProfileGUI.
@@ -59,6 +62,19 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
         
         studentIdText.setEditable(false);
         enrollmentIdText.setEditable(false);
+    }
+    
+    /**
+     * New constructor to create StudentProfileGUI with previous frame's coordinates.
+     * This constructor should be used when opening from StudentGUI.
+     * @param student The Student object.
+     * @param prevX The X coordinate of the previous frame.
+     * @param prevY The Y coordinate of the previous frame.
+     */
+    public StudentProfileGUI(Student student, int prevX, int prevY) {
+        this(student); // Call the existing constructor to perform common initialization
+        this.previousFrameX = prevX; // Store the X coordinate
+        this.previousFrameY = prevY; // Store the Y coordinate
     }
 
     /**
@@ -171,53 +187,43 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(34, 34, 34)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(icPassportText, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(phoneNumberText, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(enrollmentIdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(studentIdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emailText, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(passwordText, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(usernameText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(backHomepageButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(saveProfileButton))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(icPassportText))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jLabel4))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(phoneNumberText, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(enrollmentIdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(studentIdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jLabel7)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(emailText, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(15, 15, 15))
+                                    .addComponent(jLabel2))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(18, 18, 18)
-                                .addComponent(passwordText)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel9))
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(backHomepageButton)
-                .addGap(18, 18, 18)
-                .addComponent(saveProfileButton)
-                .addGap(36, 36, 36))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,8 +280,8 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addComponent(jLabel1)
+                .addGap(37, 37, 37))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,7 +315,7 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
         String newEmail = emailText.getText().trim();
         String newAddress = addressText.getText().trim();
 
-        // Basic validation
+        // Basic validation 
         if (newUsername.isEmpty() || newPassword.isEmpty() || newIcPassport.isEmpty() ||
             newPhoneNumber.isEmpty() || newEmail.isEmpty() || newAddress.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields must be filled out.", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -394,7 +400,7 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
 
             // If the user chooses NO, prevent going back
             if (response == JOptionPane.NO_OPTION) {
-                return; 
+                return;
             }
         }
 
@@ -404,8 +410,8 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
         if (parentFrame != null) {
             parentFrame.dispose();
         }
-        // Open the StudentGUI (dashboard)
-        StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
+        // Open the StudentGUI (dashboard) at the stored previous location
+        StudentGUI studentDashboard = new StudentGUI(loggedInStudent, previousFrameX, previousFrameY);
         studentDashboard.setVisible(true);
     }//GEN-LAST:event_backHomepageButtonActionPerformed
 
