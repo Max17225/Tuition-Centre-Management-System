@@ -216,7 +216,6 @@ public class TutorMainGUI extends JFrame {
         }
 
 
-
         // ----------------------------------------------------------------------------- Logout Button 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(new Color(102,102,102));

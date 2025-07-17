@@ -5,12 +5,11 @@
 package UserInterface.Student;
 
 import UserInterface.Student.ChangeSubjectGUI;
+import UserInterface.Student.StudentProfileGUI; 
 import DataModel.Student; 
 import UserInterface.LoginGUI;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 /**
  *
  * @author User
@@ -19,18 +18,25 @@ public class StudentGUI extends javax.swing.JFrame {
     
     private Student loggedInStudent; // Declare a field to store logged-in student
 
-    /**
+     /**
      * Creates new form StudentGUI
      */
     public StudentGUI(Student student) {
        this.loggedInStudent = student; //store the student object
+       this.setResizable(false);
         initComponents();
-        
+
         // --- Use the loggedInStudent object to personalize the GUI ---
         if (loggedInStudent != null) {
             // Update the welcome message
             welcomeUser.setText("Welcome, " + loggedInStudent.getUsername() + "!"); // Update welcomeUser label
         }
+    }
+
+    // New constructor to accept x and y coordinates
+    public StudentGUI(Student student, int x, int y) {
+        this(student); // Call the existing constructor
+        this.setLocation(x, y); // Set the location
     }
 
     /**
@@ -48,10 +54,10 @@ public class StudentGUI extends javax.swing.JFrame {
         welcomeUser = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        changeSubject = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        paymentButton = new javax.swing.JButton();
+        changeSubjectButton = new javax.swing.JButton();
+        scheduleButton = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -112,56 +118,56 @@ public class StudentGUI extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(235, 245, 238));
         jPanel3.setForeground(new java.awt.Color(152, 193, 217));
 
-        jButton1.setBackground(new java.awt.Color(48, 188, 237));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(50, 50, 50));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/payment.png"))); // NOI18N
-        jButton1.setText("Payment");
-        jButton1.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton1.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        paymentButton.setBackground(new java.awt.Color(48, 188, 237));
+        paymentButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        paymentButton.setForeground(new java.awt.Color(50, 50, 50));
+        paymentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/payment.png"))); // NOI18N
+        paymentButton.setText("Payment");
+        paymentButton.setMaximumSize(new java.awt.Dimension(163, 43));
+        paymentButton.setMinimumSize(new java.awt.Dimension(163, 43));
+        paymentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                paymentButtonActionPerformed(evt);
             }
         });
 
-        changeSubject.setBackground(new java.awt.Color(48, 188, 237));
-        changeSubject.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        changeSubject.setForeground(new java.awt.Color(50, 50, 50));
-        changeSubject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book-stack.png"))); // NOI18N
-        changeSubject.setText("Change Subject");
-        changeSubject.setMaximumSize(new java.awt.Dimension(163, 43));
-        changeSubject.setMinimumSize(new java.awt.Dimension(163, 43));
-        changeSubject.setPreferredSize(new java.awt.Dimension(163, 43));
-        changeSubject.addActionListener(new java.awt.event.ActionListener() {
+        changeSubjectButton.setBackground(new java.awt.Color(48, 188, 237));
+        changeSubjectButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        changeSubjectButton.setForeground(new java.awt.Color(50, 50, 50));
+        changeSubjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book-stack.png"))); // NOI18N
+        changeSubjectButton.setText("Change Subject");
+        changeSubjectButton.setMaximumSize(new java.awt.Dimension(163, 43));
+        changeSubjectButton.setMinimumSize(new java.awt.Dimension(163, 43));
+        changeSubjectButton.setPreferredSize(new java.awt.Dimension(163, 43));
+        changeSubjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeSubjectActionPerformed(evt);
+                changeSubjectButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(48, 188, 237));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(50, 50, 50));
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/schedulelogo.png"))); // NOI18N
-        jButton4.setText("Schedule");
-        jButton4.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton4.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        scheduleButton.setBackground(new java.awt.Color(48, 188, 237));
+        scheduleButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        scheduleButton.setForeground(new java.awt.Color(50, 50, 50));
+        scheduleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/schedulelogo.png"))); // NOI18N
+        scheduleButton.setText("Schedule");
+        scheduleButton.setMaximumSize(new java.awt.Dimension(163, 43));
+        scheduleButton.setMinimumSize(new java.awt.Dimension(163, 43));
+        scheduleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                scheduleButtonActionPerformed(evt);
             }
         });
 
-        jButton7.setBackground(new java.awt.Color(48, 188, 237));
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(50, 50, 50));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
-        jButton7.setText("Profile");
-        jButton7.setMaximumSize(new java.awt.Dimension(163, 43));
-        jButton7.setMinimumSize(new java.awt.Dimension(163, 43));
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        profileButton.setBackground(new java.awt.Color(48, 188, 237));
+        profileButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        profileButton.setForeground(new java.awt.Color(50, 50, 50));
+        profileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
+        profileButton.setText("Profile");
+        profileButton.setMaximumSize(new java.awt.Dimension(163, 43));
+        profileButton.setMinimumSize(new java.awt.Dimension(163, 43));
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                profileButtonActionPerformed(evt);
             }
         });
 
@@ -183,12 +189,12 @@ public class StudentGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(changeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scheduleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(changeSubjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(70, 70, 70)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(paymentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(profileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(100, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -200,12 +206,12 @@ public class StudentGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scheduleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(profileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(changeSubjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(paymentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
@@ -229,53 +235,114 @@ public class StudentGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void paymentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentButtonActionPerformed
+        // Get the current location of this StudentGUI frame
+        int currentX = this.getX();
+        int currentY = this.getY();
+
+        // Create an instance of StudentPaymentGUI (which is a JPanel), passing necessary data
+        // StudentPaymentGUI's constructor expects: Student, JFrame, int, int
+        // Here, 'this' refers to the current StudentGUI JFrame, which will be the mainFrame for StudentPaymentGUI
+        UserInterface.Student.StudentPaymentGUI studentPaymentGUI =
+            new UserInterface.Student.StudentPaymentGUI(loggedInStudent, this, currentX, currentY);
+
+        // Create a new JFrame to hold the StudentPaymentGUI panel
+        JFrame paymentFrame = new JFrame("Student Payment"); // Give your new window a title
+        paymentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes this frame when done
+        paymentFrame.getContentPane().add(studentPaymentGUI); // Add the JPanel to the JFrame's content pane
+        paymentFrame.pack(); // Size the frame to fit the panel's preferred size
+
+        // Set the new frame's location to be the same as the StudentGUI frame
+        paymentFrame.setLocation(currentX, currentY);
+        paymentFrame.setResizable(false); // Make the new payment window non-resizable
+        paymentFrame.setVisible(true); // Make the new frame visible
+
+        // Dispose the current StudentGUI window
+        this.dispose();
+    }//GEN-LAST:event_paymentButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        LoginGUI login = new LoginGUI();
-        login.setVisible(true);
+     // Show a confirmation dialog
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to log out?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+
+    // If the user clicks "Yes"
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Dispose (close) the current StudentGUI JFrame directly
         this.dispose();
+
+        // Create a new LoginGUI instance
+        LoginGUI login = new LoginGUI();
+        // Make the LoginGUI visible
+        login.setVisible(true);
+        }   
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void changeSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectActionPerformed
-        // When "Change Subject" button is clicked, open ChangeSubjectGUI in a NEW JFrame
-        ChangeSubjectGUI changeSubjectPanel = new ChangeSubjectGUI(loggedInStudent);
-        JFrame changeSubjectFrame = new JFrame("Change Subject Request"); // Create a new JFrame
-        changeSubjectFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only this frame
-        changeSubjectFrame.getContentPane().add(changeSubjectPanel); // Add the JPanel to the new JFrame
-        changeSubjectFrame.pack(); // Size the new frame
-        changeSubjectFrame.setLocationRelativeTo(this); // Center relative to current frame
-        changeSubjectFrame.setVisible(true); // Make the new frame visible
-        
-        this.dispose(); // Close the current StudentGUI window
-    }//GEN-LAST:event_changeSubjectActionPerformed
+    private void changeSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectButtonActionPerformed
+        JFrame changeSubjectFrame = new JFrame("Change Subject Request");
+        changeSubjectFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // Pass the current frame's location to ChangeSubjectGUI
+        changeSubjectFrame.add(new ChangeSubjectGUI(loggedInStudent, this.getX(), this.getY()));
+        changeSubjectFrame.pack();
+        changeSubjectFrame.setLocation(this.getX(), this.getY()); // Set the new frame to the old frame's position
+        changeSubjectFrame.setVisible(true);
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    this.dispose(); // Close the current StudentGUI window
+
+        this.dispose(); // Close the current StudentGUI window
+    }//GEN-LAST:event_changeSubjectButtonActionPerformed
+
+    private void scheduleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scheduleButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_scheduleButtonActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
+        // Get the current location of the StudentGUI frame
+        int currentX = this.getX();
+        int currentY = this.getY();
+
+        // Create an instance of your StudentProfileGUI, passing the logged-in student
+        // AND the current coordinates of the StudentGUI.
+        StudentProfileGUI studentProfilePanel = new StudentProfileGUI(loggedInStudent, currentX, currentY);
+
+        // Create a new JFrame to hold the StudentProfileGUI panel
+        JFrame profileFrame = new JFrame("Student Profile"); // Give your new window a title
+
+        // Set properties for the new JFrame that contains your panel
+        profileFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes this frame when done
+        profileFrame.getContentPane().add(studentProfilePanel); // Add the JPanel to the JFrame's content pane
+        profileFrame.pack(); // Size the frame to fit the panel's preferred size
+
+        // Set the new frame's location to be the same as the StudentGUI frame
+        profileFrame.setLocation(currentX, currentY); // <--- Key Change: Set exact location
+
+        profileFrame.setResizable(false); // Make the new profile window non-resizable
+        profileFrame.setVisible(true); // Make the new frame visible
+
+        // Dispose the current StudentGUI window
+        this.dispose();
+    
+    }//GEN-LAST:event_profileButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton changeSubject;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton changeSubjectButton;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton paymentButton;
+    private javax.swing.JButton profileButton;
+    private javax.swing.JButton scheduleButton;
     private javax.swing.JLabel welcomeUser;
     // End of variables declaration//GEN-END:variables
 }
