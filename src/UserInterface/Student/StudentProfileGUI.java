@@ -11,13 +11,12 @@ import javax.swing.*;
 
 /**
  * GUI for displaying and editing a student's profile.
- * This class is now a JPanel, designed to be embedded within a JFrame or other container.
  */
-public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFrame to JPanel
+public class StudentProfileGUI extends javax.swing.JPanel { 
 
     private Student loggedInStudent;
     private StudentService studentService;
-    
+
     // Declare instance variables to store the initial state of text fields
     private String initialUsername;
     private String initialPassword;
@@ -25,10 +24,6 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
     private String initialPhoneNumber;
     private String initialEmail;
     private String initialAddress;
-    
-    // New fields to store the coordinates of the previous frame (StudentGUI)
-    private int previousFrameX;
-    private int previousFrameY;
 
     /**
      * Creates new form StudentProfileGUI.
@@ -39,7 +34,7 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
         this.studentService = new StudentService();
 
         initComponents(); 
-        
+
         if (loggedInStudent != null) {
             studentIdText.setText(loggedInStudent.getId());
             usernameText.setText(loggedInStudent.getUsername());
@@ -59,23 +54,11 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
             initialEmail = loggedInStudent.getEmail();
             initialAddress = loggedInStudent.getAddress();
         }
-        
+
         studentIdText.setEditable(false);
         enrollmentIdText.setEditable(false);
     }
-    
-    /**
-     * New constructor to create StudentProfileGUI with previous frame's coordinates.
-     * This constructor should be used when opening from StudentGUI.
-     * @param student The Student object.
-     * @param prevX The X coordinate of the previous frame.
-     * @param prevY The Y coordinate of the previous frame.
-     */
-    public StudentProfileGUI(Student student, int prevX, int prevY) {
-        this(student); // Call the existing constructor to perform common initialization
-        this.previousFrameX = prevX; // Store the X coordinate
-        this.previousFrameY = prevY; // Store the Y coordinate
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -261,9 +244,9 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
                     .addComponent(jLabel8)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(backHomepageButton)
-                    .addComponent(saveProfileButton))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(saveProfileButton)
+                    .addComponent(backHomepageButton))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -411,7 +394,7 @@ public class StudentProfileGUI extends javax.swing.JPanel { // Changed from JFra
             parentFrame.dispose();
         }
         // Open the StudentGUI (dashboard) at the stored previous location
-        StudentGUI studentDashboard = new StudentGUI(loggedInStudent, previousFrameX, previousFrameY);
+        StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
         studentDashboard.setVisible(true);
     }//GEN-LAST:event_backHomepageButtonActionPerformed
 

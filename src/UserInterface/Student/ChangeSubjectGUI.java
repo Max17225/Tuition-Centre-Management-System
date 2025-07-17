@@ -40,9 +40,6 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
     private List<Subject> allSubjects;
     private List<Subject> enrolledSubjects;
     
-    // Fields for window position preservation
-    private int previousFrameX;
-    private int previousFrameY;
     
     // Field for unsaved changes detection
     private boolean hasUnsavedChanges = false;
@@ -56,18 +53,11 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         studentRequestManager = DataManager.of(StudentRequest.class);
     }
 
-    public ChangeSubjectGUI(Student student, int prevX, int prevY) {
+    public ChangeSubjectGUI(Student student) {
         this(); // Call the no-arg constructor to initialize components
         this.loggedInStudent = student;
-        this.previousFrameX = prevX;
-        this.previousFrameY = prevY;
         populateComboBoxes(); 
         addListenersForUnsavedChanges(); 
-    }
-    
-    // Constructor - existing, modified to call the new one with default coordinates
-    public ChangeSubjectGUI(Student student) {
-        this(student, -1, -1); 
     }
     
     /**
@@ -437,8 +427,8 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
             currentFrame.dispose(); // Close the current ChangeSubjectGUI frame
 
             // Open the StudentGUI for the logged-in student at the stored location
-            // Pass previousFrameX and previousFrameY
-            StudentGUI studentDashboard = new StudentGUI(loggedInStudent, previousFrameX, previousFrameY);
+            // Pass loggedinStudentObject
+            StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
             studentDashboard.setVisible(true);
         }
     }//GEN-LAST:event_backHomeButtonActionPerformed
