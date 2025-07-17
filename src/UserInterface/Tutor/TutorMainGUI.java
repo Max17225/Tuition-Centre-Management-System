@@ -19,22 +19,19 @@ import UserInterface.LoginGUI;
 import Util.*;
 
 
-public class TutorMainGUI extends JFrame {
-    final private String tutorId;
-    
+public class TutorMainGUI extends JFrame {    
     // Initialize GUI
     public TutorMainGUI(String tutorId) {
-        this.tutorId = tutorId;
 
         
-        // ===Frame Setting===
+        // ----------------------------------------------------------------------------- Frame Setting
         setTitle("Tutor Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // === Top Panel ===
+        // ----------------------------------------------------------------------------- Top Panel 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(new Color(102, 102, 102));
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Add extra space surround the topPanel
@@ -68,7 +65,7 @@ public class TutorMainGUI extends JFrame {
         centerWrapper.add(textPanel);
         topPanel.add(centerWrapper, BorderLayout.CENTER);
         
-        // Account button
+        // ----------------------------------------------------------------------------- Account button
         JButton accountButton = new JButton("My Account", getScaledIcon("/images/uis--user-md.png", 48, 48));
         accountButton.setHorizontalTextPosition(SwingConstants.CENTER);
         accountButton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -105,28 +102,28 @@ public class TutorMainGUI extends JFrame {
         });
         topPanel.add(accountButton, BorderLayout.EAST);
         
-        // Add everything on top
+        // ---- Add everything on top
         add(topPanel, BorderLayout.NORTH);
         
         
-        // === Center Buttons ===
+        // ----------------------------------------------------------------------------- Center Buttons 
+        
         // layout setting
         JPanel centerPanel = new JPanel(new GridLayout(2, 3, 30, 30));
         centerPanel.setBackground(new Color(40, 40, 40));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
         
-        // button label
+        //  button label
         String[] btnLabels = {
-            "View My Schedule",  "Add Subject Schedule", "View Subject Student",
-            "Update Subject Schedule", "Update Subject Fee"
+            "View My Schedule",  "Update Subject Schedule", "Delete Subject Schedule", "View Subject Student", "Update Subject Fee"
         };
         
         // defult icon picture
         String[] defaultIcons = {
             "/images/Time Table 1.png",    
             "/images/Add Schedule 1.png",
+            "/images/Del Subject Schedule 1.png",
             "/images/Student 1.png",
-            "/images/Update Subject Schedule 1.png",
             "/images/Fee 1.png"
         };
         
@@ -134,8 +131,8 @@ public class TutorMainGUI extends JFrame {
         String[] hoverIcons = {
             "/images/Time Table 2.png",   
             "/images/Add Schedule 2.png",
+            "/images/Del Subject Schedule 2.png",
             "/images/Student 2.png",
-            "/images/Update Subject Schedule 2.png",
             "/images/Fee 2.png"
         };
         
@@ -205,9 +202,9 @@ public class TutorMainGUI extends JFrame {
             // === Action Events ===
             button.addActionListener(e -> {
                 switch (label) {
-                    case "View My Schedule"        -> System.out.println("Viewing schedule for " + tutorId);
-                    case "Add Subject Schedule"    -> System.out.println("Adding subject schedule...");
-                    case "Update Subject Schedule" -> System.out.println("Updating subject schedule...");
+                    case "View My Schedule"        -> {new ViewMyScheduleGUI(tutorId).setVisible(true); dispose();}
+                    case "Update Subject Schedule" -> {new AddSubjectScheduleGUI(tutorId).setVisible(true); dispose();}
+                    case "Delete Subject Schedule" -> {}
                     case "Update Subject Fee"      -> System.out.println("Updating subject fee...");
                     case "View Subject Student"    -> System.out.println("Viewing subject student list...");
                     default                        -> System.out.println("Unknown button clicked");
@@ -220,7 +217,7 @@ public class TutorMainGUI extends JFrame {
 
 
 
-        // === Logout Button ===
+        // ----------------------------------------------------------------------------- Logout Button 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(new Color(102,102,102));
 
@@ -267,14 +264,14 @@ public class TutorMainGUI extends JFrame {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                logoutBtn.setBackground(new Color(60, 179, 113)); // 原色
+                logoutBtn.setBackground(new Color(60, 179, 113)); 
                 logoutBtn.setIcon(defaultIcon); 
                 logoutBtn.repaint();
             }
         });
 
         logoutBtn.addActionListener((ActionEvent e) -> {
-            new LoginGUI().setVisible(true); // assuming LoginGUI exists
+            new LoginGUI().setVisible(true); 
             dispose();
         });
 
@@ -300,9 +297,5 @@ public class TutorMainGUI extends JFrame {
             System.err.println("Failed to load image: " + path);
             return null;
         }
-    }
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TutorMainGUI("T0001").setVisible(true));
     }
 }

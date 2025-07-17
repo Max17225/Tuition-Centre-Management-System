@@ -41,4 +41,10 @@ public class Subject implements DataSerializable{
         // do the code here
         return String.join(",", subjectId, subjectName, level, tutorId, feePerMonth);
     }
+    
+    // To a simple string for showing simple info(e.g. Math | L1 | 200)
+    @Override
+    public String toString() {
+        return getSubjectName() + " | " + getLevel() + " | " + getFeePerMonth();
+    }
 }
