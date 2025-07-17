@@ -17,6 +17,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints; 
 import java.awt.Insets; 
 import java.awt.event.ActionEvent; 
+import java.awt.event.ActionListener; 
+import javax.swing.event.DocumentEvent; 
+import javax.swing.event.DocumentListener; 
 
 
 /**
@@ -31,11 +34,15 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
     private StudentService studentService;
     private DataManager<Subject> subjectManager;
     private DataManager<Enrollment> enrollmentManager;
-    private DataManager<StudentRequest> studentRequestManager; // Ensure this is initialized
-
+    private DataManager<StudentRequest> studentRequestManager; 
+    
     // Lists to hold data for populating combo boxes
     private List<Subject> allSubjects;
     private List<Subject> enrolledSubjects;
+    
+    
+    // Field for unsaved changes detection
+    private boolean hasUnsavedChanges = false;
 
     // Constructor 
     public ChangeSubjectGUI() {
@@ -43,14 +50,14 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         studentService = new StudentService();
         subjectManager = DataManager.of(Subject.class);
         enrollmentManager = DataManager.of(Enrollment.class);
-        studentRequestManager = DataManager.of(StudentRequest.class); 
-
+        studentRequestManager = DataManager.of(StudentRequest.class);
     }
 
     public ChangeSubjectGUI(Student student) {
         this(); // Call the no-arg constructor to initialize components
         this.loggedInStudent = student;
         populateComboBoxes(); 
+        addListenersForUnsavedChanges(); 
     }
     
     /**
@@ -270,6 +277,47 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // Method to add listeners for change detection
+    private void addListenersForUnsavedChanges() {
+        // DocumentListener for JTextArea
+        reasonTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                hasUnsavedChanges = true;
+            }
+            public void removeUpdate(DocumentEvent e) {
+                hasUnsavedChanges = true;
+            }
+            public void changedUpdate(DocumentEvent e) {
+                hasUnsavedChanges = true;
+            }
+        });
+
+        // ActionListener for JComboBoxes
+        ActionListener comboBoxListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Ignore initial selection events that happen during population
+                // (e.g., if you call setSelectedIndex(0) in populateComboBoxes)
+                // This can be tricky; a common workaround is to remove/add listeners,
+                // or check if the event source is adjusting (not always available for JComboBox).
+                // For simplicity, we'll just set it true for any selection change.
+                if (e.getSource() instanceof JComboBox) {
+                    JComboBox<?> source = (JComboBox<?>) e.getSource();
+                    // Avoid setting 'true' if the selected item is the initial prompt
+                    // AND it's the very first item selected (i.e., not a user change from another item)
+                    if (source.getSelectedIndex() != -1 && !source.getSelectedItem().equals("Select New Subject") && !source.getSelectedItem().equals("No subjects enrolled")) {
+                        hasUnsavedChanges = true;
+                    } else if (source.getSelectedItem().equals("None (Add New Subject)")) {
+                        hasUnsavedChanges = true;
+                    }
+                }
+            }
+        };
+
+        availableSubject.addActionListener(comboBoxListener);
+        chooseNewSubject.addActionListener(comboBoxListener);
+    }
+    
     private void availableSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_availableSubjectActionPerformed
         String selectedOldSubjectName = (String) availableSubject.getSelectedItem();
         // Call the helper to update the "Select New Subject" dropdown based on this choice
@@ -345,6 +393,8 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         if (success) {
             JOptionPane.showMessageDialog(this, "Subject change request submitted successfully! Pending approval.", "Success", JOptionPane.INFORMATION_MESSAGE);
             reasonTextArea.setText(""); // Clear reason text area
+            // Reset unsaved changes flag
+            hasUnsavedChanges = false; // <--- ADDED: Reset unsaved changes flag after successful submission
             // Refresh combo boxes after submission
             populateComboBoxes(); // Re-call the main population method to reset and refresh
             chooseNewSubject.setSelectedIndex(0); // Reset "Select New Subject" to prompt
@@ -360,19 +410,24 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
      * @param evt The ActionEvent generated by the button.
      */
     private void backHomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backHomeButtonActionPerformed
-        // Confirmation dialog
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to go back? Any unsaved changes will be lost.",
-            "Confirm Exit",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (topFrame != null) {
-                topFrame.dispose(); // Close the current ChangeSubjectGUI frame
+        if (hasUnsavedChanges) { 
+            int response = JOptionPane.showConfirmDialog(this,
+                    "You have unsaved changes. Do you want to discard them and go back?",
+                    "Unsaved Changes",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (response == JOptionPane.NO_OPTION) {
+                return; // User chose not to discard, stay on the current screen
             }
-            // Open the StudentGUI for the logged-in student
+        }
+
+        // Navigate back to StudentGUI, preserving the location
+        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (currentFrame != null) {
+            currentFrame.dispose(); // Close the current ChangeSubjectGUI frame
+
+            // Open the StudentGUI for the logged-in student at the stored location
+            // Pass loggedinStudentObject
             StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
             studentDashboard.setVisible(true);
         }
@@ -432,6 +487,9 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
         // Call the helper for initial population based on the default selected item
         // of 'availableSubject' (which will be the first item, either "None" or a subject).
         updateNewSubjectComboBoxOptions((String) availableSubject.getSelectedItem());
+        
+        // Reset hasUnsavedChanges after initial population to reflect a "clean" state
+        hasUnsavedChanges = false;
     }
 
     /**

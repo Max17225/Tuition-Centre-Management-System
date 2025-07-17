@@ -8,12 +8,13 @@ import DataModel.Student;
 import DataModel.StudentRequest;
 import DataModel.Subject;
 import DataModel.Enrollment;
+import DataModel.Payment;
 import Util.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator; // For safe removal during iteration
 import Util.IdGenerator;
+import java.time.LocalDate;
 
 /**
  *
@@ -30,6 +31,7 @@ public class StudentService {
     private DataManager<Subject> subjectManager;
     private DataManager<Student> studentManager;
     private DataManager<Enrollment> enrollmentManager;
+    private DataManager<Payment> paymentManager;
 
     /**
      * Constructor for StudentService.
@@ -40,8 +42,14 @@ public class StudentService {
         this.subjectManager = DataManager.of(Subject.class);
         this.studentManager = DataManager.of(Student.class);
         this.enrollmentManager = DataManager.of(Enrollment.class);
+        this.paymentManager = DataManager.of(Payment.class);
     }
-
+    
+    /////t
+    public Student getStudentById(String studentId) {
+    return DataManager.of(Student.class).getRecordById(studentId);
+}
+        
     /**
      * Retrieves a list of subjects the given student is currently enrolled in.
      * @param studentId The ID of the student.
@@ -263,14 +271,130 @@ public class StudentService {
         return "Schedule for student " + studentId + ": Not yet implemented.";
     }
 
+    
+     // --- Payment-related methods ---
+
     /**
-     * Placeholder for viewing a student's payment history.
-     * This method would typically interact with a Payment DataManager.
-     * @param studentId The ID of the student.
-     * @return A string representation of payment history (or a list of payment objects).
+     * Represents the payment details for a specific subject for a student.
      */
-    public String viewPaymentHistory(String studentId) {
-        // Implement logic to retrieve and format student's payment history
-        return "Payment history for student " + studentId + ": Not yet implemented.";
+    public static class SubjectPaymentDetail {
+        public Subject subject;
+        public String status; // "Unpaid", "Pending", "Paid"
+
+        public SubjectPaymentDetail(Subject subject, String status) {
+            this.subject = subject;
+            this.status = status;
+        }
     }
+
+    /**
+     * Retrieves a list of enrolled subjects for a student along with their payment status and amount.
+     * @param studentId The ID of the student.
+     * @return A list of SubjectPaymentDetail objects.
+     */
+    public List<SubjectPaymentDetail> getEnrolledSubjectsWithPaymentStatusAndAmount(String studentId) {
+        List<SubjectPaymentDetail> details = new ArrayList<>();
+        List<Subject> enrolledSubjects = getEnrolledSubjects(studentId); 
+
+        List<Payment> studentPayments = getPaymentsForStudent(studentId);
+
+        for (Subject subject : enrolledSubjects) {
+            String currentStatus = "Unpaid"; // Default status
+            
+            // Check for existing payments for this student and subject
+            for (Payment payment : studentPayments) {
+                if (payment.getSubjectId().equals(subject.getId())) {
+                    currentStatus = payment.getStatus();
+                    break; 
+                }
+            }
+            details.add(new SubjectPaymentDetail(subject, currentStatus));
+        }
+        return details;
+    }
+
+    /**
+     * Records a payment for a specific subject for a student.
+     * Sets the status to "Pending" upon initiation by the student.
+     * @param studentId The ID of the student making the payment.
+     * @param subjectId The ID of the subject the payment is for.
+     * @param amount The amount being paid.
+     * @return true if the payment was recorded successfully, false otherwise.
+     */
+    public boolean recordSubjectPayment(String studentId, String subjectId, String amount) {
+        // First, check if a payment record (Paid or Pending) already exists for this subject.
+        // If it's already 'Paid', we don't allow a new payment.
+
+       List<Payment> studentPayments = getPaymentsForStudent(studentId);
+        
+        for (Payment existingPayment : studentPayments) {
+            if (existingPayment.getSubjectId().equals(subjectId)) {
+                if ("Paid".equalsIgnoreCase(existingPayment.getStatus()) || "Pending".equalsIgnoreCase(existingPayment.getStatus())) {
+                    System.out.println("Payment for subject " + subjectId + " is already " + existingPayment.getStatus() + ". Cannot initiate new payment.");
+                    return false; // Cannot pay again if already paid or pending
+                } else {
+                    // If status is "Unpaid" or any other non-final status, we can update it.
+                    // This scenario is for retrying a previously failed/cancelled payment or updating an 'Unpaid' to 'Pending'.
+                    existingPayment.setAmount(amount); // Update amount in case it changed
+                    existingPayment.setPaymentDate(LocalDate.now().toString());
+                    existingPayment.setStatus("Pending"); // Set to pending
+                    paymentManager.updateRecord(existingPayment); // Use updateRecord instead of update
+                    System.out.println("Updated payment for subject " + subjectId + " to Pending.");
+                    return true;
+                }
+            }
+        }
+        
+        // If no existing record or existing record was truly 'Unpaid' and needs a new record
+        String paymentId = IdGenerator.getNewId(Payment.class);
+        // Receptionist ID is set to "N/A" for student-initiated payments.
+        // It will be updated by a receptionist when they process and confirm the payment.
+        Payment newPayment = new Payment(paymentId, "N/A", studentId, subjectId, amount, LocalDate.now().toString(), "Pending");
+        paymentManager.appendOne(newPayment); // Use appendOne instead of add
+        System.out.println("New payment initiated for subject " + subjectId + " with status Pending.");
+        return true;
+    }
+
+    /**
+     * Calculates the total outstanding amount for a student, summing up fees for subjects
+     * that are either "Unpaid" or "Pending".
+     * @param studentId The ID of the student.
+     * @return The total outstanding amount as a double.
+     */
+    public double calculateTotalOutstandingAmount(String studentId) {
+        double total = 0.0;
+        List<SubjectPaymentDetail> paymentDetails = getEnrolledSubjectsWithPaymentStatusAndAmount(studentId);
+
+        for (SubjectPaymentDetail detail : paymentDetails) {
+            if ("Unpaid".equalsIgnoreCase(detail.status) || "Pending".equalsIgnoreCase(detail.status)) {
+                try {
+                    total += Double.parseDouble(detail.subject.getFeePerMonth()); 
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing fees for subject " + detail.subject.getSubjectName() + ": " + e.getMessage());
+                }
+            }
+        }
+        return total;
+    }
+    
+    /**
+    * Retrieves all payment records for a specific student.
+    * @param studentId The ID of the student.
+    * @return A list of Payment objects for that student.
+    */
+   public List<Payment> getPaymentsForStudent(String studentId) {
+       List<Payment> allPayments = paymentManager.readFromFile();
+       List<Payment> studentPayments = new ArrayList<>();
+
+       if (allPayments != null) {
+           for (Payment payment : allPayments) {
+               if (payment.getStudentId().equals(studentId)) {
+                   studentPayments.add(payment);
+               }
+           }
+       }
+
+       return studentPayments;
+   }
 }
+

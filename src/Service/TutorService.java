@@ -52,27 +52,6 @@ public class TutorService {
         return userSubjects;
     }
     
-    // To get the subject which without having schedule
-    // param(tutorId): The id of the choosen Tutor
-    // return(List)  : A list of subject
-    public static List<Subject> getMySubjectWithoutSchedule(String tutorId) {
-        
-        List<Subject> mySubjects = getMySubject(tutorId);
-
-        List<ClassSchedule> mySchedules = getMyClassSchedule(tutorId);
-
-        Set<String> scheduledSubjectIds = mySchedules.stream()
-            .map(ClassSchedule::getSubjectId)
-            .collect(Collectors.toSet());
-
-        // if the subject id is not inside the scheduledSubjectIds, it will store into a list
-        List<Subject> unscheduledSubjects = mySubjects.stream()
-            .filter(subject -> !scheduledSubjectIds.contains(subject.getId()))
-            .toList();
-
-        return unscheduledSubjects; // return the list
-    }
-    
     // To get the subject which already having schedule
     // param(tutorId): The id of the choosen Tutor
     // return (List) : A list of subject
@@ -107,47 +86,33 @@ public class TutorService {
         return mySchedule;
     }
     
-    // A new schedule creatin interface, after user finish the input, return a map of info
-    // return(Map) : A map which contain schedule info (e.g. {"Monday": "1200-1300", "Tuesday": "1400-1530", ...})
-    public static Map<String, String> newScheduleCreation() {
-        Scanner scanner = new Scanner(System.in);
-        Map<String, String> scheduleMap = new LinkedHashMap<>();
-        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    // To check if the choosen subject got schedule or not
+    // param(subject): The choosen Subect
+    // return(bool)  : True, if subject has no schedule
+    public static boolean subjectHasNoSchedule (Subject subject) {
+        List<ClassSchedule> allSchedule = DataManager.of(ClassSchedule.class).readFromFile();
+        Set<String> allScheduleSubId = allSchedule.stream()
+            .map(sch -> sch.getSubjectId())
+            .collect(Collectors.toSet());
         
-        
-        for (String day : days) { // start the day in week one by one
-            while (true) {
-                System.out.print(day + ": ");
-                String input = scanner.nextLine().trim(); // let user input the time
-
-                if (input.isEmpty()) {
-                    break; // skip this day
-                }
-
-                if (!InputValidator.isValidTime(input)) { // if their input time is not valid, print warning
-                    System.out.println("Invalid Time Format: " + input + " (Use format HHMM-HHMM like 0900-1100)");
-                    continue; // ask again for this day
-                }
-
-                scheduleMap.put(day, input); // if valid then put it into map
-                break;
-            }
-        }
-        
-        return scheduleMap;
+        return (!allScheduleSubId.contains(subject.getId()));
     }
 
     // To check if the new schedule time will conflict exist schedule time or not.
-    // param(subject)       : The subject that u want to add the schedule
-    // param(newScheduleMap): The map of the new schedule create by the newScheduleCreation method
-    // return(bool)         : if no time conflict founded return true
-    public static boolean noTimeConflictInSameLevel(Subject subject, Map<String, String> newScheduleMap) {
-        boolean conflictFound = false;
-
+    // param(subject)        : The subject that u want to add the schedule
+    // param(newScheduleDay) : The day of the new schedule will add
+    // param(newScheduleTime): The time of the new schedule will add
+    // return(bool)          : if no time conflict founded return true
+    public static boolean noTimeConflictInSameLevel(Subject subject, String newScheduleDay, String newScheduleTime) {
+        
+        // Get all Schedule
         DataManager<ClassSchedule> scheduleManager = DataManager.of(ClassSchedule.class);
         List<ClassSchedule> allSchedule = scheduleManager.readFromFile();
+        
+        // Get all the schedule which having the schedule
         List<Subject> allSubjectWithSchedule = getAllSubjectWithSchedule();
         
+        // The level of current subject
         String thisSubjectLevel = subject.getLevel();
 
         // get the subject id of all the schedule that in the same level 
@@ -161,56 +126,38 @@ public class TutorService {
             .filter(sch -> sameLevelSubjectIds.contains(sch.getSubjectId()))
             .toList();
 
-       // create a map for storing the exist schedule info (e.g.{"Monday":["1200-1300", "1500-1600:, ...], ...})
-        Map<String, List<String>> existScheduleMap = new HashMap<>();
-        String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-        for (String day : days) {
-            existScheduleMap.put(day, new ArrayList<>());
-        }
-        
-        // put the time info to the map
-        for (ClassSchedule schedule : sameLevelSchedules) {
-            String[] dayTimePairs = schedule.getScheduleInWeek().split("\\|");
-            for (String pair : dayTimePairs) {
-                String[] parts = pair.split(":");
-                if (parts.length == 2) {
-                    String day = parts[0];
-                    String time = parts[1];
-                    if (existScheduleMap.containsKey(day)) {
-                        existScheduleMap.get(day).add(time);
-                    }
+       // create a list to store the exist time of the same level subject for one day only.
+        List<String> sameLvSubTimeInOneDay = new ArrayList<>();
+        for (ClassSchedule sch : sameLevelSchedules) {
+            for (String dayTime : sch.getScheduleInWeek().split("\\|")) {
+                String [] dayTimePairs = dayTime.split(":");
+                String day = dayTimePairs[0];
+                String time = dayTimePairs[1];
+                
+                if (day.equals(newScheduleDay)) {
+                    sameLvSubTimeInOneDay.add(time);
                 }
             }
         }
 
         
         // check for the conflict
-        for (Map.Entry<String, String> entry : newScheduleMap.entrySet()) {
-            String day = entry.getKey();
-            String newTimeStr = entry.getValue();
-            int[] newTime = parseTimeRange(newTimeStr);
-
-            List<String> existTimes = existScheduleMap.getOrDefault(day, new ArrayList<>());
-            for (String existTimeStr : existTimes) {
-                int[] existTime = parseTimeRange(existTimeStr);
-                
-                // if conflict founded print out the conflict
-                if (newTime[0] < existTime[1] && newTime[1] > existTime[0]) {
-                    System.out.printf("Conflict on %s: %s overlaps with existing %s%n",
-                            day, timeRangeToStr(newTime), timeRangeToStr(existTime));
-                    conflictFound = true;
-                }
+        int[] newTime = parseTimeRange(newScheduleTime);
+        for (String time : sameLvSubTimeInOneDay) {
+            int [] existTime = parseTimeRange(time);
+            if (newTime[0] < existTime[1] && newTime[1] > existTime[0]) {
+                    return false;
             }
         }
-
-        return !conflictFound; 
+        return true;
     }
     
     // To check if the new schedule time will conflict with own schedule, not matter what level
-    // param(tutorId)       : The id of tutor
-    // param(newScheduleMap): The map of the new schedule create by the newScheduleCreation method
-    // return(bool)         : if no time conflict founded return true
-    public static boolean noTimeConflictWithOwnSchedule(String tutorId, Map<String, String> newScheduleMap) {
+    // param(tutorId)        : The id of tutor
+    // param(newScheduleDay) : The day of the new schedule will add
+    // param(newScheduleTime): The time of the new schedule will add
+    // return(bool)          : if no time conflict founded return true
+    public static boolean noTimeConflictWithOwnSchedule(String tutorId, String newScheduleDay, String newScheduleTime) {
         List<Subject> mySubjects = getMySubject(tutorId);
 
         // Get all the schedule by tutor himself no matter level
@@ -223,97 +170,128 @@ public class TutorService {
             .filter(sch -> mySubjectIds.contains(sch.getSubjectId()))
             .toList();
 
-        // Create a map to store his own schedule, day will be key, time will be value
-        Map<String, List<String>> existScheduleMap = new HashMap<>();
+        // Create a List to store the same day's time of his own schedule
+        List<String> existTimeOnSameDay = new ArrayList<> ();
+        for (ClassSchedule schedule : mySchedules) {
+            for (String dayTime : schedule.getScheduleInWeek().split("\\|")) {
+                String[] dayTimePairs = dayTime.split(":");
+                String day = dayTimePairs[0];
+                String time = dayTimePairs[1];
+                
+                if (day.equals(newScheduleDay)) {
+                    existTimeOnSameDay.add(time);
+                }
+            }
+        }
+
+        // check if the new schedule will conflict to his own schedule
+        int[] newTime = parseTimeRange(newScheduleTime);
+        for (String time : existTimeOnSameDay) {
+            int [] existTime = parseTimeRange(time);
+            if (newTime[0] < existTime[1] && newTime[1] > existTime[0]) {
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    // To get the same level day schedule map
+    // param(subject) : The subject that will gonna add the schedule
+    // return(Map)    : A map will store day as key and subject with corresponding schedule as value
+    public static Map<String, Map<Subject, List<String>>> getSameLevelDayScheduleMap(Subject subject) {
+        // create a map to put the day as key and empty map as value
+        Map<String, Map<Subject, List<String>>> dayToSubjectsMap = new HashMap<>();
         String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
         for (String day : days) {
-            existScheduleMap.put(day, new ArrayList<>());
+            dayToSubjectsMap.put(day, new LinkedHashMap<>());
         }
-        for (ClassSchedule schedule : mySchedules) {
+
+        String targetLevel = subject.getLevel();
+        String thisSubjectId = subject.getId();
+        
+        // All Schedules
+        DataManager<ClassSchedule> scheduleManager = DataManager.of(ClassSchedule.class);
+        List<ClassSchedule> allSchedules = scheduleManager.readFromFile();
+        
+        // All Subjects
+        DataManager<Subject> subjectManager = DataManager.of(Subject.class);
+        List<Subject> allSubjects = subjectManager.readFromFile();
+        
+        // A map which store same level Subject id as key and subject as value
+        Map<String, Subject> sameLevelSubIdAndSubMap = allSubjects.stream()
+            .filter(sub -> sub.getLevel().equals(targetLevel) && !sub.getId().equals(thisSubjectId))
+            .collect(Collectors.toMap(Subject::getId, sub -> sub));
+        
+        // put the same level schedule's time into the list
+        for (ClassSchedule schedule : allSchedules) {
+            Subject sub = sameLevelSubIdAndSubMap.get(schedule.getSubjectId());
+            if (sub == null) continue; // To get the subject's corresponding schedule
+
             String[] dayTimePairs = schedule.getScheduleInWeek().split("\\|");
             for (String pair : dayTimePairs) {
                 String[] parts = pair.split(":");
                 if (parts.length == 2) {
                     String day = parts[0];
                     String time = parts[1];
-                    existScheduleMap.get(day).add(time);
+                    if (dayToSubjectsMap.containsKey(day)) {
+                        dayToSubjectsMap.get(day)
+                            .computeIfAbsent(sub, k -> new ArrayList<>())
+                            .add(time);
+                    }
                 }
             }
         }
 
-        // check if the new schedule will conflict to his own schedule
-        for (Map.Entry<String, String> entry : newScheduleMap.entrySet()) {
-            String day = entry.getKey();
-            String newTimeStr = entry.getValue();
-            int[] newTime = parseTimeRange(newTimeStr);
-
-            for (String existTimeStr : existScheduleMap.get(day)) {
-                int[] existTime = parseTimeRange(existTimeStr);
-                if (newTime[0] < existTime[1] && newTime[1] > existTime[0]) {
-                    System.out.printf("Tutor Time Conflict on %s: %s overlaps with existing %s%n", day, timeRangeToStr(newTime), timeRangeToStr(existTime));
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    // Format the scheduleMap to a string for saving it to the file 
-    // param(scheduleMap): The map of the schedule info
-    // return(String)    : A formated string line
-    public static String formatScheduleMapToString(Map<String, String> scheduleMap) {
-    return scheduleMap.entrySet().stream()
-        .map(entry -> entry.getKey() + ":" + entry.getValue())
-        .collect(Collectors.joining("|"));
+        return dayToSubjectsMap;
     }
 
     // This will store all the schedule info of the tutor in a Map.
     // param(tutorId): The id of the Tutor
     // return(Map)   : Return a map of schedule info (e.g. {"Monday": {Math: "1020-1120", Sceince: "0900-1000", ...}, "Tuesday": ...)
-    public static Map<String, Map<Subject, String>> getMyWeekScheduleMap (String tutorId) {
-        
-        // Initialize a Map which contain the day in each key and empty map in value.
-        Map<String, Map<Subject, String>> myWeekScheduleMap = new HashMap<>();
-        String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };   
+    public static Map<String, Map<Subject, List<String>>> getMyWeekScheduleMap(String tutorId) {
+        // Initialize a Map which contains the day in each key and an empty map in value.
+        Map<String, Map<Subject, List<String>>> myWeekScheduleMap = new HashMap<>();
+        String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
         for (String day : days) {
             myWeekScheduleMap.put(day, new HashMap<>());
         }
-        
+
         // Get a list of subject, then convert each subject to a set of subjectId.
         List<Subject> mySubject = getMySubject(tutorId);
         Set<String> mySubjectId = mySubject.stream()
-            .map(sub -> sub.getId())
+            .map(Subject::getId)
             .collect(Collectors.toSet());
-        
+
         // Get the schedule record of the tutor
         DataManager<ClassSchedule> scheduleManager = DataManager.of(ClassSchedule.class);
         List<ClassSchedule> allSchedule = scheduleManager.readFromFile();
         List<ClassSchedule> mySchedule = allSchedule.stream()
             .filter(sch -> mySubjectId.contains(sch.getSubjectId()))
             .toList();
-        
+
         // Loop the tutor's schedule one by one and put the info into the map.
         for (ClassSchedule schedule : mySchedule) {
             Subject thisSubject = getMySubjectById(schedule.getSubjectId(), tutorId);
             if (thisSubject == null) continue;
-            
+
             String[] allDayAndTime = schedule.getScheduleInWeek().split("\\|");
             for (String dayAndTime : allDayAndTime) {
-                String[] parts =  dayAndTime.split(":", 2);
+                String[] parts = dayAndTime.split(":", 2);
                 if (parts.length < 2) continue;
+
                 String day = parts[0];
                 String time = parts[1];
-                
+
                 if (myWeekScheduleMap.containsKey(day)) {
-                    myWeekScheduleMap.get(day).put(thisSubject, time);
+                    Map<Subject, List<String>> subjectMap = myWeekScheduleMap.get(day);
+                    subjectMap.computeIfAbsent(thisSubject, k -> new ArrayList<>()).add(time);
                 }
             }
         }
-        
-        return myWeekScheduleMap;       
+
+        return myWeekScheduleMap;
     }
-    
+
     // This will return a Map with Subject(Object) as key and a List of student(Object) as value.
     // param(tutorId): The id of tutor
     // return(Map)   : A map will look like {Subject: [Student, Student2], Subject2:[...], ...}
@@ -377,7 +355,7 @@ public class TutorService {
         
         
         if (allSchedule.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         
         Set<String> allSubjectIdWithSchedule = allSchedule.stream()
