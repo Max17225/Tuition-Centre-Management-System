@@ -4,6 +4,7 @@
  */
 package UserInterface;
 
+import DataModel.Tutor;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
@@ -257,7 +258,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
     // ===== Tutor Platform =====
     private void jTutorActionPerformed(java.awt.event.ActionEvent evt) {
-        String[] options = { "Register Tutor", "Delete Tutor" };
+        String[] options = { "Register Tutor", "Delete Tutor", "Update Tutor" };
         int choice = JOptionPane.showOptionDialog(
                 this, 
                 "Choose an action for Tutor:", 
@@ -319,11 +320,67 @@ public class AdminGUI extends javax.swing.JFrame {
             if (tutorId != null) {
                 boolean deleted = Service.AdminService.deleteTutor(tutorId.trim());
                 JOptionPane.showMessageDialog(this, deleted ? "Tutor deleted." : "Tutor ID not found.");
-        }
-    }
-        // TODO add your handling code here:
-    }                                      
+            }
+        } else if (choice == 2) {
+            // Assign subject info to tutor
+            JTextField tutorIdField = new JTextField();
+            JTextField subjectNameField = new JTextField();
+            JComboBox<String> levelCombo = new JComboBox<>(new String[]{"L1", "L2", "L3", "L4", "L5"});
 
+            Object[] fields = {
+                "Tutor ID:", tutorIdField,
+                "Subject Name:", subjectNameField,
+                "Level:", levelCombo
+            };
+
+            int result = JOptionPane.showConfirmDialog(this, fields, "Assign Subject to Tutor", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                String tutorId = tutorIdField.getText().trim();
+                String subjectName = subjectNameField.getText().trim();
+                String level = (String) levelCombo.getSelectedItem();
+
+                // Validation
+                if (tutorId.isEmpty() || subjectName.isEmpty() || level.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "All fields must be filled.");
+                    return;
+                }
+
+                Tutor tutor = Util.DataManager.of(DataModel.Tutor.class).getRecordById(tutorId);
+                if (tutor == null) {
+                    JOptionPane.showMessageDialog(this, "Tutor with ID " + tutorId + " not found.");
+                    return;
+                }
+
+                // Check if the tutor already has a subject assigned
+                if (tutor.getSubject() != null) {
+                    JOptionPane.showMessageDialog(this, "Tutor already has a subject assigned.");
+                    return;
+                }
+
+                // Look for matching Subject from subject data
+                List<Subject> subjects = Util.DataManager.of(Subject.class).getAll();
+                Subject matchedSubject = subjects.stream()
+                    .filter(s -> s.getName().equalsIgnoreCase(subjectName) && s.getLevel().equalsIgnoreCase(level))
+                    .findFirst()
+                    .orElse(null);
+
+                if (matchedSubject == null) {
+                    JOptionPane.showMessageDialog(this, "Subject not found for the given name and level.");
+                    return;
+                }
+
+                // Assign subject to tutor
+                tutor.setSubject(matchedSubject);
+                Util.DataManager.of(Tutor.class).updateRecord(tutor);
+
+                JOptionPane.showMessageDialog(this, "Subject assigned to tutor successfully.");
+            }
+        }
+ 
+        
+        // TODO add your handling code here:
+    }
+               
     // ===== Receptionist Platform =====
     private void jReceptionistActionPerformed(java.awt.event.ActionEvent evt) {
         String[] options = { "Register Receptionist", "Delete Receptionist" };
@@ -371,7 +428,6 @@ public class AdminGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, deleted ? "Receptionist deleted." : "Receptionist ID not found.");
             }
         }
-        // TODO add your handling code here:
     }                                             
 
     // ===== Logout Button =====
