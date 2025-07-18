@@ -8,8 +8,9 @@ import UserInterface.ReceptGUI;
 import UserInterface.Student.StudentGUI;
 import Service.AuthService;
 import DataModel.Student; 
-import Util.DataManager;   
-import java.awt.Color;
+import Util.DataManager; 
+import Util.WindowUtils;
+import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +29,7 @@ public class LoginGUI extends javax.swing.JFrame {
     public LoginGUI() {
         this.setResizable(false);
         initComponents();
+        WindowUtils.centerWindow(this);
     }
     
     /**
@@ -209,7 +211,10 @@ public class LoginGUI extends javax.swing.JFrame {
                     if (loggedInStudent != null) {
                         // 3. Pass the Student object to StudentGUI's constructor
                         StudentGUI studentHomePage = new StudentGUI(loggedInStudent);
+                        studentHomePage.pack();
+                        WindowUtils.centerWindow(studentHomePage); // Use Window Utility method to center window
                         studentHomePage.setVisible(true);
+
                     } else {
                         JOptionPane.showMessageDialog(this, "Error: Student data not found for ID: " + inputId);
                     }

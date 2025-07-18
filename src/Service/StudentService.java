@@ -44,7 +44,12 @@ public class StudentService {
         this.enrollmentManager = DataManager.of(Enrollment.class);
         this.paymentManager = DataManager.of(Payment.class);
     }
-
+    
+    /////t
+    public Student getStudentById(String studentId) {
+    return DataManager.of(Student.class).getRecordById(studentId);
+}
+        
     /**
      * Retrieves a list of subjects the given student is currently enrolled in.
      * @param studentId The ID of the student.
@@ -289,18 +294,9 @@ public class StudentService {
      */
     public List<SubjectPaymentDetail> getEnrolledSubjectsWithPaymentStatusAndAmount(String studentId) {
         List<SubjectPaymentDetail> details = new ArrayList<>();
-        List<Subject> enrolledSubjects = getEnrolledSubjects(studentId); // Reusing existing method
+        List<Subject> enrolledSubjects = getEnrolledSubjects(studentId); 
 
-        // ALTERNATIVE: Read all payments and filter manually (since DataManager won't be changed)
-        List<Payment> allPayments = paymentManager.readFromFile();
-        List<Payment> studentPayments = new ArrayList<>();
-        if (allPayments != null) {
-            for (Payment payment : allPayments) {
-                if (payment.getStudentId().equals(studentId)) {
-                    studentPayments.add(payment);
-                }
-            }
-        }
+        List<Payment> studentPayments = getPaymentsForStudent(studentId);
 
         for (Subject subject : enrolledSubjects) {
             String currentStatus = "Unpaid"; // Default status
@@ -329,15 +325,7 @@ public class StudentService {
         // First, check if a payment record (Paid or Pending) already exists for this subject.
         // If it's already 'Paid', we don't allow a new payment.
 
-        List<Payment> allPayments = paymentManager.readFromFile();
-        List<Payment> studentPayments = new ArrayList<>();
-        if (allPayments != null) {
-            for (Payment payment : allPayments) {
-                if (payment.getStudentId().equals(studentId)) {
-                    studentPayments.add(payment);
-                }
-            }
-        }
+       List<Payment> studentPayments = getPaymentsForStudent(studentId);
         
         for (Payment existingPayment : studentPayments) {
             if (existingPayment.getSubjectId().equals(subjectId)) {
@@ -388,4 +376,25 @@ public class StudentService {
         }
         return total;
     }
+    
+    /**
+    * Retrieves all payment records for a specific student.
+    * @param studentId The ID of the student.
+    * @return A list of Payment objects for that student.
+    */
+   public List<Payment> getPaymentsForStudent(String studentId) {
+       List<Payment> allPayments = paymentManager.readFromFile();
+       List<Payment> studentPayments = new ArrayList<>();
+
+       if (allPayments != null) {
+           for (Payment payment : allPayments) {
+               if (payment.getStudentId().equals(studentId)) {
+                   studentPayments.add(payment);
+               }
+           }
+       }
+
+       return studentPayments;
+   }
 }
+

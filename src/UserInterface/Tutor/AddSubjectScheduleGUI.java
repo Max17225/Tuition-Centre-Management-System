@@ -35,6 +35,7 @@ public class AddSubjectScheduleGUI extends JFrame {
         this.tutorId = tutorId;
         
         List<Subject> subjectList = TutorService.getMySubject(tutorId);
+
         // ----------------------------------------------------------------------------- Frame setting
         setTitle("Add Subject Schedule");
         setSize(800, 600);

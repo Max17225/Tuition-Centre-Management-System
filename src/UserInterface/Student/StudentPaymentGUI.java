@@ -6,8 +6,8 @@ package UserInterface.Student;
 
 import DataModel.Student; 
 import DataModel.Subject; 
+import DataModel.Payment;
 import Service.StudentService; 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane; 
 import java.util.List;
 import java.util.HashMap;
@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.awt.Color;
 import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
 
 /**
  *
@@ -25,10 +27,6 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
 
     private Student loggedInStudent;
     private StudentService studentService;
-    private JFrame mainFrame; // To get the parent frame for navigation
-    private int previousFrameX;
-    private int previousFrameY;
-    
 
     // A map to store subjects linked to their GUI components for easier management
     private Map<String, Subject> displayedSubjects = new HashMap<>();
@@ -36,17 +34,13 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
     /**
      * Creates new form StudentPaymentGUI
      * @param student The logged-in student whose payments are to be displayed.
-     * @param mainFrame The main JFrame of the application.
-     * @param previousFrameX The X coordinate of the previous frame.
-     * @param previousFrameY The Y coordinate of the previous frame.
      */
-    public StudentPaymentGUI(Student student, JFrame mainFrame, int previousFrameX, int previousFrameY) {
+    public StudentPaymentGUI(Student student) {
         this.loggedInStudent = student;
         this.studentService = new StudentService(); 
-        this.mainFrame = mainFrame;
-        this.previousFrameX = previousFrameX;
-        this.previousFrameY = previousFrameY;
+      
         initComponents();
+        
         loadPaymentData(); // Load data when the panel is initialized
     }
 
@@ -80,10 +74,15 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        receipt1 = new javax.swing.JButton();
+        receipt2 = new javax.swing.JButton();
+        receipt3 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(45, 118, 232));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/payment.png"))); // NOI18N
         jLabel1.setText("Payment");
 
@@ -102,7 +101,7 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         subject3.setForeground(new java.awt.Color(0, 0, 0));
         subject3.setText("Subject3");
 
-        totalAmount.setFont(new java.awt.Font("Yu Gothic UI Semilight", 1, 18)); // NOI18N
+        totalAmount.setFont(new java.awt.Font("Segoe UI Semibold", 1, 18)); // NOI18N
         totalAmount.setForeground(new java.awt.Color(0, 0, 0));
         totalAmount.setText("TotalAmount");
 
@@ -178,12 +177,40 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Make Payment");
 
+        receipt1.setForeground(new java.awt.Color(0, 0, 0));
+        receipt1.setText("Print Receipt");
+        receipt1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                receipt1ActionPerformed(evt);
+            }
+        });
+
+        receipt2.setForeground(new java.awt.Color(0, 0, 0));
+        receipt2.setText("Print Receipt");
+        receipt2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                receipt2ActionPerformed(evt);
+            }
+        });
+
+        receipt3.setForeground(new java.awt.Color(0, 0, 0));
+        receipt3.setText("Print Receipt");
+        receipt3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                receipt3ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Receipt");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(totalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -210,11 +237,18 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
                             .addComponent(makePaymentSubject2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(makePaymentSubject1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(makePaymentSubject3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(receipt3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(backButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(receipt1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(receipt2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,48 +258,54 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subject1Amount)
                     .addComponent(subject1Status)
                     .addComponent(makePaymentSubject1)
-                    .addComponent(subject1))
-                .addGap(18, 18, 18)
+                    .addComponent(subject1)
+                    .addComponent(receipt1))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subject2)
                     .addComponent(subject2Amount)
                     .addComponent(subject2Status)
-                    .addComponent(makePaymentSubject2))
-                .addGap(18, 18, 18)
+                    .addComponent(makePaymentSubject2)
+                    .addComponent(receipt2))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subject3)
                     .addComponent(subject3Status)
                     .addComponent(subject3Amount)
-                    .addComponent(makePaymentSubject3))
-                .addGap(27, 27, 27)
-                .addComponent(totalAmount)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addComponent(makePaymentSubject3)
+                    .addComponent(receipt3))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(totalAmount)
+                        .addContainerGap(51, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(139, 139, 139)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(207, 207, 207))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,22 +355,39 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_makePaymentSubject2ActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // Create a new instance of StudentGUI (which is a JFrame)
-        // Pass the student object and the coordinates where it was previously located
-        UserInterface.Student.StudentGUI studentGUIFrame =
-            new UserInterface.Student.StudentGUI(loggedInStudent, previousFrameX, previousFrameY);
+         // Re-fetch the latest student data from the text file
+        StudentService studentService = new StudentService();
+        Student freshStudent = studentService.getStudentById(loggedInStudent.getId());
 
-        // Make the new StudentGUI JFrame visible
-        studentGUIFrame.setVisible(true);
-
-        // Get the parent frame of the current StudentPaymentGUI panel and dispose it
-        // The parent frame is the JFrame that contains this StudentPaymentGUI panel
-        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (parentFrame != null) {
-            parentFrame.dispose();
+        if (freshStudent == null) {
+            JOptionPane.showMessageDialog(this, "Unable to reload student data. Please try again.", "Reload Failed", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        // Create and show a refreshed StudentGUI 
+        StudentGUI refreshedGUI = new StudentGUI(freshStudent);
+        refreshedGUI.setVisible(true);
+
+        // Close the current window
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    private void receipt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt1ActionPerformed
+        Subject subject = displayedSubjects.get("subject1");
+        generateReceiptForSubject(subject);
+    }//GEN-LAST:event_receipt1ActionPerformed
+
+    private void receipt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt3ActionPerformed
+        Subject subject = displayedSubjects.get("subject3");
+        generateReceiptForSubject(subject);
+    }//GEN-LAST:event_receipt3ActionPerformed
+
+    private void receipt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt2ActionPerformed
+        Subject subject = displayedSubjects.get("subject2");
+        generateReceiptForSubject(subject);
+    }//GEN-LAST:event_receipt2ActionPerformed
+
+    
      /**
      * Loads and displays the student's enrolled subjects, their amounts, and payment statuses.
      * Also calculates and displays the total outstanding amount.
@@ -382,34 +439,37 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
             JLabel currentSubjectLabel = null;
             JLabel currentAmountLabel = null;
             javax.swing.JButton currentMakePaymentButton = null;
+            javax.swing.JButton currentReceiptButton = null;
 
             switch (i) {
-                case 0:
-                    currentSubjectLabel = subject1;
-                    currentAmountLabel = subject1Amount;
-                    currentStatusLabel = subject1Status;
-                    currentMakePaymentButton = makePaymentSubject1;
-                    displayedSubjects.put("subject1", detail.subject);
-                    break;
-                case 1:
-                    currentSubjectLabel = subject2;
-                    currentAmountLabel = subject2Amount;
-                    currentStatusLabel = subject2Status;
-                    currentMakePaymentButton = makePaymentSubject2;
-                    displayedSubjects.put("subject2", detail.subject);
-                    break;
-                case 2:
-                    currentSubjectLabel = subject3;
-                    currentAmountLabel = subject3Amount;
-                    currentStatusLabel = subject3Status;
-                    currentMakePaymentButton = makePaymentSubject3;
-                    displayedSubjects.put("subject3", detail.subject);
-                    break;
-                default:
-                    System.out.println("Warning: More than 3 subjects enrolled. Only first 3 are displayed.");
-                    continue; // Skip to the next iteration if more than 3 subjects
-            }
-
+            case 0:
+                currentSubjectLabel = subject1;
+                currentAmountLabel = subject1Amount;
+                currentStatusLabel = subject1Status;
+                currentMakePaymentButton = makePaymentSubject1;
+                currentReceiptButton = receipt1;
+                displayedSubjects.put("subject1", detail.subject);
+                break;
+            case 1:
+                currentSubjectLabel = subject2;
+                currentAmountLabel = subject2Amount;
+                currentStatusLabel = subject2Status;
+                currentMakePaymentButton = makePaymentSubject2;
+                currentReceiptButton = receipt2;
+                displayedSubjects.put("subject2", detail.subject);
+                break;
+            case 2:
+                currentSubjectLabel = subject3;
+                currentAmountLabel = subject3Amount;
+                currentStatusLabel = subject3Status;
+                currentMakePaymentButton = makePaymentSubject3;
+                currentReceiptButton = receipt3;
+                displayedSubjects.put("subject3", detail.subject);
+                break;
+            default:
+                System.out.println("Warning: More than 3 subjects enrolled. Only first 3 are displayed.");
+                continue;
+        }
             // Set text and amount for the current subject
             currentSubjectLabel.setText(subjectName + ":");
             currentAmountLabel.setText(amount);
@@ -420,22 +480,26 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
                 case "pending":
                     currentStatusLabel.setForeground(pendingColor);
                     currentAmountLabel.setForeground(pendingColor);
-                    currentMakePaymentButton.setEnabled(false); // Disable payment if pending
+                    currentMakePaymentButton.setEnabled(false);
+                    currentReceiptButton.setEnabled(false); 
                     break;
                 case "paid":
                     currentStatusLabel.setForeground(paidColor);
                     currentAmountLabel.setForeground(paidColor);
-                    currentMakePaymentButton.setEnabled(false); // Disable payment if paid
+                    currentMakePaymentButton.setEnabled(false);
+                    currentReceiptButton.setEnabled(true); 
                     break;
                 case "unpaid":
                     currentStatusLabel.setForeground(unpaidColor);
                     currentAmountLabel.setForeground(unpaidColor);
-                    currentMakePaymentButton.setEnabled(true); // Enable payment if unpaid
+                    currentMakePaymentButton.setEnabled(true);
+                    currentReceiptButton.setEnabled(false); 
                     break;
                 default:
-                    currentStatusLabel.setForeground(defaultColor); // Fallback to black for other statuses
+                    currentStatusLabel.setForeground(defaultColor);
                     currentAmountLabel.setForeground(defaultColor);
-                    currentMakePaymentButton.setEnabled(false); // Disable for unknown status
+                    currentMakePaymentButton.setEnabled(false);
+                    currentReceiptButton.setEnabled(false); 
                     break;
             }
         }
@@ -470,6 +534,46 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
             }
         }
     }
+    
+    private void generateReceiptForSubject(Subject subject) {
+        if (subject == null) {
+            JOptionPane.showMessageDialog(this, "No subject data found for receipt.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        List<Payment> payments = studentService.getPaymentsForStudent(loggedInStudent.getId());
+        Payment targetPayment = null;
+
+        for (Payment p : payments) {
+            if (p.getSubjectId().equals(subject.getId()) && "Paid".equalsIgnoreCase(p.getStatus())) {
+                targetPayment = p;
+                break;
+            }
+        }
+
+        if (targetPayment == null) {
+            JOptionPane.showMessageDialog(this, "No PAID payment record found for this subject.", "Receipt Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Format the receipt
+        StringBuilder receipt = new StringBuilder();
+        receipt.append("----- PAYMENT RECEIPT -----\n");
+        receipt.append("Student Name: ").append(loggedInStudent.getUsername()).append("\n");
+        receipt.append("Student ID: ").append(loggedInStudent.getId()).append("\n");
+        receipt.append("Subject: ").append(subject.getSubjectName()).append("\n");
+        receipt.append("Amount Paid: $").append(targetPayment.getAmount()).append("\n");
+        receipt.append("Payment Date: ").append(targetPayment.getPaymentDate()).append("\n");
+        receipt.append("Receptionist ID: ").append(targetPayment.getReceptionistId()).append("\n"); // ✅ NEW LINE
+        receipt.append("Receipt ID: ").append(targetPayment.getId()).append("\n");
+        receipt.append("---------------------------\n");
+
+        // Show in dialog
+        JTextArea receiptArea = new JTextArea(receipt.toString());
+        receiptArea.setEditable(false);
+        JOptionPane.showMessageDialog(this, receiptArea, "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
@@ -477,12 +581,16 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton makePaymentSubject1;
     private javax.swing.JButton makePaymentSubject2;
     private javax.swing.JButton makePaymentSubject3;
+    private javax.swing.JButton receipt1;
+    private javax.swing.JButton receipt2;
+    private javax.swing.JButton receipt3;
     private javax.swing.JLabel subject1;
     private javax.swing.JLabel subject1Amount;
     private javax.swing.JLabel subject1Status;
