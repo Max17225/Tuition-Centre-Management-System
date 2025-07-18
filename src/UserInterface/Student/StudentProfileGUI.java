@@ -1,7 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+/**
+ * StudentProfileGUI.java
+ *
+ * This panel allows students to view and update their personal profile information.
+ * Fields include username, password, IC/Passport, phone number, email, and address.
+ *
+ * Key Features:
+ * - Loads and displays current student details upon initialization
+ * - Allows inline editing of editable fields (except Student ID and Enrollment ID)
+ * - Provides validation for email and phone number formats
+ * - Confirms navigation when unsaved changes exist
+ *
+ * Core Interactions:
+ * - Uses StudentService to update profile data in persistent storage
+ * - Invoked from StudentGUI → profileButtonActionPerformed
+ *
+ * Depends on:
+ * - DataModel: Student
+ * - Service: StudentService
+ * - Util: InputValidator
  */
+
 package UserInterface.Student;
 
 import DataModel.Student; 
@@ -9,15 +27,12 @@ import Service.StudentService;
 import Util.InputValidator;
 import javax.swing.*; 
 
-/**
- * GUI for displaying and editing a student's profile.
- */
 public class StudentProfileGUI extends javax.swing.JPanel { 
 
-    private Student loggedInStudent;
-    private StudentService studentService;
+    private Student loggedInStudent; // The student currently using the system
+    private StudentService studentService; // Service to handle data operations
 
-    // Declare instance variables to store the initial state of text fields
+    // Stores the original profile data to detect unsaved changes
     private String initialUsername;
     private String initialPassword;
     private String initialIcPassport;
@@ -25,17 +40,20 @@ public class StudentProfileGUI extends javax.swing.JPanel {
     private String initialEmail;
     private String initialAddress;
 
-    /**
-     * Creates new form StudentProfileGUI.
-     * @param student The Student object whose profile is to be displayed/edited.
+     /**
+     * Constructor for StudentProfileGUI.
+     * Loads data from a Student object and initializes UI.
+     *
+     * @param student the student object passed from StudentGUI
      */
     public StudentProfileGUI(Student student) {
         this.loggedInStudent = student;
         this.studentService = new StudentService();
 
-        initComponents(); 
+        initComponents(); // GUI setup
 
         if (loggedInStudent != null) {
+            // Populate fields from student object
             studentIdText.setText(loggedInStudent.getId());
             usernameText.setText(loggedInStudent.getUsername());
             passwordText.setText(loggedInStudent.getPassword()); 
@@ -45,18 +63,18 @@ public class StudentProfileGUI extends javax.swing.JPanel {
             emailText.setText(loggedInStudent.getEmail());
             addressText.setText(loggedInStudent.getAddress());
 
-            // Store initial values after setting text fields
-            // These values will be used to check for unsaved changes
+            // Save original values for comparison
             initialUsername = loggedInStudent.getUsername();
-            initialPassword = loggedInStudent.getPassword(); // This assumes password is not hashed on load
+            initialPassword = loggedInStudent.getPassword(); 
             initialIcPassport = loggedInStudent.getIcPassport();
             initialPhoneNumber = loggedInStudent.getPhoneNumber();
             initialEmail = loggedInStudent.getEmail();
             initialAddress = loggedInStudent.getAddress();
         }
 
-        studentIdText.setEditable(false);
-        enrollmentIdText.setEditable(false);
+        // Set StudentId and EnrollmentId cannot be editable
+        studentIdText.setEditable(false); 
+        enrollmentIdText.setEditable(false); 
     }
 
 
@@ -127,6 +145,8 @@ public class StudentProfileGUI extends javax.swing.JPanel {
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Password:");
 
+        saveProfileButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        saveProfileButton.setForeground(new java.awt.Color(0, 0, 0));
         saveProfileButton.setText("Save");
         saveProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,6 +154,8 @@ public class StudentProfileGUI extends javax.swing.JPanel {
             }
         });
 
+        backHomepageButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        backHomepageButton.setForeground(new java.awt.Color(0, 0, 0));
         backHomepageButton.setText("Back");
         backHomepageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,7 +269,7 @@ public class StudentProfileGUI extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(saveProfileButton)
                     .addComponent(backHomepageButton))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel1.setBackground(new java.awt.Color(45, 118, 232));
@@ -290,42 +312,43 @@ public class StudentProfileGUI extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Triggered when "Save" is clicked.
+     * Validates and saves updated profile information.
+     *
+     * @param evt the event triggered by saveProfileButton
+     */
     private void saveProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProfileButtonActionPerformed
-         String newUsername = usernameText.getText().trim();
+        // Collect form input
+        String newUsername = usernameText.getText().trim();
         String newPassword = new String(passwordText.getPassword()).trim();
         String newIcPassport = icPassportText.getText().trim();
         String newPhoneNumber = phoneNumberText.getText().trim();
         String newEmail = emailText.getText().trim();
         String newAddress = addressText.getText().trim();
 
-        // Basic validation 
+        // Validate required fields 
         if (newUsername.isEmpty() || newPassword.isEmpty() || newIcPassport.isEmpty() ||
             newPhoneNumber.isEmpty() || newEmail.isEmpty() || newAddress.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields must be filled out.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return; // Stop further execution if validation fails
         }
         
-        if (newUsername.isEmpty() || newPassword.isEmpty() || newIcPassport.isEmpty() ||
-            newPhoneNumber.isEmpty() || newEmail.isEmpty() || newAddress.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "All fields must be filled out.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        // Validate email format using InputValidator
+        // Email format check
         if (!InputValidator.emailFormatIsValid(newEmail)) {
             JOptionPane.showMessageDialog(this, "Invalid email format. Please use @gmail.com or @mail.com", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Validate phone number format (assuming a basic regex for 10 or 11 digits)
+        // Phone number format check
         if (!newPhoneNumber.matches("^\\d{10,11}$")) {
             JOptionPane.showMessageDialog(this, "Invalid phone number format. Please enter 10 or 11 digits.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Update the loggedInStudent object with new data
+        // Apply updates to model
         loggedInStudent.setUsername(newUsername);
-        loggedInStudent.setPassword(newPassword); // In a real application, hash passwords!
+        loggedInStudent.setPassword(newPassword); 
         loggedInStudent.setIcPassport(newIcPassport);
         loggedInStudent.setPhoneNumber(newPhoneNumber);
         loggedInStudent.setEmail(newEmail);
@@ -349,9 +372,10 @@ public class StudentProfileGUI extends javax.swing.JPanel {
         
     }//GEN-LAST:event_saveProfileButtonActionPerformed
 
-    /**
-     * Checks if there are any unsaved changes in the profile fields.
-     * @return true if there are changes, false otherwise.
+   /**
+     * Checks whether the user has made changes to their profile but hasn't saved yet.
+     *
+     * @return true if unsaved changes exist, false otherwise
      */
     private boolean hasUnsavedChanges() {
         // Get current values from the text fields
@@ -371,6 +395,12 @@ public class StudentProfileGUI extends javax.swing.JPanel {
                !currentAddress.equals(initialAddress);
     }
     
+     /**
+     * Triggered when the "Back" button is clicked.
+     * Confirms discard of unsaved changes and returns to StudentGUI.
+     *
+     * @param evt the event triggered by backHomepageButton
+     */
     private void backHomepageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backHomepageButtonActionPerformed
         if (hasUnsavedChanges()) {
             int response = JOptionPane.showConfirmDialog(
@@ -387,15 +417,10 @@ public class StudentProfileGUI extends javax.swing.JPanel {
             }
         }
 
-        // User confirmed to proceed or no unsaved changes were present
-        // Get the parent JFrame and dispose of it
+        // Close current panel and return to StudentGUI
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (parentFrame != null) {
-            parentFrame.dispose();
-        }
-        // Open the StudentGUI (dashboard) at the stored previous location
-        StudentGUI studentDashboard = new StudentGUI(loggedInStudent);
-        studentDashboard.setVisible(true);
+        if (parentFrame != null) parentFrame.dispose();
+        new StudentGUI(loggedInStudent).setVisible(true);
     }//GEN-LAST:event_backHomepageButtonActionPerformed
 
     private void studentIdTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIdTextActionPerformed
