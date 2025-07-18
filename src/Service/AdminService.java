@@ -40,15 +40,6 @@ public class AdminService {
         return removed;
     }
     
-    public static boolean assignTutorToSubject(String tutorId, String subjectName, String level, String fee) {
-        String subjectId = IdGenerator.getNewId(Subject.class);
-        Subject newSubject = new Subject(subjectId, tutorId, subjectName, level, fee);
-
-        DataManager<Subject> subjectManager = DataManager.of(Subject.class);
-        subjectManager.appendOne(newSubject);
-        return true;
-    }
-    
     public static boolean assignSubjectToTutor(String tutorId, String subjectName, String level, String fee) {
         DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
         DataManager<Subject> subjectManager = DataManager.of(Subject.class);

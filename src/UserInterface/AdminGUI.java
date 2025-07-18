@@ -346,7 +346,7 @@ public class AdminGUI extends javax.swing.JFrame {
                 }
 
                 Tutor tutor = Util.DataManager.of(DataModel.Tutor.class).getRecordById(tutorId);
-                if (tutor == null) {
+                if (tutor == null) { 
                     JOptionPane.showMessageDialog(this, "Tutor with ID " + tutorId + " not found.");
                     return;
                 }
