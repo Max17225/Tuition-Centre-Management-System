@@ -9,6 +9,7 @@ import UserInterface.Student.StudentProfileGUI;
 import DataModel.Student; 
 import UserInterface.LoginGUI;
 import javax.swing.*;
+import Util.WindowUtils;
 
 /**
  *
@@ -25,18 +26,13 @@ public class StudentGUI extends javax.swing.JFrame {
        this.loggedInStudent = student; //store the student object
        this.setResizable(false);
         initComponents();
+        WindowUtils.centerWindow(this);
 
         // --- Use the loggedInStudent object to personalize the GUI ---
         if (loggedInStudent != null) {
             // Update the welcome message
             welcomeUser.setText("Welcome, " + loggedInStudent.getUsername() + "!"); // Update welcomeUser label
         }
-    }
-
-    // New constructor to accept x and y coordinates
-    public StudentGUI(Student student, int x, int y) {
-        this(student); // Call the existing constructor
-        this.setLocation(x, y); // Set the location
     }
 
     /**
@@ -236,63 +232,33 @@ public class StudentGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void paymentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentButtonActionPerformed
-        // Get the current location of this StudentGUI frame
-        int currentX = this.getX();
-        int currentY = this.getY();
-
-        // Create an instance of StudentPaymentGUI (which is a JPanel), passing necessary data
-        // StudentPaymentGUI's constructor expects: Student, JFrame, int, int
-        // Here, 'this' refers to the current StudentGUI JFrame, which will be the mainFrame for StudentPaymentGUI
-        UserInterface.Student.StudentPaymentGUI studentPaymentGUI =
-            new UserInterface.Student.StudentPaymentGUI(loggedInStudent, this, currentX, currentY);
-
-        // Create a new JFrame to hold the StudentPaymentGUI panel
-        JFrame paymentFrame = new JFrame("Student Payment"); // Give your new window a title
-        paymentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes this frame when done
-        paymentFrame.getContentPane().add(studentPaymentGUI); // Add the JPanel to the JFrame's content pane
-        paymentFrame.pack(); // Size the frame to fit the panel's preferred size
-
-        // Set the new frame's location to be the same as the StudentGUI frame
-        paymentFrame.setLocation(currentX, currentY);
-        paymentFrame.setResizable(false); // Make the new payment window non-resizable
-        paymentFrame.setVisible(true); // Make the new frame visible
-
-        // Dispose the current StudentGUI window
-        this.dispose();
+         StudentPaymentGUI panel = new StudentPaymentGUI(loggedInStudent);
+        WindowUtils.openCenteredFrame(new JFrame("Student Payment") {{
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            getContentPane().add(panel);
+        }}, true, this);
     }//GEN-LAST:event_paymentButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-     // Show a confirmation dialog
-    int confirm = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to log out?",
-            "Confirm Logout",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+      int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to log out?",
+                "Confirm Logout",
+                JOptionPane.YES_NO_OPTION);
 
-    // If the user clicks "Yes"
-    if (confirm == JOptionPane.YES_OPTION) {
-        // Dispose (close) the current StudentGUI JFrame directly
-        this.dispose();
-
-        // Create a new LoginGUI instance
-        LoginGUI login = new LoginGUI();
-        // Make the LoginGUI visible
-        login.setVisible(true);
-        }   
+        if (confirm == JOptionPane.YES_OPTION) {
+            this.dispose();
+            LoginGUI login = new LoginGUI();
+            WindowUtils.centerWindow(login);
+            login.setVisible(true);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void changeSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectButtonActionPerformed
-        JFrame changeSubjectFrame = new JFrame("Change Subject Request");
-        changeSubjectFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        // Pass the current frame's location to ChangeSubjectGUI
-        changeSubjectFrame.add(new ChangeSubjectGUI(loggedInStudent, this.getX(), this.getY()));
-        changeSubjectFrame.pack();
-        changeSubjectFrame.setLocation(this.getX(), this.getY()); // Set the new frame to the old frame's position
-        changeSubjectFrame.setVisible(true);
-
-    this.dispose(); // Close the current StudentGUI window
-
-        this.dispose(); // Close the current StudentGUI window
+        ChangeSubjectGUI panel = new ChangeSubjectGUI(loggedInStudent);
+        WindowUtils.openCenteredFrame(new JFrame("Change Subject Request") {{
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            getContentPane().add(panel);
+        }}, true, this);
     }//GEN-LAST:event_changeSubjectButtonActionPerformed
 
     private void scheduleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scheduleButtonActionPerformed
@@ -304,31 +270,11 @@ public class StudentGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
-        // Get the current location of the StudentGUI frame
-        int currentX = this.getX();
-        int currentY = this.getY();
-
-        // Create an instance of your StudentProfileGUI, passing the logged-in student
-        // AND the current coordinates of the StudentGUI.
-        StudentProfileGUI studentProfilePanel = new StudentProfileGUI(loggedInStudent, currentX, currentY);
-
-        // Create a new JFrame to hold the StudentProfileGUI panel
-        JFrame profileFrame = new JFrame("Student Profile"); // Give your new window a title
-
-        // Set properties for the new JFrame that contains your panel
-        profileFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes this frame when done
-        profileFrame.getContentPane().add(studentProfilePanel); // Add the JPanel to the JFrame's content pane
-        profileFrame.pack(); // Size the frame to fit the panel's preferred size
-
-        // Set the new frame's location to be the same as the StudentGUI frame
-        profileFrame.setLocation(currentX, currentY); // <--- Key Change: Set exact location
-
-        profileFrame.setResizable(false); // Make the new profile window non-resizable
-        profileFrame.setVisible(true); // Make the new frame visible
-
-        // Dispose the current StudentGUI window
-        this.dispose();
-    
+        StudentProfileGUI panel = new StudentProfileGUI(loggedInStudent);
+        WindowUtils.openCenteredFrame(new JFrame("Student Profile") {{
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            getContentPane().add(panel);
+        }}, true, this);
     }//GEN-LAST:event_profileButtonActionPerformed
 
 
