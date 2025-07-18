@@ -120,6 +120,67 @@ public class ComponentFactory {
         return button;
     }
     
+    // Create TopPanel for display Title 
+    public static JPanel createTopTitlePanel(String title) {
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(102, 102, 102));
+        
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+        titleLabel.setFont(new Font("MV Boli", Font.BOLD, 28));
+        titleLabel.setForeground(new Color(0, 53, 97));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        
+        topPanel.add(titleLabel, BorderLayout.CENTER);
+        
+        return topPanel;
+    }
+    
+    // Create BottomPanel for display Back Button
+    public static JPanel createBottomButtonPanel(JFrame parentFrame, String tutorId) {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(102, 102, 102));
+
+        JButton backButton = ComponentFactory.createRoundedButton("Back", new Color(40, 160, 100));
+        backButton.addActionListener(e -> {
+            new TutorMainGUI(tutorId).setVisible(true);
+            parentFrame.dispose();
+        });
+
+        buttonPanel.add(backButton);
+        return buttonPanel;
+    }
+    
+    // If user was out of data for the page, this method will display empty page
+    // param(title)  : Title of the frame
+    // param(tutorId): The id of the tutor
+    // param(message): The message that will display at the center of the frame
+    public static void showEmptyStatusFrame(String title, String tutorId, String message) {
+        JFrame frame = new JFrame(title);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        JLabel msgLabel = new JLabel(message, SwingConstants.CENTER);
+        msgLabel.setFont(new Font("Segoe UI", Font.ITALIC, 20));
+        msgLabel.setForeground(Color.LIGHT_GRAY);
+        msgLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 20, 0));
+
+        JPanel topPanel = createTopTitlePanel(title); 
+        JPanel botPanel = createBottomButtonPanel(frame, tutorId); 
+
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(new Color(30, 30, 30));
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.add(msgLabel, BorderLayout.CENTER);
+
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(botPanel, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
     // Rounded Panel Class
     public static class RoundedPanel extends JPanel {
         final private int radius;
