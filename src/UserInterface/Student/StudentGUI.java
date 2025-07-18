@@ -1,26 +1,44 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+/**
+ * StudentGUI.java
+ *
+ * Acts as the main dashboard/homepage GUI for a logged-in student.
+ * Provides navigation to key student-related functionalities including:
+ * - Viewing and editing student profile
+ * - Viewing weekly schedule
+ * - Requesting subject changes
+ * - Viewing and making payments
+ *
+ * Core Functionalities:
+ * - Centered layout and transitions using WindowUtils
+ * - Dynamic welcome message based on logged-in student
+ * - Opens relevant GUI panels with associated student context
+ *
+ * Used in:
+ * - LoginGUI → upon successful student login
+ *
+ * Depends on:
+ * - DataModel: Student
+ * - GUI: StudentProfileGUI, ViewStudentScheduleGUI, ChangeSubjectGUI, StudentPaymentGUI
+ * - Utility: WindowUtils
  */
+
 package UserInterface.Student;
 
 import UserInterface.Student.ChangeSubjectGUI;
 import UserInterface.Student.StudentProfileGUI; 
+import UserInterface.Student.ViewStudentScheduleGUI;
 import DataModel.Student; 
 import UserInterface.LoginGUI;
 import javax.swing.*;
 import Util.WindowUtils;
 
-/**
- *
- * @author User
- */
 public class StudentGUI extends javax.swing.JFrame {
     
-    private Student loggedInStudent; // Declare a field to store logged-in student
+    private Student loggedInStudent; // Holds the currently logged-in student object
 
      /**
-     * Creates new form StudentGUI
+     * Constructor to create StudentGUI frame.
+     * @param student The logged-in student object.
      */
     public StudentGUI(Student student) {
        this.loggedInStudent = student; //store the student object
@@ -231,6 +249,10 @@ public class StudentGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     /**
+     * Opens StudentPaymentGUI in a centered window.
+     * Triggered when user clicks the "Payment" button.
+     */
     private void paymentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentButtonActionPerformed
          StudentPaymentGUI panel = new StudentPaymentGUI(loggedInStudent);
         WindowUtils.openCenteredFrame(new JFrame("Student Payment") {{
@@ -239,6 +261,10 @@ public class StudentGUI extends javax.swing.JFrame {
         }}, true, this);
     }//GEN-LAST:event_paymentButtonActionPerformed
 
+    /**
+     * Logs the user out and opens LoginGUI.
+     * Triggered when user clicks the "Logout" button.
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
       int confirm = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to log out?",
@@ -253,6 +279,10 @@ public class StudentGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+     /**
+     * Opens ChangeSubjectGUI in a centered window.
+     * Triggered when user clicks the "Change Subject" button.
+     */
     private void changeSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSubjectButtonActionPerformed
         ChangeSubjectGUI panel = new ChangeSubjectGUI(loggedInStudent);
         WindowUtils.openCenteredFrame(new JFrame("Change Subject Request") {{
@@ -261,14 +291,29 @@ public class StudentGUI extends javax.swing.JFrame {
         }}, true, this);
     }//GEN-LAST:event_changeSubjectButtonActionPerformed
 
+    /**
+     * Opens ViewStudentScheduleGUI and hides the current StudentGUI window.
+     * Triggered when user clicks the "Schedule" button.
+     */
     private void scheduleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scheduleButtonActionPerformed
-        // TODO add your handling code here:
+        ViewStudentScheduleGUI scheduleFrame = new ViewStudentScheduleGUI(loggedInStudent);
+        scheduleFrame.setResizable(false);
+        WindowUtils.centerWindow(scheduleFrame);
+        this.setVisible(false); 
+        scheduleFrame.setVisible(true);
     }//GEN-LAST:event_scheduleButtonActionPerformed
 
+     /**
+     * Unused test button handler (auto-generated).
+     */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    /**
+     * Opens StudentProfileGUI in a centered window.
+     * Triggered when user clicks the "Profile" button.
+     */
     private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
         StudentProfileGUI panel = new StudentProfileGUI(loggedInStudent);
         WindowUtils.openCenteredFrame(new JFrame("Student Profile") {{
