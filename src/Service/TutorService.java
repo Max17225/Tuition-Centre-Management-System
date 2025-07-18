@@ -386,11 +386,5 @@ public class TutorService {
     private static int[] parseTimeRange(String timeStr) {
         String[] parts = timeStr.split("-");
         return new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
-    }
-
-    // To convert int[]{1100, 1200} -> "1100-1200"
-    private static String timeRangeToStr(int[] range) {
-        return String.format("%04d-%04d", range[0], range[1]);
-    }
-    
+    }  
 }

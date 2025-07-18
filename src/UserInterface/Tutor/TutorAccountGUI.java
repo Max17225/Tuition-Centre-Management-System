@@ -32,15 +32,7 @@ public class TutorAccountGUI extends JFrame {
         Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
         // ----------------------------------------------------------------------------------- Top Panel 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(102, 102, 102));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 10, 40));
-
-        JLabel title = new JLabel("My Account", SwingConstants.CENTER);
-        title.setFont(new Font("MV Boli", Font.BOLD, 28));
-        title.setForeground(new Color(0, 53, 97));
-        
-        topPanel.add(title, BorderLayout.CENTER);
+        JPanel topPanel = ComponentFactory.createTopTitlePanel("My Account");
         add(topPanel, BorderLayout.NORTH);
 
         // ------------------------------------------------------------------------ Center Panel with Two Section
@@ -161,19 +153,7 @@ public class TutorAccountGUI extends JFrame {
         add(centerWrapperPanel, BorderLayout.CENTER); // Add it in middle of frame
 
         // --------------------------------------------------------------------------Bottom Panel with Back Button
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setBackground(new Color(102, 102, 102));
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-        
-        // Redesign the button
-        JButton backBtn = ComponentFactory.createRoundedButton("Back", new Color(40, 160, 100));
-
-        backBtn.addActionListener(e -> {
-            new TutorMainGUI(tutorId).setVisible(true);
-            dispose();
-        });
-
-        bottomPanel.add(backBtn);
+        JPanel bottomPanel = ComponentFactory.createBottomButtonPanel(this, tutorId);
         add(bottomPanel, BorderLayout.SOUTH);
     }
     
@@ -192,10 +172,7 @@ public class TutorAccountGUI extends JFrame {
             Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
             // ---- Title ----
-            JLabel title = new JLabel("Edit My Info", SwingConstants.CENTER);
-            title.setFont(new Font("MV Boli", Font.BOLD, 26));
-            title.setForeground(new Color(0, 53, 97));
-            title.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
+            JPanel title = ComponentFactory.createTopTitlePanel("Profile Editor");
             add(title, BorderLayout.NORTH);
 
             // ---- Editor ----
@@ -291,10 +268,7 @@ public class TutorAccountGUI extends JFrame {
             Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
             // ---------- Title --------------
-            JLabel title = new JLabel("Change Password", SwingConstants.CENTER);
-            title.setFont(new Font("MV Boli", Font.BOLD, 26));
-            title.setForeground(new Color(0, 53, 97));
-            title.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
+            JPanel title = ComponentFactory.createTopTitlePanel("Password Editor");
             add(title, BorderLayout.NORTH);
 
             // --------- Editor(Form) -----------

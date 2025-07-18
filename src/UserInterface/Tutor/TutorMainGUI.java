@@ -203,10 +203,10 @@ public class TutorMainGUI extends JFrame {
             button.addActionListener(e -> {
                 switch (label) {
                     case "View My Schedule"        -> {new ViewMyScheduleGUI(tutorId).setVisible(true); dispose();}
-                    case "Update Subject Schedule" -> {new AddSubjectScheduleGUI(tutorId).setVisible(true); dispose();}
-                    case "Delete Subject Schedule" -> {}
-                    case "Update Subject Fee"      -> System.out.println("Updating subject fee...");
-                    case "View Subject Student"    -> System.out.println("Viewing subject student list...");
+                    case "Update Subject Schedule" -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
+                    case "Delete Subject Schedule" -> {DeleteSubjectScheduleGUI.launch(tutorId); dispose();}
+                    case "Update Subject Fee"      -> {UpdateSubjectFeeGUI.launch(tutorId); dispose();}
+                    case "View Subject Student"    -> {ViewMyStudentGUI.launch(tutorId); dispose();}
                     default                        -> System.out.println("Unknown button clicked");
                 }
             });
