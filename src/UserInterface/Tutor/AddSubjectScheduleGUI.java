@@ -14,15 +14,28 @@ import Util.*;
         
 public class AddSubjectScheduleGUI extends JFrame {
 
-    private JComboBox<Subject> subjectComboBox;
-    private JComboBox<String> dayComboBox;
-    private JTextField timeField;
-    private JTextArea conflictArea;
+    private final JComboBox<Subject> subjectComboBox;
+    private final JComboBox<String> dayComboBox;
+    private final JTextField timeField;
+    private final JTextArea conflictArea;
     final private String tutorId;
-
-    public AddSubjectScheduleGUI(String tutorId) {
+    
+    // Use this to launch GUI if tutor was empty status, it will display empty status page
+    public static void launch(String tutorId) {
+        List<Subject> subjectList = TutorService.getMySubject(tutorId);
+        if (subjectList.isEmpty()) {
+            ComponentFactory.showEmptyStatusFrame("Add Subject Schedule", tutorId, "No Subject Registered, Please register with Admin");
+        } else {
+            new AddSubjectScheduleGUI(tutorId).setVisible(true);
+        }
+    }
+    
+    // Constructor
+    private AddSubjectScheduleGUI(String tutorId) {
         this.tutorId = tutorId;
         
+        List<Subject> subjectList = TutorService.getMySubject(tutorId);
+
         // ----------------------------------------------------------------------------- Frame setting
         setTitle("Add Subject Schedule");
         setSize(800, 600);
@@ -42,35 +55,6 @@ public class AddSubjectScheduleGUI extends JFrame {
         topPanel.add(titleLabel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        
-        List<Subject> subjectList = TutorService.getMySubject(tutorId);
-        // ----------------------------------------------------If tutor has no register for subject yet this will display
-        if (subjectList == null || subjectList.isEmpty()) {
-            JPanel emptyPanel = new JPanel();
-            emptyPanel.setBackground(new Color(30, 30, 30));
-            emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
-
-            JLabel msgLabel = new JLabel("No Subject Registered, Please register with Admin");
-            msgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            msgLabel.setFont(new Font("Segoe UI", Font.ITALIC, 20));
-            msgLabel.setForeground(Color.LIGHT_GRAY);
-            msgLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 20, 0));
-
-            JButton backBtn = ComponentFactory.createRoundedButton("Back", new Color(60, 179, 113));
-            backBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            backBtn.addActionListener(e -> {
-                new TutorMainGUI(tutorId).setVisible(true); 
-                dispose();
-            });
-
-            emptyPanel.add(msgLabel);
-            emptyPanel.add(backBtn);
-            add(emptyPanel, BorderLayout.CENTER);
-
-            setVisible(true);
-            return;
-        }
-        
         //--------------------------------------------------------------------------------Center
         Color textColor = Color.WHITE;
         Font labelFont = new Font("Segoe UI", Font.PLAIN, 18);
@@ -208,10 +192,12 @@ public class AddSubjectScheduleGUI extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "✔ Schedule added/updated successfully!");
-
-        new AddSubjectScheduleGUI(tutorId).setVisible(true);
-        dispose();
-
+        
+        // Reset Page
+        subjectComboBox.setSelectedIndex(0);
+        dayComboBox.setSelectedIndex(0);
+        timeField.setText("");
+        conflictArea.setText("");
     }
 
     
