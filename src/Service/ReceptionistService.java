@@ -1,13 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Service;
 
-/**
- *
- * @author nengz
- */
+import Util.DataManager;
+import DataModel.Enrollment;
+
 public class ReceptionistService {
-    
+
+    public static void registerEnrollmentOnly(Enrollment enrollment) {
+        DataManager<Enrollment> manager = DataManager.of(Enrollment.class);
+        manager.appendOne(enrollment);
+    }
 }
