@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.util.List;
 
 public class UpdateProfileGUI extends javax.swing.JFrame {
+private final DataManager<Receptionist> manager = DataManager.of(Receptionist.class);
 
    private final String receptionistId;
 
@@ -39,21 +40,18 @@ public UpdateProfileGUI(String receptionistId) {
     }
     
     private void loadReceptionistData() {
-    DataManager<Receptionist> receptionistManager = DataManager.of(Receptionist.class);
-    List<Receptionist> receptionistList = receptionistManager.readFromFile();
+    Receptionist r = manager.getRecordById(receptionistId);
 
-    for (Receptionist r : receptionistList) {
-        if (r.getId().equals(receptionistId)) {
-            txtId.setText(r.getId()); // ✅ this was missing
-            txtUsername.setText(r.getUsername());
-            txtPhone.setText(r.getPhoneNumber());
-            txtCountry.setText(r.getCountry());
-            txtEmail.setText(r.getEmail());
-            txtPassword.setText(r.getPassword());
-            break;
-        }
+    if (r != null) {
+        txtId.setText(r.getId());
+        txtUsername.setText(r.getUsername());
+        txtPassword.setText(r.getPassword());
+        txtPhone.setText(r.getPhoneNumber());
+        txtCountry.setText(r.getCountry());
+        txtEmail.setText(r.getEmail());
     }
 }
+
 
 
     
@@ -191,24 +189,20 @@ public UpdateProfileGUI(String receptionistId) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+Receptionist r = manager.getRecordById(receptionistId); // ✅ This line goes here too
 
-        DataManager<Receptionist> manager = DataManager.of(Receptionist.class);
-        List<Receptionist> receptionists = manager.readFromFile();
+    if (r != null) {
+        r.setUsername(txtUsername.getText().trim());
+        r.setPassword(new String(txtPassword.getPassword()));
+        r.setPhoneNumber(txtPhone.getText().trim());
+        r.setCountry(txtCountry.getText().trim());
+        r.setEmail(txtEmail.getText().trim());
 
-        for (Receptionist r : receptionists) {
-            if (r.getId().equals(receptionistId)) {
-                r.setUsername(txtUsername.getText().trim());
-                r.setPassword(new String(txtPassword.getPassword()));
-                r.setPhoneNumber(txtPhone.getText().trim());
-                r.setCountry(txtCountry.getText().trim());
-                r.setEmail(txtEmail.getText().trim());
-                break;
-            }
-        }
-
-        manager.overwriteFile(receptionists);
+        manager.updateRecord(r); // ✅ this now replaces overwriteFile
         JOptionPane.showMessageDialog(this, "Profile updated successfully.");
-            // TODO add your handling code here:
+    } else {
+        JOptionPane.showMessageDialog(this, "Receptionist not found.");
+    }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed

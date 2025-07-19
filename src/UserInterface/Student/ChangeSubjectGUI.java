@@ -738,4 +738,3 @@ public class ChangeSubjectGUI extends javax.swing.JPanel {
     private javax.swing.JTabbedPane viewRequest;
     // End of variables declaration//GEN-END:variables
 }
-

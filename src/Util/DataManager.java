@@ -236,24 +236,22 @@ public List<String> readRawLines() {
     }
 }
 
-// Overwrites all lines in the file (used after manual line replacement)
-public void overwriteRawLines(List<String> lines) {
-    Path path = Paths.get("Data", fileName);
-    try {
-        Files.write(path, lines);
-    } catch (IOException e) {
-        System.out.println("Error writing raw lines: " + e.getMessage());
+// New object-based delete method (replaces raw filterAndOverwrite)
+    public boolean deleteByCondition(Predicate<T> deleteCondition) {
+        List<T> all = readFromFile();
+        List<T> filtered = all.stream()
+                              .filter(deleteCondition.negate())
+                              .collect(Collectors.toList());
+        boolean changed = all.size() != filtered.size();
+        if (changed) {
+            overwriteFile(filtered);
+        }
+        return changed;
     }
-}
-// Filter and overwrite based on condition (used for deleting entries)
-// Filter and overwrite based on condition (used for deleting entries)
-public boolean filterAndOverwrite(Predicate<T> keepCondition) {
-    List<T> all = readFromFile();
-    List<T> filtered = all.stream()
-                          .filter(keepCondition)
-                          .collect(Collectors.toList());
-    overwriteFile(filtered);  // ✅ Use the correct method here
-    return all.size() != filtered.size(); // true if anything was deleted
-}
+
+    // Shortcut: delete by ID
+    public boolean deleteById(String id) {
+        return deleteByCondition(item -> item.getId().equalsIgnoreCase(id));
+    }
 
 }
