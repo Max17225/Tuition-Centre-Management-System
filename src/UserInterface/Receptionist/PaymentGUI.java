@@ -146,37 +146,7 @@ public class PaymentGUI extends javax.swing.JFrame {
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
 this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btnExitActionPerformed
-private void updateReceptionistIdInFile(String paymentId, String newReceptionistId) {
-        List<Payment> allPayments = paymentManager.readFromFile();
-        for (int i = 0; i < allPayments.size(); i++) {
-            Payment p = allPayments.get(i);
-            if (p.getId().equals(paymentId)) {
-                // Update receptionistId manually in data line
-                String[] parts = p.toDataLine().split(",");
-                parts[1] = newReceptionistId; // index 1 is receptionist ID
-                String updatedLine = String.join(",", parts);
-                replaceLineInFile(paymentId, updatedLine);
-                break;
-            }
-        }
-    }
 
-    private void replaceLineInFile(String paymentId, String newLine) {
-        List<String> allLines = paymentManager.readRawLines();
-        for (int i = 0; i < allLines.size(); i++) {
-            if (allLines.get(i).startsWith(paymentId + ",")) {
-                allLines.set(i, newLine);
-                break;
-            }
-        }
-        paymentManager.overwriteRawLines(allLines);
-    }
-    /**
-     * @param args the command line arguments
-     */
- public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new PaymentGUI("R0001").setVisible(true));
-    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
