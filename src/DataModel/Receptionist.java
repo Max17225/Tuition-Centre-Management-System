@@ -21,13 +21,6 @@ public class Receptionist extends User implements DataSerializable {
 
     @Override
     public String toDataLine() {
-        return String.join(",",
-            getId(),
-            getUsername(),
-            getPassword(),
-            getPhoneNumber(),
-            getCountry(),
-            getEmail()
-        );
+        return String.join(",", id, username, password, phoneNumber, country, email);
     }
 }

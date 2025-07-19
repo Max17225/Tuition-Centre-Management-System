@@ -190,7 +190,7 @@ public class ComponentFactory {
 
         frame.setVisible(true);
     }
-
+    
     // Rounded Panel Class
     public static class RoundedPanel extends JPanel {
         final private int radius;
