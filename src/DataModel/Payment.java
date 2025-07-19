@@ -5,10 +5,10 @@
 package DataModel;
 
 public class Payment implements DataSerializable {
-    private String paymentId;
+    private final String paymentId;
     private String receptionistId;
-    private String studentId;
-    private String subjectId;
+    private final String studentId;
+    private final String subjectId;
     private String amount;
     private String paymentDate;
     private String status; 

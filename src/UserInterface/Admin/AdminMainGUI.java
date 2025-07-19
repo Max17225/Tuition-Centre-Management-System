@@ -111,7 +111,7 @@ public class AdminMainGUI extends JFrame {
         
         //  button label
         String[] btnLabels = {
-            "Tutor Account Management",  "Tutor Subject Management", "Receptionist Account Management", "View Montly Income"
+            "Tutor Account Management",  "Tutor Subject Management", "Receptionist Account Management", "View Monthly Income"
         };
         
         // defult icon picture
@@ -199,7 +199,7 @@ public class AdminMainGUI extends JFrame {
 //                    case "Tutor Account Management"        -> {new ViewMyScheduleGUI(Id).setVisible(true); dispose();}
 //                    case "Tutor Subject Management"        -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
                     case "Receptionist Account Management"   -> {new ReceptionistAccountManagementGUI(adminId).setVisible(true); dispose();}
-//                    case "View Monthly Income"             -> {UpdateSubjectFeeGUI.launch(tutorId); dispose();} 
+                    case "View Monthly Income"             -> {new ViewMonthlyIncomeGUI(adminId).setVisible(true); dispose();} 
                     default                        -> System.out.println("Unknown button clicked");
                 }
             });
