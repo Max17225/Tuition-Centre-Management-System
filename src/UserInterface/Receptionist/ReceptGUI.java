@@ -1,37 +1,49 @@
-package UserInterface;
+package UserInterface.Receptionist;
+import UserInterface.LoginGUI;
+import UserInterface.Receptionist.EnrollmentGUI;
+import UserInterface.Receptionist.StudentRequestGUI;
+import UserInterface.Receptionist.UpdateProfileGUI;
+import UserInterface.Receptionist.PaymentGUI;
+import UserInterface.Receptionist.DeleteStudentFromReceptionist;
+
 
 /**
  *
  * @author User
  */
 public class ReceptGUI extends javax.swing.JFrame {
+private final String receptionistId;
+  
+public ReceptGUI(String receptionistId) {
+    this.receptionistId = receptionistId;
+    initComponents();
 
-    /**
-     * Creates new form ReceptGUI
-     */
-    public ReceptGUI() {
-        initComponents();
-        btnEnrollment.addActionListener(e -> {
-    new EnrollmentGUI().setVisible(true);  // you must have this class
+   btnEnrollment.addActionListener(e -> {
+    new EnrollmentGUI().setVisible(true);
 });
 
-//btnPayment.addActionListener(e -> {
-//    new PaymentGUI().setVisible(true);  // make sure this exists
-//});
-//
-//btnChangeSubject.addActionListener(e -> {
-//    new ChangeSubjectGUI().setVisible(true);
-//});
-//
-//btnUpdateProfile.addActionListener(e -> {
-//    new UpdateProfileGUI().setVisible(true);
-//});
+    btnPayment.addActionListener(e -> {
+        new PaymentGUI(receptionistId).setVisible(true);
+    });
 
-btnExit.addActionListener(e -> {
-    dispose(); // close the window
-});
+    btnStudentRequest.addActionListener(e -> {
+        new StudentRequestGUI().setVisible(true);
+    });
 
-    }
+    btnUpdateProfile.addActionListener(e -> {
+        new UpdateProfileGUI(receptionistId).setVisible(true);
+    });
+
+    btnDeleteStudentFromReceptionist.addActionListener(e -> {
+        new DeleteStudentFromReceptionist(receptionistId).setVisible(true);
+    });
+
+    btnExit.addActionListener(e -> {
+        this.dispose();
+        new LoginGUI().setVisible(true);
+    });
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,9 +58,10 @@ btnExit.addActionListener(e -> {
         jLabel1 = new javax.swing.JLabel();
         btnPayment = new javax.swing.JButton();
         btnEnrollment = new javax.swing.JButton();
-        btnChangeSubject = new javax.swing.JButton();
-        btnUpdateProfile = new javax.swing.JButton();
+        btnStudentRequest = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
+        btnUpdateProfile = new javax.swing.JButton();
+        btnDeleteStudentFromReceptionist = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Receptionist Dashboard");
@@ -77,11 +90,13 @@ btnExit.addActionListener(e -> {
 
         btnEnrollment.setText("Enrollment");
 
-        btnChangeSubject.setText("Changed Subject");
+        btnStudentRequest.setText("Student  Request");
+
+        btnExit.setText("Exit");
 
         btnUpdateProfile.setText("Update Profile");
 
-        btnExit.setText("Exit");
+        btnDeleteStudentFromReceptionist.setText("Delete Student");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,10 +107,11 @@ btnExit.addActionListener(e -> {
                 .addGap(216, 216, 216)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpdateProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnChangeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnStudentRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEnrollment, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnEnrollment, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdateProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteStudentFromReceptionist, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -107,60 +123,52 @@ btnExit.addActionListener(e -> {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnChangeSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnStudentRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnUpdateProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(btnDeleteStudentFromReceptionist, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+                                         
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ReceptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ReceptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ReceptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ReceptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ReceptGUI().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnChangeSubject;
+    private javax.swing.JButton btnDeleteStudentFromReceptionist;
     private javax.swing.JButton btnEnrollment;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPayment;
+    private javax.swing.JButton btnStudentRequest;
     private javax.swing.JButton btnUpdateProfile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
+
+
+   
+
+
+       
+    
+
+ 
+      
+
+
+
+
+
+
+  
 
