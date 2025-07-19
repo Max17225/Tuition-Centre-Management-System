@@ -4,11 +4,6 @@
  */
 package DataModel;
 
-/**
- *
- * @author nengz
- */
-
 public class Admin extends User implements DataSerializable {
     
     //constructor
@@ -22,11 +17,9 @@ public class Admin extends User implements DataSerializable {
     this.email = email;
     }
     
-    // Everything in here was prepare for u to modify
-
+    // To data line for text file saving
     @Override
     public String toDataLine() {
-        // do the code here
-        return "";
+        return String.join(",", id, username, password, phoneNumber, country, email);
     }
 }

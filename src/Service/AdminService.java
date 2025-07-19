@@ -1,13 +1,136 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Service;
-
-/**
- *
- * @author nengz
- */
+import java.util.*;
+import DataModel.*;
+import Util.*;
+import java.time.LocalDate;
 public class AdminService {
+    // ----------------------- TUTOR MANAGEMENT ------------------------
+    public static boolean registerTutor(String username, String password, String email, String contact, String subjectName, String level, String fee) {
+        if (!InputValidator.emailFormatIsValid(email)) return false;
+
+        String newId = IdGenerator.getNewId(Tutor.class);
+        Tutor newTutor = new Tutor(newId, "", username, password, email, contact);
+
+        DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
+        tutorManager.appendOne(newTutor);
+        
+        if (subjectName != null && !subjectName.isEmpty() &&
+            level != null && !level.isEmpty() &&
+            fee != null && !fee.isEmpty()) {
+            
+            // Assign subject only if values are provided
+            String subjectId = IdGenerator.getNewId(Subject.class);
+            Subject subject = new Subject(subjectId, subjectName, level, newId, fee);
+
+            DataManager<Subject> subjectManager = DataManager.of(Subject.class);
+            subjectManager.appendOne(subject);
+        }
+        return true;
+    }
     
+    public static boolean deleteTutor(String tutorId) {
+        DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
+        List<Tutor> allTutors = tutorManager.readFromFile();
+        boolean removed = allTutors.removeIf(t -> t.getId().equals(tutorId));
+
+        if (removed) {
+            tutorManager.overwriteFile(allTutors);
+        }
+
+        return removed;
+    }
+    
+    public static boolean assignSubjectToTutor(String tutorId, String subjectName, String level, String fee) {
+        DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
+        DataManager<Subject> subjectManager = DataManager.of(Subject.class);
+
+        // 1. Check if tutor exists
+        Tutor tutor = tutorManager.getRecordById(tutorId);
+        if (tutor == null) {
+            System.err.println("Tutor not found with ID: " + tutorId);
+            return false;
+        }
+
+        // 2. Check if the tutor already teaches this subject at the level
+        List<Subject> allSubjects = subjectManager.readFromFile();
+        boolean alreadyAssigned = allSubjects.stream()
+            .anyMatch(s -> s.getTutorId().equals(tutorId)
+                    && s.getSubjectName().equalsIgnoreCase(subjectName)
+                    && s.getLevel().equalsIgnoreCase(level));
+
+        if (alreadyAssigned) {
+            System.err.println("Tutor already assigned to this subject and level.");
+            return false;
+        }
+
+        // 3. Assign new subject to tutor
+        String subjectId = IdGenerator.getNewId(Subject.class);
+        Subject newSubject = new Subject(subjectId, subjectName, level, fee, tutorId);
+        subjectManager.appendOne(newSubject);
+
+        return true;
+    }
+    
+     // ----------------------- RECEPTIONIST MANAGEMENT ------------------------
+    public static boolean registerReceptionist(String name, String username, String password, String email, String contact) {
+        if (!InputValidator.emailFormatIsValid(email)) return false;
+
+        String newId = IdGenerator.getNewId(Receptionist.class);
+        Receptionist newReceptionist = new Receptionist(newId, name, username, password, email, contact);
+
+        DataManager<Receptionist> receptionistManager = DataManager.of(Receptionist.class);
+        receptionistManager.appendOne(newReceptionist);
+        return true;
+    }
+    
+    public static boolean deleteReceptionist(String receptionistId) {
+        DataManager<Receptionist> receptionistManager = DataManager.of(Receptionist.class);
+        List<Receptionist> allReceptionists = receptionistManager.readFromFile();
+        boolean removed = allReceptionists.removeIf(r -> r.getId().equals(receptionistId));
+
+        if (removed) {
+            receptionistManager.overwriteFile(allReceptionists);
+        }
+
+        return removed;
+    }
+    
+    // ----------------------- INCOME REPORTING ------------------------
+    public static int getMonthlyIncome(int year, int month) {
+        DataManager<Payment> paymentManager = DataManager.of(Payment.class);
+        List<Payment> payments = paymentManager.readFromFile();
+
+        int total = 0;
+        for (Payment payment : payments) {
+            try {
+                LocalDate date = LocalDate.parse(payment.getPaymentDate()); // e.g., "2025-07-01"
+                if (date.getYear() == year && date.getMonthValue() == month) {
+                    total += Integer.parseInt(payment.getAmount());
+                }
+            } catch (Exception e) {
+                System.err.println("Invalid payment entry: " + payment.toDataLine());
+            }
+        }
+        return total;
+    }
+
+
+    // ----------------------- ADMIN PROFILE UPDATE ------------------------
+    public static boolean updateAdminProfile(String id, String name, String phoneNumber, String email, String country) {
+        Admin targetAdmin = DataManager.of(Admin.class).getRecordById(id);
+        
+        if (targetAdmin == null) {
+            System.err.println("Admin ID Not Found");
+            return false;
+            
+        } else {
+            targetAdmin.setUsername(name);
+            targetAdmin.setPhoneNumber(phoneNumber);
+            targetAdmin.setEmail(email);
+            targetAdmin.setCountry(country);
+            
+            DataManager.of(Admin.class).updateRecord(targetAdmin);
+            return true;
+        }
+    }
 }
