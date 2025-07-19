@@ -4,6 +4,7 @@
  */
 package UserInterface;
 
+import UserInterface.Receptionist.ReceptGUI;
 import UserInterface.Student.StudentGUI;
 import Service.AuthService;
 import DataModel.Student; 
@@ -220,11 +221,11 @@ public class LoginGUI extends javax.swing.JFrame {
                 } 
                 
                 case 'A' -> {
-                    new UserInterface.Admin.AdminMainGUI(inputId).setVisible(true);
+                    new AdminGUI().setVisible(true);
                 }
                 
                 case 'R' -> {
-                    new UserInterface.Receptionist.ReceptGUI(inputId).setVisible(true);  
+                new ReceptGUI(inputId).setVisible(true);  
                }
 
 

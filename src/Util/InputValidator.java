@@ -48,4 +48,11 @@ public class InputValidator {
             return false;
         }
     }
+    
+    // Verify for correct Level format input
+    // param(leve) : String input of level
+    // return(bool): if is valid return true
+    public static boolean isValidLevel(String level) {
+        return level != null && level.matches("L[1-5]");
+    }
 }

@@ -2,19 +2,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package UserInterface.Tutor;
+package UserInterface.Admin;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
  * @author nengz
  */
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-// UserInterface.Tutor class for create common element
-
 public class ComponentFactory {
     
     // Create a rounded button with hoven effect
@@ -123,7 +133,7 @@ public class ComponentFactory {
     // Create TopPanel for display Title 
     public static JPanel createTopTitlePanel(String title) {
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(102, 102, 102));
+        topPanel.setBackground(new Color(0, 128, 128));
         
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("MV Boli", Font.BOLD, 28));
@@ -136,13 +146,13 @@ public class ComponentFactory {
     }
     
     // Create BottomPanel for display Back Button
-    public static JPanel createBottomButtonPanel(JFrame parentFrame, String tutorId) {
+    public static JPanel createBottomButtonPanel(JFrame parentFrame, String adminId) {
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(102, 102, 102));
+        buttonPanel.setBackground(new Color(0, 128, 128));
 
         JButton backButton = ComponentFactory.createRoundedButton("Back", new Color(40, 160, 100));
         backButton.addActionListener(e -> {
-            new TutorMainGUI(tutorId).setVisible(true);
+            new AdminMainGUI(adminId).setVisible(true);
             parentFrame.dispose();
         });
 
@@ -152,9 +162,9 @@ public class ComponentFactory {
     
     // If user was out of data for the page, this method will display empty page
     // param(title)  : Title of the frame
-    // param(tutorId): The id of the tutor
+    // param(adminId): The id of the admin
     // param(message): The message that will display at the center of the frame
-    public static void showEmptyStatusFrame(String title, String tutorId, String message) {
+    public static void showEmptyStatusFrame(String title, String adminId, String message) {
         JFrame frame = new JFrame(title);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
@@ -167,7 +177,7 @@ public class ComponentFactory {
         msgLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 20, 0));
 
         JPanel topPanel = createTopTitlePanel(title); 
-        JPanel botPanel = createBottomButtonPanel(frame, tutorId); 
+        JPanel botPanel = createBottomButtonPanel(frame, adminId); 
 
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(new Color(30, 30, 30));

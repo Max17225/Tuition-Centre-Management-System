@@ -1,7 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+/**
+ * StudentPaymentGUI.java
+ *
+ * Provides a payment panel interface for students as part of the Student Dashboard.
+ * Allows students to:
+ * - View enrolled subjects (up to 3)
+ * - Check individual payment amounts and current statuses (Paid, Pending, Unpaid)
+ * - Make payments for Unpaid subjects (transitions to Pending)
+ * - Generate and view receipts for Paid subjects
+ *
+ * Core Functionalities:
+ * - Uses StudentService to load enrolled subjects and payment data
+ * - Dynamically updates labels and buttons based on payment status
+ * - Calculates and displays total outstanding amount
+ *
+ * Used in:
+ * - StudentGUI → paymentButtonActionPerformed
+ *
+ * Depends on:
+ * - DataModel: Student, Subject, Payment
+ * - Service: StudentService
+ * - Util: SwingUtilities (for window transition)
  */
+
 package UserInterface.Student;
 
 import DataModel.Student; 
@@ -18,30 +38,27 @@ import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
-
-/**
- *
- * @author User
- */
 public class StudentPaymentGUI extends javax.swing.JPanel {
 
-    private Student loggedInStudent;
-    private StudentService studentService;
+    private Student loggedInStudent; // The currently logged-in student
+    private StudentService studentService; // Service layer for student-related operations
 
-    // A map to store subjects linked to their GUI components for easier management
+    // Maps subject identifier (e.g., "subject1") to its corresponding Subject object
     private Map<String, Subject> displayedSubjects = new HashMap<>();
 
-    /**
-     * Creates new form StudentPaymentGUI
-     * @param student The logged-in student whose payments are to be displayed.
-     */
+   /**
+    * Constructor for StudentPaymentGUI.
+    * Initializes the GUI components and loads payment data for the provided student.
+    * 
+    * @param student The student whose payment data will be managed.
+    */
     public StudentPaymentGUI(Student student) {
         this.loggedInStudent = student;
         this.studentService = new StudentService(); 
       
         initComponents();
         
-        loadPaymentData(); // Load data when the panel is initialized
+        loadPaymentData(); // Load data on panel load
     }
 
     /**
@@ -153,6 +170,7 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
             }
         });
 
+        backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         backButton.setForeground(new java.awt.Color(0, 0, 0));
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
@@ -324,6 +342,10 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+    * Triggered when the "Pay Now" button for subject 3 is clicked.
+    * Initiates payment handling logic.
+    */
     private void makePaymentSubject3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePaymentSubject3ActionPerformed
         // Find the Subject associated with subject3 label
         Subject sub3 = displayedSubjects.get("subject3");
@@ -334,6 +356,10 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_makePaymentSubject3ActionPerformed
 
+    /**
+    * Triggered when the "Pay Now" button for subject 1 is clicked.
+    * Initiates payment handling logic.
+    */
     private void makePaymentSubject1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePaymentSubject1ActionPerformed
         // Find the Subject associated with subject1 label
         Subject sub1 = displayedSubjects.get("subject1");
@@ -344,6 +370,10 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_makePaymentSubject1ActionPerformed
 
+    /**
+    * Triggered when the "Pay Now" button for subject 2 is clicked.
+    * Initiates payment handling logic.
+    */
     private void makePaymentSubject2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePaymentSubject2ActionPerformed
         // Find the Subject associated with subject2 label
         Subject sub2 = displayedSubjects.get("subject2");
@@ -354,8 +384,12 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_makePaymentSubject2ActionPerformed
 
+    /**
+    * Returns to the student dashboard (StudentGUI) after refreshing student data.
+    * Closes the current payment panel window.
+    */  
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-         // Re-fetch the latest student data from the text file
+        // Re-fetch the latest student data from the text file
         StudentService studentService = new StudentService();
         Student freshStudent = studentService.getStudentById(loggedInStudent.getId());
 
@@ -372,26 +406,42 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    /**
+    * Triggered when the "Print Receipt" button for subject 1 is clicked.
+    * Displays receipt dialog for the subject if paid.
+    */
     private void receipt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt1ActionPerformed
         Subject subject = displayedSubjects.get("subject1");
         generateReceiptForSubject(subject);
     }//GEN-LAST:event_receipt1ActionPerformed
 
+    /**
+    * Triggered when the "Print Receipt" button for subject 3 is clicked.
+    * Displays receipt dialog for the subject if paid.
+    */
     private void receipt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt3ActionPerformed
         Subject subject = displayedSubjects.get("subject3");
         generateReceiptForSubject(subject);
     }//GEN-LAST:event_receipt3ActionPerformed
 
+    /**
+    * Triggered when the "Print Receipt" button for subject 2 is clicked.
+    * Displays receipt dialog for the subject if paid.
+    */
     private void receipt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receipt2ActionPerformed
         Subject subject = displayedSubjects.get("subject2");
         generateReceiptForSubject(subject);
     }//GEN-LAST:event_receipt2ActionPerformed
-
     
-     /**
-     * Loads and displays the student's enrolled subjects, their amounts, and payment statuses.
-     * Also calculates and displays the total outstanding amount.
-     */
+    /**
+    * Loads the student's payment-related data including:
+    * - Subject names
+    * - Amount due
+    * - Status of each subject's payment (Paid / Unpaid / Pending)
+    * 
+    * It also sets GUI visibility/logic for enabling or disabling payment and receipt buttons
+    * depending on the current status.
+    */
     private void loadPaymentData() {
         // Clear previous data in case of refresh
         subject1.setText("Subject1:");
@@ -423,9 +473,9 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
             studentService.getEnrolledSubjectsWithPaymentStatusAndAmount(loggedInStudent.getId());
 
         // Define colors
-        Color pendingColor = new Color(255, 140, 0); // Orange
-        Color paidColor = new Color(34, 139, 34);    // Forest Green
-        Color unpaidColor = new Color(220, 20, 60);  // Crimson Red (or use Color.RED for a brighter red)
+        Color pendingColor = new Color(255, 140, 0); 
+        Color paidColor = new Color(34, 139, 34);    
+        Color unpaidColor = new Color(220, 20, 60);  
         Color defaultColor = Color.BLACK;
 
         // Populate labels based on up to 3 enrolled subjects
@@ -511,10 +561,12 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
 
 
     /**
-     * Handles the logic for making a payment for a specific subject.
-     * @param subjectId The ID of the subject being paid for.
-     * @param amount The amount to be paid for the subject.
-     */
+    * Initiates a payment request for a given subject.
+    * Sets the status to "Pending" and disables further changes until reviewed.
+    * 
+    * @param subjectId The ID of the subject to make payment for.
+    * @param amount The amount to be paid.
+    */
     private void handleMakePayment(String subjectId, String amount) {
         int confirm = JOptionPane.showConfirmDialog(this,
             "Are you sure you want to make a payment of $" + amount + " for this subject?",
@@ -535,6 +587,11 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         }
     }
     
+    /**
+    * Generates and displays a formatted receipt for a successfully paid subject.
+    * 
+    * @param subject The Subject object for which receipt is to be shown.
+    */
     private void generateReceiptForSubject(Subject subject) {
         if (subject == null) {
             JOptionPane.showMessageDialog(this, "No subject data found for receipt.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -564,7 +621,7 @@ public class StudentPaymentGUI extends javax.swing.JPanel {
         receipt.append("Subject: ").append(subject.getSubjectName()).append("\n");
         receipt.append("Amount Paid: $").append(targetPayment.getAmount()).append("\n");
         receipt.append("Payment Date: ").append(targetPayment.getPaymentDate()).append("\n");
-        receipt.append("Receptionist ID: ").append(targetPayment.getReceptionistId()).append("\n"); // ✅ NEW LINE
+        receipt.append("Payment Accepted By: ").append(targetPayment.getReceptionistId()).append("\n"); 
         receipt.append("Receipt ID: ").append(targetPayment.getId()).append("\n");
         receipt.append("---------------------------\n");
 
