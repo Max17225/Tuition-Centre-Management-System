@@ -1,1 +1,1 @@
-A0001, Kunlalala, A0001, 01111111, Soviet Union, kunlalala@gmail.com
+A0001,KunAdmin,A0001,01111111,Soviet Union,kunlalala@gmail.com
