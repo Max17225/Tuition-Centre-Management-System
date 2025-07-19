@@ -196,11 +196,10 @@ public class AdminMainGUI extends JFrame {
             // === Action Events ===
             button.addActionListener(e -> {
                 switch (label) {
-//                    case "View My Schedule"        -> {new ViewMyScheduleGUI(Id).setVisible(true); dispose();}
-//                    case "Update Subject Schedule" -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
-//                    case "Delete Subject Schedule" -> {DeleteSubjectScheduleGUI.launch(tutorId); dispose();}
-//                    case "Update Subject Fee"      -> {UpdateSubjectFeeGUI.launch(tutorId); dispose();}
-//                    case "View Subject Student"    -> {ViewMyStudentGUI.launch(tutorId); dispose();}
+//                    case "Tutor Account Management"        -> {new ViewMyScheduleGUI(Id).setVisible(true); dispose();}
+//                    case "Tutor Subject Management"        -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
+                    case "Receptionist Account Management"   -> {new ReceptionistAccountManagementGUI(adminId).setVisible(true); dispose();}
+//                    case "View Monthly Income"             -> {UpdateSubjectFeeGUI.launch(tutorId); dispose();} 
                     default                        -> System.out.println("Unknown button clicked");
                 }
             });

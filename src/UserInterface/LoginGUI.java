@@ -224,7 +224,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 }
                 
                 case 'R' -> {
-                    new UserInterface.Receptionist.ReceptGUI(inputId).setVisible(true);  
+//                    new UserInterface.Receptionist.ReceptGUI(inputId).setVisible(true);  
                }
 
 
