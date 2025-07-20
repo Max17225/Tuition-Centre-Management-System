@@ -4,7 +4,7 @@
  */
 package DataModel;
 
-public class Admin extends User implements DataSerializable {
+public class Admin extends User {
     
     //constructor
     public Admin(String id, String username, String password, String phoneNumber) {
