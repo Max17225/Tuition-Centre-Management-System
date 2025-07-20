@@ -306,7 +306,7 @@ public class StudentService {
                     return false;
                 } else {
                     p.setAmount(amount);
-                    p.setPaymentDate(LocalDate.now().toString());
+                    p.setDate(LocalDate.now().toString());
                     p.setStatus("Pending");
                     paymentManager.updateRecord(p);
                     return true;
