@@ -313,6 +313,7 @@ public class StudentService {
                 }
             }
         }
+        
         Payment newPayment = new Payment(IdGenerator.getNewId(Payment.class), "N/A", studentId, subjectId, amount, LocalDate.now().toString(), "Pending");
         paymentManager.appendOne(newPayment);
         return true;

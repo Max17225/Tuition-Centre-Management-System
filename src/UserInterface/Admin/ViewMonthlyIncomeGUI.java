@@ -21,17 +21,17 @@ import javax.swing.table.JTableHeader;
  * @author nengz
  */
 public class ViewMonthlyIncomeGUI extends JFrame {
-    private final JTable paymentTable; // Table to display payments
-    private final DefaultTableModel tableModel; // Table model for dynamic data
+    private final JTable paymentTable;              // Table to display payments
+    private final DefaultTableModel tableModel;     // Table model for dynamic data
     private final JComboBox<Integer> monthComboBox; // Dropdown to select month
-    private final JLabel totalLabel; // Label to show total income
+    private final JLabel totalLabel;                // Label to show total income
 
     public ViewMonthlyIncomeGUI(String adminId) {
-        setTitle("Monthly Income Report"); // Window title
-        setSize(800, 600); // Window size
-        setLocationRelativeTo(null); // Center window on screen
+        setTitle("Monthly Income Report");                 // Window title
+        setSize(800, 600);                                 // Window size
+        setLocationRelativeTo(null);                       // Center window on screen
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only this window
-        setLayout(new BorderLayout()); // Use BorderLayout for layout
+        setLayout(new BorderLayout());                     // Use BorderLayout for layout
 
         // Top Panel
         JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("My Account");
@@ -47,7 +47,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
 
         // Filter controls
         JLabel selectMonth = new JLabel("Select Month:");
-        selectMonth.setForeground(Color.WHITE); // Label text color
+        selectMonth.setForeground(Color.WHITE);           // Label text color
 
         JPanel filterPanel = new JPanel();
         filterPanel.setBackground(new Color(20, 30, 45)); // Match background
@@ -82,7 +82,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
         paymentTable.setGridColor(new Color(80, 80, 80)); // Grid line color
         paymentTable.setSelectionForeground(Color.WHITE); // Selected text color
         paymentTable.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Row font
-        paymentTable.setRowHeight(28); // Row height
+        paymentTable.setRowHeight(28);                              // Row height
 
         // Table header styling
         JTableHeader tableHeader = paymentTable.getTableHeader();
@@ -104,11 +104,11 @@ public class ViewMonthlyIncomeGUI extends JFrame {
 
     private void loadPaymentsForSelectedMonth() {
         int selectedMonth = (int) monthComboBox.getSelectedItem(); // Get selected month
-        int currentYear = LocalDate.now().getYear(); // Get current year
+        int currentYear = LocalDate.now().getYear();               // Get current year
         List<Payment> payments = DataManager.of(Payment.class).readFromFile(); // Load payment data
 
         tableModel.setRowCount(0); // Clear existing table rows
-        double total = 0; // Reset total
+        double total = 0;          // Reset total
 
         // Process each payment record
         for (Payment p : payments) {
@@ -129,9 +129,11 @@ public class ViewMonthlyIncomeGUI extends JFrame {
                         p.getStatus()
                     });
 
-                    // Add to total income
-                    total += Double.parseDouble(p.getAmount());
+                    // Add to total income, but not unpaid satus
+                    if (p.getStatus().equalsIgnoreCase("Paid"))
+                        total += Double.parseDouble(p.getAmount());
                 }
+                
             } catch (NumberFormatException e) {
                 // Log invalid entries
                 System.err.println("Invalid payment entry: " + p.toDataLine());

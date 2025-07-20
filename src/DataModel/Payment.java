@@ -9,8 +9,8 @@ public class Payment implements DataSerializable {
     private String receptionistId;
     private final String studentId;
     private final String subjectId;
-    private String amount;
-    private String paymentDate;
+    private final String amount;
+    private final String paymentDate;
     private String status; 
 
     // Constructor
@@ -41,9 +41,6 @@ public class Payment implements DataSerializable {
 
     // Set info
     public void setStatus(String status) {this.status = status;}
-    public void setPaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
-    public void setAmount(String amount) {this.amount = amount;}
-   
     public void setReceptionistId(String receptionistId) { this.receptionistId = receptionistId; }
 
 }

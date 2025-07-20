@@ -1,6 +1,6 @@
 package DataModel;
 
-public class Receptionist extends User implements DataSerializable {
+public class Receptionist extends User {
 
     public Receptionist(String id, String username, String password, String phoneNumber) {
         super(id, username, password, phoneNumber);
