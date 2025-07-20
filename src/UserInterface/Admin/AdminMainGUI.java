@@ -196,7 +196,7 @@ public class AdminMainGUI extends JFrame {
             // === Action Events ===
             button.addActionListener(e -> {
                 switch (label) {
-//                    case "Tutor Account Management"        -> {new ViewMyScheduleGUI(Id).setVisible(true); dispose();}
+                    case "Tutor Account Management"        -> {new TutorAccountManagementGUI(adminId).setVisible(true); dispose();}
 //                    case "Tutor Subject Management"        -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
                     case "Receptionist Account Management"   -> {new ReceptionistAccountManagementGUI(adminId).setVisible(true); dispose();}
                     case "View Monthly Income"             -> {new ViewMonthlyIncomeGUI(adminId).setVisible(true); dispose();} 

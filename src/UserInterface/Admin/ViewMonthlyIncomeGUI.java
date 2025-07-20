@@ -20,6 +20,7 @@ import javax.swing.table.JTableHeader;
  *
  * @author nengz
  */
+
 public class ViewMonthlyIncomeGUI extends JFrame {
     private final JTable paymentTable;              // Table to display payments
     private final DefaultTableModel tableModel;     // Table model for dynamic data
@@ -67,7 +68,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
         filterPanel.add(filterButton);
 
         // Label for displaying total income
-        totalLabel = new JLabel("Total Income: RM0");
+        totalLabel = new JLabel("Total Paid Income: RM0");
         totalLabel.setForeground(Color.WHITE);
         filterPanel.add(totalLabel);
 
@@ -141,7 +142,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
         }
 
         // Display total income formatted to 2 decimal places
-        totalLabel.setText(String.format("Total Income: RM%.2f", total));
+        totalLabel.setText(String.format("Total Paid Income: RM%.2f", total));
     }
 }
 

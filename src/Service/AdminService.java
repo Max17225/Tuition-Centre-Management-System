@@ -10,26 +10,15 @@ public class AdminService {
     // ----------------------- TUTOR MANAGEMENT ------------------------
     // Use to register new Tutor
     // return(bool): return true if success 
-    public static boolean registerTutor(String username, String password, String email, String contact, String subjectName, String level, String fee) {
+    public static boolean registerTutor(String username, String password, String phoneNumber, String email, String country) {
         if (!InputValidator.emailFormatIsValid(email)) return false;
 
         String newId = IdGenerator.getNewId(Tutor.class);
-        Tutor newTutor = new Tutor(newId, "", username, password, email, contact);
+        Tutor newTutor = new Tutor(newId, username, password, phoneNumber, email, country);
 
         DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
         tutorManager.appendOne(newTutor);
-        
-        if (subjectName != null && !subjectName.isEmpty() &&
-            level != null && !level.isEmpty() &&
-            fee != null && !fee.isEmpty()) {
-            
-            // Assign subject only if values are provided
-            String subjectId = IdGenerator.getNewId(Subject.class);
-            Subject subject = new Subject(subjectId, subjectName, level, newId, fee);
-
-            DataManager<Subject> subjectManager = DataManager.of(Subject.class);
-            subjectManager.appendOne(subject);
-        }
+ 
         return true;
     }
     

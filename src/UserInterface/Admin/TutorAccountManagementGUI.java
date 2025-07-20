@@ -4,6 +4,10 @@
  */
 package UserInterface.Admin;
 
+/**
+ *
+ * @author nengz
+ */
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,7 +18,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import Util.*;
 import java.util.List;
-import DataModel.Receptionist;
+import DataModel.Tutor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -24,11 +28,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nengz
  */
-public class ReceptionistAccountManagementGUI extends JFrame {
-    private final DefaultTableModel model; // Table model to manage receptionist data
 
-    public ReceptionistAccountManagementGUI(String adminId) {
-        setTitle("Receptionist Account Management");
+public class TutorAccountManagementGUI extends JFrame {
+    private final DefaultTableModel model; // Table model to manage Tutor data
+
+    public TutorAccountManagementGUI(String adminId) {
+        setTitle("Tutor Account Management");
         setSize(800, 600);
         setLocationRelativeTo(null); // Center the frame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -36,7 +41,7 @@ public class ReceptionistAccountManagementGUI extends JFrame {
         getContentPane().setBackground(new Color(0, 128, 128)); // Background color
 
         // ------------------------ Top Panel ------------------------
-        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("Receptionist Account");
+        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("Tutor Account");
         add(topPanel, BorderLayout.NORTH);
 
         // ------------------------ Bottom Panel (Back button) ------------------------
@@ -50,14 +55,14 @@ public class ReceptionistAccountManagementGUI extends JFrame {
         centerPanel.setBorder(new EmptyBorder(20, 40, 20, 40)); // padding
 
         // ------------------------ Table Setup ------------------------
-        List<Receptionist> allRecp = DataManager.of(Receptionist.class).readFromFile();
+        List<Tutor> allTutor = DataManager.of(Tutor.class).readFromFile();
         String[] columns = {"ID", "Username", "Phone", "Country", "Email"};
         model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
         // Fill table with data
-        for (Receptionist r : allRecp) {
-            model.addRow(new Object[]{ r.getId(), r.getUsername(), r.getPhoneNumber(), r.getEmail(), r.getCountry() });
+        for (Tutor t : allTutor) {
+            model.addRow(new Object[]{ t.getId(), t.getUsername(), t.getPhoneNumber(), t.getEmail(), t.getCountry() });
         }
 
         table.setFillsViewportHeight(true);
@@ -88,8 +93,8 @@ public class ReceptionistAccountManagementGUI extends JFrame {
         Font btnFont = new Font("Segoe UI", Font.BOLD, 14);
         Color btnColor = new Color(100, 255, 180);
 
-        JButton registerBtn = new JButton("Register New Receptionist");
-        JButton deleteBtn = new JButton("Delete Receptionist Account");
+        JButton registerBtn = new JButton("Register New Tutor");
+        JButton deleteBtn = new JButton("Delete Tutor Account");
         JButton changePwBtn = new JButton("Change Password");
 
         // Style buttons
@@ -112,38 +117,38 @@ public class ReceptionistAccountManagementGUI extends JFrame {
 
         // Open Register GUI
         registerBtn.addActionListener(e -> {
-            new RegisterReceptionistGUI(adminId).setVisible(true);
+            new RegisterTutorGUI(adminId).setVisible(true);
             dispose(); // Close current frame
         });
 
-        // Delete selected receptionist
+        // Delete selected tutor
         deleteBtn.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                String recepId = (String) table.getValueAt(selectedRow, 0); // ID is in column 0
+                String tutorId = (String) table.getValueAt(selectedRow, 0); // ID is in column 0
 
                 int confirm = JOptionPane.showConfirmDialog(null,
-                        "Are you sure you want to delete Receptionist ID: " + recepId + "?",
+                        "Are you sure you want to delete Tutor ID: " + tutorId + "?",
                         "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    DataManager.of(Receptionist.class).deleteById(recepId);
-                    JOptionPane.showMessageDialog(null, "Receptionist deleted.");
+                    DataManager.of(Tutor.class).deleteById(tutorId);
+                    JOptionPane.showMessageDialog(null, "Tutor deleted.");
                     refreshTable(); // Update UI after delete
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Please select a receptionist to delete.");
+                JOptionPane.showMessageDialog(null, "Please select a tutor to delete.");
             }
         });
 
-        // Change selected receptionist's password
+        // Change selected tutor's password
         changePwBtn.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                String recepId = (String) table.getValueAt(selectedRow, 0);
-                new changeReceptionistPasswordDialog(this, recepId); // open dialog
+                String tutorId = (String) table.getValueAt(selectedRow, 0);
+                new changeTutorPasswordDialog(this, tutorId); // open dialog
             } else {
-                JOptionPane.showMessageDialog(null, "Please select a receptionist to change password.");
+                JOptionPane.showMessageDialog(null, "Please select a tutor to change password.");
             }
         });
 
@@ -154,16 +159,16 @@ public class ReceptionistAccountManagementGUI extends JFrame {
     // ------------------------ Refresh table content ------------------------
     private void refreshTable() {
         model.setRowCount(0); // Clear existing table rows
-        List<Receptionist> updatedList = DataManager.of(Receptionist.class).readFromFile();
+        List<Tutor> updatedList = DataManager.of(Tutor.class).readFromFile();
 
-        for (Receptionist r : updatedList) {
-            model.addRow(new Object[]{ r.getId(), r.getUsername(), r.getPhoneNumber(), r.getEmail(), r.getCountry() });
+        for (Tutor t : updatedList) {
+            model.addRow(new Object[]{ t.getId(), t.getUsername(), t.getPhoneNumber(), t.getEmail(), t.getCountry() });
         }
     }
 
     // ------------------------ Password Change Dialog ------------------------
-    public class changeReceptionistPasswordDialog extends JDialog {
-        public changeReceptionistPasswordDialog(JFrame parent, String recepId) {
+    public class changeTutorPasswordDialog extends JDialog {
+        public changeTutorPasswordDialog(JFrame parent, String tutorId) {
             super(parent, "Change Password", true);
             setSize(350, 180);
             setLocationRelativeTo(parent);
@@ -202,9 +207,9 @@ public class ReceptionistAccountManagementGUI extends JFrame {
                     return;
                 }
 
-                Receptionist targetRec = DataManager.of(Receptionist.class).getRecordById(recepId);
-                targetRec.setPassword(newPassword);
-                DataManager.of(Receptionist.class).updateRecord(targetRec);
+                Tutor targetTutor = DataManager.of(Tutor.class).getRecordById(tutorId);
+                targetTutor.setPassword(newPassword);
+                DataManager.of(Tutor.class).updateRecord(targetTutor);
 
                 messageLabel.setText("Password updated.");
                 messageLabel.setForeground(new Color(0, 128, 0));
@@ -219,4 +224,3 @@ public class ReceptionistAccountManagementGUI extends JFrame {
         }
     }
 }
-
