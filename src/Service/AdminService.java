@@ -3,6 +3,7 @@ import java.util.*;
 import DataModel.*;
 import Util.*;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 
 public class AdminService {
@@ -131,6 +132,65 @@ public class AdminService {
             DataManager.of(Admin.class).updateRecord(targetAdmin); // Save updated admin
             return true;
         }
+    }
+    
+    // Fetch all tutors
+    public static List<Tutor> getAllTutors() {
+        return DataManager.of(Tutor.class).readFromFile();
+    }
+    
+    public static boolean changeTutorPassword(String tutorId, String newPassword) {
+        List<Tutor> tutors = getAllTutors();
+        for (Tutor t : tutors) {
+            if (t.getId().equals(tutorId)) {
+                t.setPassword(newPassword);
+                DataManager.of(Tutor.class).overwriteFile(tutors);
+            }
+        }
+        return false;
+    }
+    
+    // Get subjects assigned to a tutor
+    public static List<Subject> getSubjectsByTutor(String tutorId) {
+        return DataManager.of(Subject.class).readFromFile().stream()
+            .filter(s -> s.getTutorId().equals(tutorId))
+            .collect(Collectors.toList());
+    }
+    
+    // Assign a subject to a tutor
+    public static boolean assignSubjectToTutor(String subjectId, String tutorId) {
+        List<Subject> subjects = DataManager.of(Subject.class).readFromFile();
+        for (Subject s : subjects) {
+            if (s.getId().equals(subjectId)) {
+                s.setTutorId(tutorId);
+                DataManager.of(Subject.class).overwriteFile(subjects);
+            }
+        }
+        return false;
+    }
+    
+    // Remove subject from a tutor (unassign)
+    public static boolean removeSubjectFromTutor(String subjectId) {
+        List<Subject> subjects = DataManager.of(Subject.class).readFromFile();
+        for (Subject s : subjects) {
+            if (s.getId().equals(subjectId)) {
+                s.setTutorId("Empty"); // Or some placeholder like "Unassigned"
+                DataManager.of(Subject.class).overwriteFile(subjects);
+            }
+        }
+        return false;
+    }
+    
+    // Update fee for a subject
+    public static boolean updateSubjectFee(String subjectId, int newFee) {
+        List<Subject> subjects = DataManager.of(Subject.class).readFromFile();
+        for (Subject s : subjects) {
+            if (s.getId().equals(subjectId)) {
+                s.setFeePerMonth(newFee);
+                DataManager.of(Subject.class).overwriteFile(subjects);
+            }
+        }
+        return false;
     }
 }
 
