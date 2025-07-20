@@ -1,6 +1,6 @@
 package DataModel;
 
-public class Receptionist extends User implements DataSerializable {
+public class Receptionist extends User {
 
     public Receptionist(String id, String username, String password, String phoneNumber) {
         super(id, username, password, phoneNumber);
@@ -21,13 +21,6 @@ public class Receptionist extends User implements DataSerializable {
 
     @Override
     public String toDataLine() {
-        return String.join(",",
-            getId(),
-            getUsername(),
-            getPassword(),
-            getPhoneNumber(),
-            getCountry(),
-            getEmail()
-        );
+        return String.join(",", id, username, password, phoneNumber, country, email);
     }
 }
