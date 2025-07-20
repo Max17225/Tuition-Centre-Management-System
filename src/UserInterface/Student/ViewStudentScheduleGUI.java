@@ -9,9 +9,12 @@
  * - Supports vertical scrolling for usability
  * - Provides a "Back" button to return to the StudentGUI
  * 
- * Visuals:
- * - Colored headers for each day (filled with [48,188,237], white font)
- * - Subject entries shown below with a neutral gray color
+ * Visual Design:
+ * - Top header with blue background (Color: [45, 118, 232]) and white title text with logo
+ * - Each weekday section features a colored header (Color: [48, 188, 237]) with white font
+ * - Subject/class entries are displayed below each header in a clean white panel
+ * - Neutral gray text is used for subject entries; light italic gray text for “No classes scheduled” messages
+ * - Light green background (Color: [235, 245, 238]) for the main interface to maintain a soft, readable theme
  * 
  * Data Source:
  * - Uses StudentService#getStudentWeeklySchedule to retrieve schedule mappings

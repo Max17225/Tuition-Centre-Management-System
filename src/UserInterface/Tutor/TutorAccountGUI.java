@@ -169,7 +169,7 @@ public class TutorAccountGUI extends JFrame {
             getContentPane().setBackground(new Color(102, 102, 102));
             setLayout(new BorderLayout());
 
-            Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
+            Tutor targetTutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
             // ---- Title ----
             JPanel title = ComponentFactory.createTopTitlePanel("Profile Editor");
@@ -188,10 +188,10 @@ public class TutorAccountGUI extends JFrame {
             gbc.fill = GridBagConstraints.HORIZONTAL; // Will make a long text field
             gbc.anchor = GridBagConstraints.WEST; // Start from  left side
 
-            JTextField usernameField = new JTextField(tutor.getUsername());
-            JTextField phoneField = new JTextField(tutor.getPhoneNumber());
-            JTextField countryField = new JTextField(tutor.getCountry());
-            JTextField emailField = new JTextField(tutor.getEmail());
+            JTextField usernameField = new JTextField(targetTutor.getUsername());
+            JTextField phoneField = new JTextField(targetTutor.getPhoneNumber());
+            JTextField countryField = new JTextField(targetTutor.getCountry());
+            JTextField emailField = new JTextField(targetTutor.getEmail());
 
             addFormRow(formPanel, gbc, 0, "Username:", usernameField, labelFont, labelColor);
             addFormRow(formPanel, gbc, 1, "Phone:", phoneField, labelFont, labelColor);
@@ -230,19 +230,12 @@ public class TutorAccountGUI extends JFrame {
                 }
 
                 // If not problem then reset all data
-                tutor.setUsername(username);
-                tutor.setPhoneNumber(phone);
-                tutor.setCountry(country);
-                tutor.setEmail(email);
+                targetTutor.setUsername(username);
+                targetTutor.setPhoneNumber(phone);
+                targetTutor.setCountry(country);
+                targetTutor.setEmail(email);
 
-                List<Tutor> tutors = DataManager.of(Tutor.class).readFromFile();
-                for (int i = 0; i < tutors.size(); i++) {
-                    if (tutors.get(i).getId().equalsIgnoreCase(tutorId)) {
-                        tutors.set(i, tutor);
-                        break;
-                    }
-                }
-                DataManager.of(Tutor.class).overwriteFile(tutors);
+                DataManager.of(Tutor.class).updateRecord(targetTutor);
 
                 JOptionPane.showMessageDialog(this, "Info updated successfully.");
                 dispose();
@@ -265,7 +258,7 @@ public class TutorAccountGUI extends JFrame {
             getContentPane().setBackground(new Color(102, 102, 102));
             setLayout(new BorderLayout());
 
-            Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
+            Tutor targetTutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
             // ---------- Title --------------
             JPanel title = ComponentFactory.createTopTitlePanel("Password Editor");
@@ -307,7 +300,7 @@ public class TutorAccountGUI extends JFrame {
                 String confirm = new String(confirmPassField.getPassword()).trim();
                 
                 // A little logic to make sure current password and new password is correct.
-                if (!current.equals(tutor.getPassword())) {
+                if (!current.equals(targetTutor.getPassword())) {
                     JOptionPane.showMessageDialog(this, "Current password is incorrect.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -320,21 +313,15 @@ public class TutorAccountGUI extends JFrame {
                     return;
                 }
 
-                tutor.setPassword(newPass);
-                List<Tutor> tutors = DataManager.of(Tutor.class).readFromFile();
-                for (int i = 0; i < tutors.size(); i++) {
-                    if (tutors.get(i).getId().equalsIgnoreCase(tutorId)) {
-                        tutors.set(i, tutor);
-                        break;
-                    }
-                }
-                DataManager.of(Tutor.class).overwriteFile(tutors);
+                targetTutor.setPassword(newPass);
+                DataManager.of(Tutor.class).updateRecord(targetTutor);
 
                 JOptionPane.showMessageDialog(this, "Password updated successfully.");
                 dispose();
                 new TutorAccountGUI(tutorId).setVisible(true);
             });
-
+            
+            // Back button
             backBtn.addActionListener(e -> {
                 new TutorAccountGUI(tutorId).setVisible(true);
                 dispose();

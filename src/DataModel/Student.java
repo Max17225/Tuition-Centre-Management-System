@@ -4,7 +4,7 @@
  */
 package DataModel;
 
-public class Student extends User implements DataSerializable {
+public class Student extends User{
     
     private String address;
     final private String enrollmentId;

@@ -109,7 +109,7 @@ public class TutorService {
         DataManager<ClassSchedule> scheduleManager = DataManager.of(ClassSchedule.class);
         List<ClassSchedule> allSchedule = scheduleManager.readFromFile();
         
-        // Get all the schedule which having the schedule
+        // Get all the subject which having the schedule
         List<Subject> allSubjectWithSchedule = getAllSubjectWithSchedule();
         
         // The level of current subject
@@ -127,19 +127,7 @@ public class TutorService {
             .toList();
 
        // create a list to store the exist time of the same level subject for one day only.
-        List<String> sameLvSubTimeInOneDay = new ArrayList<>();
-        for (ClassSchedule sch : sameLevelSchedules) {
-            for (String dayTime : sch.getScheduleInWeek().split("\\|")) {
-                String [] dayTimePairs = dayTime.split(":");
-                String day = dayTimePairs[0];
-                String time = dayTimePairs[1];
-                
-                if (day.equals(newScheduleDay)) {
-                    sameLvSubTimeInOneDay.add(time);
-                }
-            }
-        }
-
+        List<String> sameLvSubTimeInOneDay = getExistTimeOnSameDay(newScheduleDay, sameLevelSchedules);
         
         // check for the conflict
         int[] newTime = parseTimeRange(newScheduleTime);
@@ -171,18 +159,7 @@ public class TutorService {
             .toList();
 
         // Create a List to store the same day's time of his own schedule
-        List<String> existTimeOnSameDay = new ArrayList<> ();
-        for (ClassSchedule schedule : mySchedules) {
-            for (String dayTime : schedule.getScheduleInWeek().split("\\|")) {
-                String[] dayTimePairs = dayTime.split(":");
-                String day = dayTimePairs[0];
-                String time = dayTimePairs[1];
-                
-                if (day.equals(newScheduleDay)) {
-                    existTimeOnSameDay.add(time);
-                }
-            }
-        }
+        List<String> existTimeOnSameDay = getExistTimeOnSameDay(newScheduleDay, mySchedules);
 
         // check if the new schedule will conflict to his own schedule
         int[] newTime = parseTimeRange(newScheduleTime);
@@ -351,9 +328,6 @@ public class TutorService {
         DataManager<Subject> subjectManager = DataManager.of(Subject.class);
         List<Subject> allSubject = subjectManager.readFromFile();
         
-        List<Subject> allSubjectWithSchedule = new ArrayList<>();
-        
-        
         if (allSchedule.isEmpty()) {
             return Collections.emptyList();
         }
@@ -362,13 +336,9 @@ public class TutorService {
             .map(ClassSchedule::getSubjectId)
             .collect(Collectors.toSet());
         
-        for (Subject record : allSubject) {
-            if (allSubjectIdWithSchedule.contains(record.getId())) {
-                allSubjectWithSchedule.add(record);
-            }
-        }
-        
-        return allSubjectWithSchedule;   
+        return allSubject.stream()
+                    .filter(sub -> allSubjectIdWithSchedule.contains(sub.getId()))
+                    .toList(); 
     }
     
     // Convert subjectId to a subject(Object)
@@ -384,7 +354,35 @@ public class TutorService {
 
     // To convert "1100-1200" -> int[]{1100, 1200}
     private static int[] parseTimeRange(String timeStr) {
-        String[] parts = timeStr.split("-");
-        return new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
-    }  
+        try {
+            String[] parts = timeStr.split("-");
+            return new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid time format: " + timeStr);
+        }
+    }
+    
+    // Get a list of time which is on the same day, used for check conflict time
+    // param(newSchDay)    : The day of the new shcedule tutor want to register
+    // param(scheckSchList): The List of classSchedule u want to check
+    // return(List)        : Return a list of String time
+    private static List<String> getExistTimeOnSameDay (String newSchDay, List<ClassSchedule> checkSchList) {
+        List<String> existTimeOnSameDay = new ArrayList<>();
+        
+        for (ClassSchedule sch : checkSchList) {
+            for (String dayTime : sch.getScheduleInWeek().split("\\|")) {
+                String [] dayTimePairs = dayTime.split(":");
+                String day = dayTimePairs[0];
+                String time = dayTimePairs[1];
+                
+                if (day.equals(newSchDay)) {
+                    existTimeOnSameDay.add(time);
+                }
+            }
+        }
+        
+        return existTimeOnSameDay;
+    }   
+        
+
 }
