@@ -4,7 +4,6 @@
  */
 package Util;
 
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -20,10 +19,13 @@ import java.util.stream.Collectors;
 public class DataManager<T extends DataModel.DataSerializable> { // extends DataSerializable, because this DataManager only can use the class in DataModel
     // A variable(rowToObject), store function.
     private final Function<List<String>, T> rowToObject; 
+    
     // fileName will the manager use.
     private final String fileName;
+    
     // A Variable to Store each Function with corresponding Class.
     private static final Map<Class<?>, Function<List<String>, ?>> converterMap = new HashMap<>();
+    
     // A Variable to Store eatch fileName with corresponding Class.
     private static final Map<Class<?>, String> fileNameMap = new HashMap<>();
     
@@ -81,16 +83,7 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         converterMap.put(DataModel.Payment.class, row -> 
             new DataModel.Payment(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6))
         );
-        fileNameMap.put (DataModel.Payment.class, "Payment.txt");
-        
-        // Add more DataModel here
-        // ---------------------------- PAYMENT ----------------------------------------------
-        converterMap.put(DataModel.Payment.class, row ->
-           new DataModel.Payment(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6))
-        );
-        fileNameMap.put(DataModel.Payment.class, "Payment.txt");
-
-//   Add more DataModel here
+        fileNameMap.put (DataModel.Payment.class, "Payment.txt"); 
     }                                                                   
 
     // Constructor of FileManager

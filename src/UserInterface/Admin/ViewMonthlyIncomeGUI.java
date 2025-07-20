@@ -35,7 +35,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
         setLayout(new BorderLayout());                     // Use BorderLayout for layout
 
         // Top Panel
-        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("My Account");
+        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("View Monthly Income");
         add(topPanel, BorderLayout.NORTH);
 
         // Bottom Panel
