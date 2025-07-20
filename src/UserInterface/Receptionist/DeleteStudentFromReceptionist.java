@@ -10,7 +10,6 @@ import DataModel.StudentRequest;
 import Util.DataManager;
 import javax.swing.JOptionPane;
 import java.util.function.Predicate; // ✅ REQUIRED for filterAndOverwrite
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import DataModel.Student;
 
@@ -106,14 +105,14 @@ private final String receptionistId;
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
-    String studentId = txtStudentId.getText().trim();
+   String studentId = txtStudentId.getText().trim();
 
     if (studentId.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter a Student ID.");
         return;
     }
 
-    // ✅ Step 1: Get Student record
+    // Step 1: Get Student record
     Student student = DataManager.of(Student.class).getRecordById(studentId);
     if (student == null) {
         JOptionPane.showMessageDialog(this, "Student not found.");
@@ -122,29 +121,29 @@ private final String receptionistId;
 
     String enrollmentId = student.getEnrollmentId();
 
-    // ✅ Step 2: Delete from Enrollment using enrollmentId
+    // Step 2: Delete from Enrollment
     boolean foundInEnrollment = DataManager.of(Enrollment.class)
-        .filterAndOverwrite(e -> !e.getId().equalsIgnoreCase(enrollmentId));
+            .deleteById(enrollmentId);
 
-    // ✅ Step 3: Delete from Payment
+    // Step 3: Delete from Payment
     boolean foundInPayment = DataManager.of(Payment.class)
-        .filterAndOverwrite(p -> !p.getStudentId().equalsIgnoreCase(studentId));
+            .deleteByCondition(p -> p.getStudentId().equalsIgnoreCase(studentId));
 
-    // ✅ Step 4: Delete from StudentRequest
+    // Step 4: Delete from StudentRequest
     boolean foundInRequest = DataManager.of(StudentRequest.class)
-        .filterAndOverwrite(r -> !r.getStudentId().equalsIgnoreCase(studentId));
+            .deleteByCondition(r -> r.getStudentId().equalsIgnoreCase(studentId));
 
-    // ✅ Step 5: Delete from Student.txt
+    // Step 5: Delete from Student
     boolean foundInStudent = DataManager.of(Student.class)
-        .filterAndOverwrite(s -> !s.getId().equalsIgnoreCase(studentId));
+            .deleteById(studentId);
 
-    // ✅ Step 6: Notify
+    // Step 6: Notify
     if (foundInEnrollment || foundInPayment || foundInRequest || foundInStudent) {
-        JOptionPane.showMessageDialog(this, 
-            "Student with ID " + studentId + " and related records have been deleted.");
+        JOptionPane.showMessageDialog(this,
+                "Student with ID " + studentId + " and related records have been deleted.");
     } else {
-        JOptionPane.showMessageDialog(this, 
-            "No records found for Student ID: " + studentId);
+        JOptionPane.showMessageDialog(this,
+                "No records found for Student ID: " + studentId);
     }
 
     txtStudentId.setText("");
@@ -160,26 +159,7 @@ private final String receptionistId;
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-    } catch (Exception ex) {
-        java.util.logging.Logger.getLogger(DeleteStudentFromReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new DeleteStudentFromReceptionist("R001").setVisible(true); // ✅ pass receptionistId
-        }
-    });
-}
-
+    
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

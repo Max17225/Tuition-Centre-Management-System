@@ -223,6 +223,7 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
             System.err.println("Update failed: ID not found - " + updatedItem.getId());
         }
     }
+  
     
     // New object-based delete method (replaces raw filterAndOverwrite)
     public boolean deleteByCondition(Predicate<T> deleteCondition) {
@@ -237,8 +238,10 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         return changed;
     }
 
+  
     // Shortcut: delete by ID
     public boolean deleteById(String id) {
         return deleteByCondition(item -> item.getId().equalsIgnoreCase(id));
     }
+  
 }

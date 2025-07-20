@@ -208,14 +208,12 @@ private String getEnrollmentIdForStudent(String studentId) {
     DataManager<StudentRequest> manager = DataManager.of(StudentRequest.class);
     List<StudentRequest> requests = manager.readFromFile();
 
-    for (StudentRequest req : requests) {
-        if (req.getRequestId().equals(requestId)) {
-            req.setStatus("Declined");
-            break;
-        }
-    }
+   StudentRequest req = manager.getRecordById(requestId);
+if (req != null) {
+    req.setStatus("Declined");
+    manager.updateRecord(req);
+}
 
-    manager.overwriteFile(requests);
     JOptionPane.showMessageDialog(this, "Request declined.");
     loadPendingRequests();
 
@@ -242,13 +240,12 @@ private String getEnrollmentIdForStudent(String studentId) {
     DataManager<StudentRequest> manager = DataManager.of(StudentRequest.class);
     List<StudentRequest> requests = manager.readFromFile();
 
-    for (StudentRequest req : requests) {
-        if (req.getRequestId().equals(requestId)) {
-            req.setStatus("Accepted");
-            break;
-        }
-    }
-    manager.overwriteFile(requests);
+    StudentRequest req = manager.getRecordById(requestId);
+if (req != null) {
+    req.setStatus("Accepted");
+    manager.updateRecord(req);
+}
+
 
     // ✅ Get enrollmentId from Student file
     String enrollmentId = getEnrollmentIdForStudent(studentId);
@@ -261,15 +258,14 @@ private String getEnrollmentIdForStudent(String studentId) {
     DataManager<Enrollment> enrollManager = DataManager.of(Enrollment.class);
     List<Enrollment> enrollments = enrollManager.readFromFile();
 
-    for (Enrollment e : enrollments) {
-        if (e.getId().equals(enrollmentId)) {
-            if (e.getSubjectId1().equals(oldSub)) e.setSubjectId1(newSub);
-            else if (e.getSubjectId2().equals(oldSub)) e.setSubjectId2(newSub);
-            else if (e.getSubjectId3().equals(oldSub)) e.setSubjectId3(newSub);
-            break;
-        }
-    }
-    enrollManager.overwriteFile(enrollments);
+    Enrollment enrollment = enrollManager.getRecordById(enrollmentId);
+if (enrollment != null) {
+    if (enrollment.getSubjectId1().equals(oldSub)) enrollment.setSubjectId1(newSub);
+    else if (enrollment.getSubjectId2().equals(oldSub)) enrollment.setSubjectId2(newSub);
+    else if (enrollment.getSubjectId3().equals(oldSub)) enrollment.setSubjectId3(newSub);
+    enrollManager.updateRecord(enrollment);
+}
+
 
     JOptionPane.showMessageDialog(this, "Request accepted and subject updated.");
     loadPendingRequests(); // refresh
@@ -278,38 +274,7 @@ private String getEnrollmentIdForStudent(String studentId) {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StudentRequestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StudentRequestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StudentRequestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StudentRequestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StudentRequestGUI().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccept;
