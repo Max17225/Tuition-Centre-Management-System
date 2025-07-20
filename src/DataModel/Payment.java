@@ -5,10 +5,10 @@
 package DataModel;
 
 public class Payment implements DataSerializable {
-    private String paymentId;
+    private final String paymentId;
     private String receptionistId;
-    private String studentId;
-    private String subjectId;
+    private final String studentId;
+    private final String subjectId;
     private String amount;
     private String paymentDate;
     private String status; 
@@ -41,9 +41,7 @@ public class Payment implements DataSerializable {
 
     // Set info
     public void setStatus(String status) {this.status = status;}
-    public void setPaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
-    public void setAmount(String amount) {this.amount = amount;}
-   
     public void setReceptionistId(String receptionistId) { this.receptionistId = receptionistId; }
-
+    public void setAmount(String newAmount) {this.amount = newAmount;}
+    public void setDate (String newDate) {this.paymentDate = newDate;}
 }
