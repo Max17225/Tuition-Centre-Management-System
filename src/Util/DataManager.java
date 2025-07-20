@@ -223,6 +223,17 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
             System.err.println("Update failed: ID not found - " + updatedItem.getId());
         }
     }
+
+   // Reads all lines as raw text (used for manual editing)
+    public List<String> readRawLines() {
+        Path path = Paths.get("Data", fileName);
+        try {
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            System.out.println("Error reading raw lines: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
   
     
     // New object-based delete method (replaces raw filterAndOverwrite)
