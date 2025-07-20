@@ -14,7 +14,7 @@ public class Tutor extends User {
         super(id, username, password, phoneNumber); 
     }
     
-    public Tutor(String id, String username, String password, String phoneNumber, String country, String email) {
+    public Tutor(String id, String username, String password, String phoneNumber, String email, String country) {
     super(id, username, password, phoneNumber);
     this.country = country;
     this.email = email;

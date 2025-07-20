@@ -32,7 +32,6 @@ public class TutorAccountGUI extends JFrame {
         Tutor tutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
         // ----------------------------------------------------------------------------------- Top Panel 
-
         JPanel topPanel = ComponentFactory.createTopTitlePanel("My Account");
         add(topPanel, BorderLayout.NORTH);
 
@@ -46,7 +45,8 @@ public class TutorAccountGUI extends JFrame {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(new Color(60, 60, 60));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-      
+
+
         // Title
         JLabel infoTitle = new JLabel("TUTOR INFO");
         infoTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -105,6 +105,8 @@ public class TutorAccountGUI extends JFrame {
         // Make sure button at the bottom
         infoPanel.add(Box.createVerticalStrut(40)); 
         infoPanel.add(btnPanel);
+
+
 
         // -----------------------------------------------------------------------------------RIGHT - Subject Info
         JPanel subjectPanel = new ComponentFactory.RoundedPanel(20);
@@ -169,7 +171,6 @@ public class TutorAccountGUI extends JFrame {
 
             Tutor targetTutor = DataManager.of(Tutor.class).getRecordById(tutorId);
 
-
             // ---- Title ----
             JPanel title = ComponentFactory.createTopTitlePanel("Profile Editor");
             add(title, BorderLayout.NORTH);
@@ -180,7 +181,6 @@ public class TutorAccountGUI extends JFrame {
 
             Font labelFont = new Font("Segoe UI", Font.PLAIN, 16);
             Color labelColor = Color.WHITE;
-
             Insets padding = new Insets(10, 20, 10, 20); // Create space
 
             GridBagConstraints gbc = new GridBagConstraints();

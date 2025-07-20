@@ -1,3 +1,2 @@
-T0001,Kunlalalalalalalala,T0001,010-111-1111,Soviet Union,KTuTOR@gmail.com
-T0002,Sumbul,T0002,010-232-2322,Russia,Test@mail.com
-T0003,Gee,T0003,022-222-2222,Japan,Gee@gmail.com
+T0001,Kunlala,T0001,01010101010111,KuNTuTOR@mail.com,Soviet Union
+T0003,Gee,T0003,022-222-2222,Gee@gmail.com,Japan

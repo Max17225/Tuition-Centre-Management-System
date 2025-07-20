@@ -6,7 +6,7 @@ public class Receptionist extends User {
         super(id, username, password, phoneNumber);
     }
 
-    public Receptionist(String id, String username, String password, String phoneNumber, String country, String email) {
+    public Receptionist(String id, String username, String password, String phoneNumber, String email, String country) {
         super(id, username, password, phoneNumber);
         this.country = country;
         this.email = email;

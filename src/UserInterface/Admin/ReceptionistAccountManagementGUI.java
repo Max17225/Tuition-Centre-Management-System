@@ -36,7 +36,7 @@ public class ReceptionistAccountManagementGUI extends JFrame {
         getContentPane().setBackground(new Color(0, 128, 128)); // Background color
 
         // ------------------------ Top Panel ------------------------
-        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("My Account");
+        JPanel topPanel = UserInterface.Admin.ComponentFactory.createTopTitlePanel("Receptionist Account");
         add(topPanel, BorderLayout.NORTH);
 
         // ------------------------ Bottom Panel (Back button) ------------------------
@@ -51,7 +51,7 @@ public class ReceptionistAccountManagementGUI extends JFrame {
 
         // ------------------------ Table Setup ------------------------
         List<Receptionist> allRecp = DataManager.of(Receptionist.class).readFromFile();
-        String[] columns = {"ID", "Username", "Phone", "Email", "Country"};
+        String[] columns = {"ID", "Username", "Phone", "Country", "Email"};
         model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
@@ -149,11 +149,6 @@ public class ReceptionistAccountManagementGUI extends JFrame {
 
         centerPanel.add(buttonPanel);
         add(centerPanel, BorderLayout.CENTER); // add center content
-    }
-
-    // ------------------------ Main Entry Point ------------------------
-    public static void main(String[] args) {
-        new ReceptionistAccountManagementGUI("A0001").setVisible(true);
     }
 
     // ------------------------ Refresh table content ------------------------
