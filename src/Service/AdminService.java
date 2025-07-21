@@ -31,31 +31,11 @@ public class AdminService {
     // Assign subject for tutor
     // return(bool): return true if success
     public static boolean assignSubjectToTutor(String tutorId, String subjectName, String level, String fee) {
-        DataManager<Tutor> tutorManager = DataManager.of(Tutor.class);
         DataManager<Subject> subjectManager = DataManager.of(Subject.class);
-
-        // 1. Check if tutor exists
-        Tutor tutor = tutorManager.getRecordById(tutorId);
-        if (tutor == null) {
-            System.err.println("Tutor not found with ID: " + tutorId);
-            return false;
-        }
-
-        // 2. Check if the tutor already teaches this subject at the level
-        List<Subject> allSubjects = subjectManager.readFromFile();
-        boolean alreadyAssigned = allSubjects.stream()
-            .anyMatch(s -> s.getTutorId().equals(tutorId)
-                    && s.getSubjectName().equalsIgnoreCase(subjectName)
-                    && s.getLevel().equalsIgnoreCase(level));
-
-        if (alreadyAssigned) {
-            System.err.println("Tutor already assigned to this subject and level.");
-            return false;
-        }
 
         // 3. Assign new subject to tutor
         String subjectId = IdGenerator.getNewId(Subject.class);
-        Subject newSubject = new Subject(subjectId, subjectName, level, fee, tutorId);
+        Subject newSubject = new Subject(subjectId, subjectName, level, tutorId, fee);
         subjectManager.appendOne(newSubject);
 
         return true;

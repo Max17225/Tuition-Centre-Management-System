@@ -217,7 +217,8 @@ public class DataManager<T extends DataModel.DataSerializable> { // extends Data
         }
     }
 
-   // Reads all lines as raw text (used for manual editing)
+    // Reads all lines as raw text (used for manual editing)
+    // Also suitable for create search bar.
     public List<String> readRawLines() {
         Path path = Paths.get("Data", fileName);
         try {
