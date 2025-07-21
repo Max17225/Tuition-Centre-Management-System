@@ -11,14 +11,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
@@ -160,37 +163,6 @@ public class ComponentFactory {
         return buttonPanel;
     }
     
-    // If user was out of data for the page, this method will display empty page
-    // param(title)  : Title of the frame
-    // param(adminId): The id of the admin
-    // param(message): The message that will display at the center of the frame
-    public static void showEmptyStatusFrame(String title, String adminId, String message) {
-        JFrame frame = new JFrame(title);
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-
-        JLabel msgLabel = new JLabel(message, SwingConstants.CENTER);
-        msgLabel.setFont(new Font("Segoe UI", Font.ITALIC, 20));
-        msgLabel.setForeground(Color.LIGHT_GRAY);
-        msgLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 20, 0));
-
-        JPanel topPanel = createTopTitlePanel(title); 
-        JPanel botPanel = createBottomButtonPanel(frame, adminId); 
-
-        JPanel centerPanel = new JPanel();
-        centerPanel.setBackground(new Color(30, 30, 30));
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(msgLabel, BorderLayout.CENTER);
-
-        frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(centerPanel, BorderLayout.CENTER);
-        frame.add(botPanel, BorderLayout.SOUTH);
-
-        frame.setVisible(true);
-    }
-    
     // Rounded Panel Class
     public static class RoundedPanel extends JPanel {
         final private int radius;
@@ -209,4 +181,30 @@ public class ComponentFactory {
             super.paintComponent(g);
         }
     }
+    
+    // ------------------------------------------------ Component Use in Register Subject/Tutor GUI ----------
+    // Create styled label
+    public static JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+
+    // Create styled text field
+    public static JTextField createTextField() {
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(250, 30));
+        return field;
+    }
+    
+    // Add label + field to form
+    public static void addField(JPanel panel, GridBagConstraints gbc, int row, JLabel label, JComponent field) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        panel.add(field, gbc);
+    }    
+    
 }

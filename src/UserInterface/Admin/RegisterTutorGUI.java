@@ -37,30 +37,30 @@ public class RegisterTutorGUI extends JFrame {
 
         // ----------------------- Form Fields ------------------------
         // Username Field
-        JLabel usernameLabel = createLabel("Username:");
-        usernameField = createTextField();
-        addField(centerPanel, gbc, 0, usernameLabel, usernameField);
+        JLabel usernameLabel = ComponentFactory.createLabel("Username:");
+        usernameField = ComponentFactory.createTextField();
+        ComponentFactory.addField(centerPanel, gbc, 0, usernameLabel, usernameField);
 
         // Password Field
-        JLabel passwordLabel = createLabel("Password:");
+        JLabel passwordLabel = ComponentFactory.createLabel("Password:");
         passwordField = new JPasswordField();
         passwordField.setPreferredSize(new Dimension(250, 30));
-        addField(centerPanel, gbc, 1, passwordLabel, passwordField);
+        ComponentFactory.addField(centerPanel, gbc, 1, passwordLabel, passwordField);
 
         // Phone Field
-        JLabel phoneLabel = createLabel("Phone:");
-        phoneField = createTextField();
-        addField(centerPanel, gbc, 2, phoneLabel, phoneField);
+        JLabel phoneLabel = ComponentFactory.createLabel("Phone:");
+        phoneField = ComponentFactory.createTextField();
+        ComponentFactory.addField(centerPanel, gbc, 2, phoneLabel, phoneField);
 
         // Email Field
-        JLabel emailLabel = createLabel("Email:");
-        emailField = createTextField();
-        addField(centerPanel, gbc, 3, emailLabel, emailField);
+        JLabel emailLabel = ComponentFactory.createLabel("Email:");
+        emailField = ComponentFactory.createTextField();
+        ComponentFactory.addField(centerPanel, gbc, 3, emailLabel, emailField);
 
         // Country Field
-        JLabel countryLabel = createLabel("Country:");
-        countryField = createTextField();
-        addField(centerPanel, gbc, 4, countryLabel, countryField);
+        JLabel countryLabel = ComponentFactory.createLabel("Country:");
+        countryField = ComponentFactory.createTextField();
+        ComponentFactory.addField(centerPanel, gbc, 4, countryLabel, countryField);
 
         // ----------------------- Register Button ------------------------
         JButton registerBtn = new JButton("Register");
@@ -90,32 +90,6 @@ public class RegisterTutorGUI extends JFrame {
         registerBtn.addActionListener((ActionEvent e) -> registerTutor());
 
         setVisible(true); // Show window
-    }
-
-    // ----------------------- Utility Methods ------------------------
-
-    // Create styled label
-    private JLabel createLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setForeground(Color.WHITE);
-        return label;
-    }
-
-    // Create styled text field
-    private JTextField createTextField() {
-        JTextField field = new JTextField();
-        field.setPreferredSize(new Dimension(250, 30));
-        return field;
-    }
-
-    // Add label + field to form
-    private void addField(JPanel panel, GridBagConstraints gbc, int row, JLabel label, JComponent field) {
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        panel.add(field, gbc);
     }
 
     // ----------------------- Registration Logic ------------------------

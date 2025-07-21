@@ -197,8 +197,8 @@ public class AdminMainGUI extends JFrame {
             button.addActionListener(e -> {
                 switch (label) {
                     case "Tutor Account Management"        -> {new TutorAccountManagementGUI(adminId).setVisible(true); dispose();}
-//                    case "Tutor Subject Management"        -> {AddSubjectScheduleGUI.launch(tutorId); dispose();}
-                    case "Receptionist Account Management"   -> {new ReceptionistAccountManagementGUI(adminId).setVisible(true); dispose();}
+                    case "Tutor Subject Management"        -> {new TutorSubjectManagementGUI(adminId).setVisible(true); dispose();}
+                    case "Receptionist Account Management" -> {new ReceptionistAccountManagementGUI(adminId).setVisible(true); dispose();}
                     case "View Monthly Income"             -> {new ViewMonthlyIncomeGUI(adminId).setVisible(true); dispose();} 
                     default                        -> System.out.println("Unknown button clicked");
                 }
