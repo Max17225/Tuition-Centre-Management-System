@@ -51,7 +51,7 @@ public class ReceptionistAccountManagementGUI extends JFrame {
 
         // ------------------------ Table Setup ------------------------
         List<Receptionist> allRecp = DataManager.of(Receptionist.class).readFromFile();
-        String[] columns = {"ID", "Username", "Phone", "Country", "Email"};
+        String[] columns = {"ID", "Username", "Phone", "Email", "Country"};
         model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 

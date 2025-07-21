@@ -56,7 +56,7 @@ public class TutorAccountManagementGUI extends JFrame {
 
         // ------------------------ Table Setup ------------------------
         List<Tutor> allTutor = DataManager.of(Tutor.class).readFromFile();
-        String[] columns = {"ID", "Username", "Phone", "Country", "Email"};
+        String[] columns = {"ID", "Username", "Phone", "Email", "Country"};
         model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
