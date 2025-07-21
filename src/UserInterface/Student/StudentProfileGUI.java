@@ -435,6 +435,10 @@ public class StudentProfileGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_enrollmentIdTextActionPerformed
 
+     private void phoneNumberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumberTextActionPerformed
+        // TODO add your handling code here:
+    }
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
