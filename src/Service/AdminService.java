@@ -41,6 +41,20 @@ public class AdminService {
         return true;
     }
     
+    // Delete all the subject record with given tutor Id, used when admin delete a tutor
+    // param(tutorId): the id of the target tutor
+    public static void deleteThisTutorSubject(String tutorId) {
+        List<Subject> allSubject = DataManager.of(Subject.class).readFromFile();
+
+        // Keep only subjects NOT belonging to this tutor
+        List<Subject> newAllSubject = allSubject.stream()
+            .filter(subject -> !subject.getTutorId().equals(tutorId))
+            .toList();
+
+        // Save updated subject list back to file
+        DataManager.of(Subject.class).overwriteFile(newAllSubject);
+    }
+    
     // ----------------------- RECEPTIONIST MANAGEMENT ------------------------
 
     // Registers a new Receptionist if the email format is valid

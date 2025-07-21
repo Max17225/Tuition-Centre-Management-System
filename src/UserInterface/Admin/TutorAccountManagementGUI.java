@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import Util.*;
 import java.util.List;
 import DataModel.Tutor;
+import Service.AdminService;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -133,6 +134,8 @@ public class TutorAccountManagementGUI extends JFrame {
 
                 if (confirm == JOptionPane.YES_OPTION) {
                     DataManager.of(Tutor.class).deleteById(tutorId);
+                    AdminService.deleteThisTutorSubject(tutorId); // Delete all the subject of that tutor
+                    
                     JOptionPane.showMessageDialog(null, "Tutor deleted.");
                     refreshTable(); // Update UI after delete
                 }
