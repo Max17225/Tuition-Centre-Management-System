@@ -11,7 +11,7 @@ public class Admin extends User {
         super(id, username, password, phoneNumber); 
     }
 
-    public Admin(String id, String username, String password, String phoneNumber, String country, String email) {
+    public Admin(String id, String username, String password, String phoneNumber, String email, String country) {
     super(id, username, password, phoneNumber);
     this.country = country;
     this.email = email;
@@ -20,6 +20,6 @@ public class Admin extends User {
     // To data line for text file saving
     @Override
     public String toDataLine() {
-        return String.join(",", id, username, password, phoneNumber, country, email);
+        return String.join(",", id, username, password, phoneNumber, email, country);
     }
 }

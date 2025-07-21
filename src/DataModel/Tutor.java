@@ -14,7 +14,7 @@ public class Tutor extends User {
         super(id, username, password, phoneNumber); 
     }
     
-    public Tutor(String id, String username, String password, String phoneNumber, String email, String country) {
+    public Tutor(String id, String username, String password, String phoneNumber,String email, String country) {
     super(id, username, password, phoneNumber);
     this.country = country;
     this.email = email;
@@ -22,6 +22,6 @@ public class Tutor extends User {
     
     @Override
     public String toDataLine() {
-        return String.join(",", id, username, password, phoneNumber, country, email);
+        return String.join(",", id, username, password, phoneNumber, email, country);
     }  
 }

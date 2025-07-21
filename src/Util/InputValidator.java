@@ -11,11 +11,17 @@ public class InputValidator {
     // Verify for correct email format.
     // param(userEmail): Email input from the user
     // return(boolean) : If correct format return true.
-    public static boolean emailFormatIsValid(String userEmail) {
-        if (userEmail == null) return false;
-    
-        userEmail = userEmail.trim().toLowerCase();
-        return userEmail.endsWith("@gmail.com") || userEmail.endsWith("@mail.com") || userEmail.equalsIgnoreCase("Empty");
+    public static boolean emailFormatIsValid(String email) {
+        if (email == null) return false;
+        email = email.trim().toLowerCase();
+
+        // Check general email format using regex
+        boolean formatOk = email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
+
+        // Check domain is allowed
+        boolean domainOk = email.endsWith("@gmail.com") || email.endsWith("@mail.com");
+
+        return formatOk && domainOk;
     }
     
     // Verify for correct time input format.

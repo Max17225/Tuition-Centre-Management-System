@@ -1,3 +1,0 @@
-S0001,Juicetin,S0001,ENR0001,09382919393,0192388287,juicetin@gmail.com,bukit jalil
-S0003,Kelvin,S0003,ENR0003,0192837465,0134839201,kelvin@yahoo.com,setapak
-S0004,Salma,S0004,ENR0004,0111122233,0184728910,salma@edu.my,cheras

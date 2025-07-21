@@ -21,6 +21,6 @@ public class Receptionist extends User {
 
     @Override
     public String toDataLine() {
-        return String.join(",", id, username, password, phoneNumber, country, email);
+        return String.join(",", id, username, password, phoneNumber, email, country);
     }
 }
