@@ -290,6 +290,9 @@
         <Component class="javax.swing.JTextField" name="icPassportText">
         </Component>
         <Component class="javax.swing.JTextField" name="phoneNumberText">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="phoneNumberTextActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="emailText">
         </Component>

@@ -1,10 +1,6 @@
 package UserInterface.Receptionist;
 import UserInterface.LoginGUI;
-import UserInterface.Receptionist.EnrollmentGUI;
-import UserInterface.Receptionist.StudentRequestGUI;
-import UserInterface.Receptionist.UpdateProfileGUI;
-import UserInterface.Receptionist.PaymentGUI;
-import UserInterface.Receptionist.DeleteStudentFromReceptionist;
+import UserInterface.Receptionist.*;
 
 
 /**
@@ -12,15 +8,14 @@ import UserInterface.Receptionist.DeleteStudentFromReceptionist;
  * @author User
  */
 public class ReceptGUI extends javax.swing.JFrame {
-private final String receptionistId;
   
 public ReceptGUI(String receptionistId) {
-    this.receptionistId = receptionistId;
     initComponents();
+    
 
-   btnEnrollment.addActionListener(e -> {
-    new EnrollmentGUI().setVisible(true);
-});
+    btnEnrollment.addActionListener(e -> {
+        new EnrollmentGUI().setVisible(true);
+    });
 
     btnPayment.addActionListener(e -> {
         new PaymentGUI(receptionistId).setVisible(true);

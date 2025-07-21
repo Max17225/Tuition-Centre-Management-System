@@ -183,6 +183,12 @@ public class StudentProfileGUI extends javax.swing.JPanel {
             }
         });
 
+        phoneNumberText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                phoneNumberTextActionPerformed(evt);
+            }
+        });
+
         addressText.setColumns(20);
         addressText.setRows(5);
         jScrollPane1.setViewportView(addressText);
@@ -337,12 +343,6 @@ public class StudentProfileGUI extends javax.swing.JPanel {
         // Email format check
         if (!InputValidator.emailFormatIsValid(newEmail)) {
             JOptionPane.showMessageDialog(this, "Invalid email format. Please use @gmail.com or @mail.com", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Phone number format check
-        if (!newPhoneNumber.matches("^\\d{10,11}$")) {
-            JOptionPane.showMessageDialog(this, "Invalid phone number format. Please enter 10 or 11 digits.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 

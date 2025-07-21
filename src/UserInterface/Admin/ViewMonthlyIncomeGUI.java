@@ -10,7 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -114,8 +113,7 @@ public class ViewMonthlyIncomeGUI extends JFrame {
         // Process each payment record
         for (Payment p : payments) {
             try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd"); // Define expected date format
-                LocalDate date = LocalDate.parse(p.getPaymentDate(), formatter); // Parse payment date
+                LocalDate date = LocalDate.parse(p.getPaymentDate()); // Parse payment date
 
                 // Check if payment matches selected month/year
                 if (date.getMonthValue() == selectedMonth && date.getYear() == currentYear) {

@@ -43,7 +43,6 @@
                           <Component id="btnCancel" min="-2" pref="165" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -53,7 +52,6 @@
                   <Component id="txtPhone" max="32767" attributes="0"/>
                   <Component id="txtEmail" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" pref="286" max="32767" attributes="0"/>
-                  <Component id="txtCountry" max="32767" attributes="0"/>
                   <Component id="comboLevel" max="32767" attributes="0"/>
                   <Component id="txtDate" alignment="0" max="32767" attributes="0"/>
                   <Component id="txtSubjects" alignment="0" max="32767" attributes="0"/>
@@ -101,12 +99,7 @@
                   <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                   <Component id="jLabel7" pref="47" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtCountry" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel9" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                   <Component id="comboLevel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -125,7 +118,7 @@
               <Component id="btnRegister" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnCancel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="68" max="32767" attributes="0"/>
+              <EmptySpace pref="80" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -206,16 +199,15 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JTextField" name="txtCountry">
-    </Component>
     <Component class="javax.swing.JComboBox" name="comboLevel">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
+          <StringArray count="5">
+            <StringItem index="0" value="L1"/>
+            <StringItem index="1" value="L2"/>
+            <StringItem index="2" value="L3"/>
+            <StringItem index="3" value="L4"/>
+            <StringItem index="4" value="L5"/>
           </StringArray>
         </Property>
       </Properties>
@@ -227,6 +219,9 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="txtDate">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtSubjects">
     </Component>
@@ -247,10 +242,8 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtEnrollId">
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Country:"/>
+        <Property name="editable" type="boolean" value="false"/>
       </Properties>
     </Component>
   </SubComponents>

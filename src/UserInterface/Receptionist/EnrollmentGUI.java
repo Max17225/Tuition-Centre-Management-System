@@ -12,20 +12,30 @@ import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.ArrayList;
 import Util.IdGenerator;
-
 import Service.ReceptionistService;
-
 import DataModel.Enrollment;
+import DataModel.Student;
+import java.time.LocalDate;
 
 
 
 public class EnrollmentGUI extends javax.swing.JFrame {
+    private String enrollmentId = IdGenerator.getNewId(Enrollment.class);
 
     /**
      * Creates new form EnrollmentGUI
      */
     public EnrollmentGUI() {
         initComponents();
+        
+        // Auto Set Enrollment Id, not editable
+        txtEnrollId.setText(enrollmentId);
+        
+        // Auto Set Date, not editable
+        LocalDate today = LocalDate.now();
+        String formattedDate = today.toString();
+        String enrollmentDate = formattedDate;
+        txtDate.setText(enrollmentDate);
     }
 
     /**
@@ -54,14 +64,12 @@ public class EnrollmentGUI extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAddress = new javax.swing.JTextArea();
-        txtCountry = new javax.swing.JTextField();
         comboLevel = new javax.swing.JComboBox<>();
         txtDate = new javax.swing.JTextField();
         txtSubjects = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         txtEnrollId = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,12 +97,14 @@ public class EnrollmentGUI extends javax.swing.JFrame {
         txtAddress.setRows(5);
         jScrollPane1.setViewportView(txtAddress);
 
-        comboLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "L1", "L2", "L3", "L4", "L5" }));
         comboLevel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboLevelActionPerformed(evt);
             }
         });
+
+        txtDate.setEditable(false);
 
         btnRegister.setText("Register");
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -110,7 +120,7 @@ public class EnrollmentGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Country:");
+        txtEnrollId.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,8 +143,7 @@ public class EnrollmentGUI extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtUsername)
@@ -143,7 +152,6 @@ public class EnrollmentGUI extends javax.swing.JFrame {
                     .addComponent(txtPhone)
                     .addComponent(txtEmail)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
-                    .addComponent(txtCountry)
                     .addComponent(comboLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtDate)
                     .addComponent(txtSubjects)
@@ -181,11 +189,7 @@ public class EnrollmentGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
-                .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -201,7 +205,7 @@ public class EnrollmentGUI extends javax.swing.JFrame {
                 .addComponent(btnRegister)
                 .addGap(18, 18, 18)
                 .addComponent(btnCancel)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         pack();
@@ -212,64 +216,62 @@ public class EnrollmentGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_comboLevelActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        try {
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+        String ic = txtIC.getText().trim();
+        String phone = txtPhone.getText().trim();
+        String email = txtEmail.getText().trim();
+        String address = txtAddress.getText().trim();
+        String level = comboLevel.getSelectedItem().toString();
+        String date = txtDate.getText().trim();
 
-    try {
-    String enrollmentId = IdGenerator.getNewId(Enrollment.class);
-    txtEnrollId.setText(enrollmentId);
-    txtEnrollId.setEditable(false);
-
-    String username = txtUsername.getText().trim();
-    String password = new String(txtPassword.getPassword()).trim();
-    String ic = txtIC.getText().trim();
-    String phone = txtPhone.getText().trim();
-    String email = txtEmail.getText().trim();
-    String address = txtAddress.getText().trim();
-    String country = txtCountry.getText().trim();
-    String level = comboLevel.getSelectedItem().toString();
-    String date = txtDate.getText().trim();
-
-    String[] subjectsRaw = txtSubjects.getText().split(",");
-    List<String> subjectList = new ArrayList<>();
-    for (String s : subjectsRaw) {
-        if (!s.trim().isEmpty()) {
-            subjectList.add(s.trim());
+        String[] subjectsRaw = txtSubjects.getText().split(",");
+        List<String> subjectList = new ArrayList<>();
+        for (String s : subjectsRaw) {
+            if (!s.trim().isEmpty()) {
+                subjectList.add(s.trim());
+            }
         }
+
+        if (subjectList.size() > 3) {
+            JOptionPane.showMessageDialog(this, "Maximum 3 subjects allowed.");
+            return;
+        }
+
+        // Create Enrollment object only (no Student object at all)
+        String subject1 = subjectList.size() > 0 ? subjectList.get(0) : "Empty";
+        String subject2 = subjectList.size() > 1 ? subjectList.get(1) : "Empty";
+        String subject3 = subjectList.size() > 2 ? subjectList.get(2) : "Empty";
+
+        Enrollment enrollment = new Enrollment(
+            enrollmentId,
+            date,
+            level,
+            subject1,
+            subject2,
+            subject3
+        );
+        
+        // Add new student info to record
+        Student newStudent = new Student(Util.IdGenerator.getNewId(Student.class), username, password, enrollmentId, ic, phone, email, address);
+        
+        // Save to file using the updated service
+        ReceptionistService.registerEnrollmentOnly(enrollment);
+        ReceptionistService.registerStudentOnly(newStudent);
+
+        JOptionPane.showMessageDialog(this, "Enrollment saved successfully.");
+        this.dispose();
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
     }
-
-    if (subjectList.size() > 3) {
-        JOptionPane.showMessageDialog(this, "Maximum 3 subjects allowed.");
-        return;
-    }
-
-    // Create Enrollment object only (no Student object at all)
-    String subject1 = subjectList.size() > 0 ? subjectList.get(0) : "Empty";
-String subject2 = subjectList.size() > 1 ? subjectList.get(1) : "Empty";
-String subject3 = subjectList.size() > 2 ? subjectList.get(2) : "Empty";
-
-Enrollment enrollment = new Enrollment(
-    enrollmentId,
-    date,
-    level,
-    subject1,
-    subject2,
-    subject3
-);
-
-    // Save to file using the updated service
-    ReceptionistService.registerEnrollmentOnly(enrollment);
-
-    JOptionPane.showMessageDialog(this, "Enrollment saved successfully.");
-    this.dispose();
-
-} catch (Exception ex) {
-    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-}
 
 
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-this.dispose();        // TODO add your handling code here:
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
@@ -281,7 +283,6 @@ this.dispose();        // TODO add your handling code here:
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnRegister;
     private javax.swing.JComboBox<String> comboLevel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -294,7 +295,6 @@ this.dispose();        // TODO add your handling code here:
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txtAddress;
-    private javax.swing.JTextField txtCountry;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtEnrollId;
